@@ -1,32 +1,31 @@
 package de.klinikum.server;
 
 import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.http.HTTPRepository;
 
+
 public class Connect {
 
-	public class Connection {
 		String sesameServer = "http://localhost:8080/openrdf-sesame";
 		String repositoryID = "TestNative";
 		
 		
 			
-		public Repository GetRepository()
+		public RepositoryConnection GetRepositoryConnection() throws RepositoryException
 		{
-			Repository myRepository = new HTTPRepository(sesameServer, repositoryID);
+			Repository repository = new HTTPRepository(sesameServer, repositoryID);
 			try {
-				myRepository.initialize();
+				repository.initialize();
 			} catch (RepositoryException e) {
 				
 				e.printStackTrace();
 			}
 
-			return myRepository;
+			RepositoryConnection repoCon = repository.getConnection();
+						
+			return repoCon;
 		}
 		
 	}
-
-	
-	
-}

@@ -14,7 +14,7 @@ import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 
-import sesameContext.Connection;
+import de.klinikum.server.Connect;
 
 public class MainTest {
 
@@ -25,15 +25,14 @@ public class MainTest {
 	public static void main(String[] args) throws RepositoryException {
 		
 		
+		//Get RepoConnection
+		Connect conn = new Connect();
+		 RepositoryConnection repoCon = conn.GetRepositoryConnection();
 		
-		Connection connectorfactory = new Connection();
-		Repository myRepo = connectorfactory.GetRepository();
-		RepositoryConnection repoCon = myRepo.getConnection();
-		
-		//Daten eintragen
+		 //Daten eintragen
 		System.out.println("THIS IS THE STATUS: " + repoCon.isOpen());
 		
-		ValueFactory f = myRepo.getValueFactory();
+		ValueFactory f = repoCon.getValueFactory();
 		URI alice = f.createURI("http://LmuKlinikum.de/patient/alice");
 		URI bob = f.createURI("http://LmuKlinikum.de/patient/bob");
 		URI name = f.createURI("http://LmuKlinikum.de/ontology/name");
