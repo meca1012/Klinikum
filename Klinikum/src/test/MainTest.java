@@ -20,18 +20,17 @@ public class MainTest {
 
 	/**
 	 * @param args
-	 * @throws RepositoryException 
+	 * @throws RepositoryException
 	 */
 	public static void main(String[] args) throws RepositoryException {
-		
-		
-		//Get RepoConnection
+
+		// Get RepoConnection
 		Connect conn = new Connect();
-		 RepositoryConnection repoCon = conn.GetRepositoryConnection();
-		
-		 //Daten eintragen
+		RepositoryConnection repoCon = conn.GetRepositoryConnection();
+
+		// Daten eintragen
 		System.out.println("THIS IS THE STATUS: " + repoCon.isOpen());
-		
+
 		ValueFactory f = repoCon.getValueFactory();
 		URI alice = f.createURI("http://LmuKlinikum.de/patient/alice");
 		URI bob = f.createURI("http://LmuKlinikum.de/patient/bob");
@@ -39,53 +38,48 @@ public class MainTest {
 		URI person = f.createURI("http://LmuKlinikum.de/ontology/person");
 		Literal bobsname = f.createLiteral("Bob");
 		Literal alicename = f.createLiteral("Alice");
-		
+
 		try {
-			
+
 			repoCon.add(alice, RDF.TYPE, person);
 			repoCon.add(alice, name, alicename);
 
 			repoCon.add(bob, RDF.TYPE, person);
 			repoCon.add(bob, name, bobsname);
-			
-				
-		}
-		catch(Exception e)
-		{
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		
-		//Datenauslesen
+		// Datenauslesen
 		try {
-			   
-			   try {
-			      String queryString = "SELECT * FROM {S} rdf:type {rdfs:Person}";
-			      TupleQuery tupleQuery = repoCon.prepareTupleQuery(QueryLanguage.SERQL, queryString);
-			      TupleQueryResult result = tupleQuery.evaluate();
-			      try {
-			    	  while (result.hasNext()) {
-			    		   BindingSet bindingSet = result.next();
-			    		   Value valueOfX = bindingSet.getValue("x");
-			    		   Value valueOfY = bindingSet.getValue("y");
-			    		   System.out.println(valueOfX.toString());
-			    		   System.out.println(valueOfY.toString());
-			    		   
-			    	  }
-			      }
-			      finally {
-			         result.close();
-			      }
-			   }
-			   finally {
-			      repoCon.close();
-			   }
+			
+			try {
+//				String queryString = "SELECT * FROM {S} rdf:type {rdfs:Person}";
+//				String queryString = "SELECT ?x ?y WHERE { ?x ?p ?y } ";
+				String queryString = "SELECT ?name WHERE {<http://LmuKlinikum.de/patient/alice> <http://LmuKlinikum.de/ontology/name> ?name}";
+				TupleQuery tupleQuery = repoCon.prepareTupleQuery(
+						QueryLanguage.SPARQL, queryString);
+				TupleQueryResult result = tupleQuery.evaluate();
+				try {
+					while (result.hasNext()) {
+						BindingSet bindingSet = result.next();
+						Value valueOfX = bindingSet.getValue("name");
+//						Value valueOfY = bindingSet.getValue("y");
+						System.out.println(valueOfX.toString());
+//						System.out.println(valueOfY.toString());
+
+					}
+				} finally {
+					result.close();
+				}
+			} finally {
+				repoCon.close();
 			}
-			catch (OpenRDFException e) {
-			   // handle exception
-			}
-		
-	
+		} catch (OpenRDFException e) {
+			// handle exception
+		}
+
 	}
 
 }
