@@ -8,10 +8,17 @@ tmp/**/*
 *.bak
 *.swp
 *~.nib
+*.iml
+*.iws
 local.properties
+/.classpath
 .classpath
+/.settings
 .settings/
 .loadpath
+log/
+target/
+build/
 
 # External tool builders
 .externalToolBuilders/
