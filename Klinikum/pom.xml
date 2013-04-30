@@ -8,6 +8,9 @@
 		<sesame.version>
 			2.7.0
 		</sesame.version>
+		<cxf.version>
+			2.7.0
+		</cxf.version>
 	</properties>
 	<packaging>war</packaging>
 	<build>
@@ -29,5 +32,18 @@
 			<artifactId>sesame-runtime</artifactId>
 			<version>${sesame.version}</version>
 		</dependency>
+		
+		<dependency>
+	      <groupId>org.apache.cxf</groupId>
+	      <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+	      <version>${cxf.version}</version>
+	    </dependency>
+	   
+	   <dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>slf4j-log4j12</artifactId>
+		<version>1.6.0</version>
+	   </dependency>
+	
 	</dependencies>
 </project>
