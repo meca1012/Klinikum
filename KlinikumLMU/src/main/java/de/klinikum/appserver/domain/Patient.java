@@ -1,4 +1,4 @@
-package de.klinikum.domain;
+package main.java.de.klinikum.appserver.domain;
 
 import java.io.Serializable;
 

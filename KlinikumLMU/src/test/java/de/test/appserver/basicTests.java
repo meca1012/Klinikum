@@ -1,4 +1,4 @@
-package test.de.klinikum.test;
+package test.java.de.test.appserver;
 
 import static org.junit.Assert.*;
 

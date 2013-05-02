@@ -1,4 +1,4 @@
-package de.klinikum.server;
+package main.java.de.klinikum.appserver.server;
 
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;

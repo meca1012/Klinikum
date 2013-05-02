@@ -1,4 +1,4 @@
-package de.klinikum.communication.rest;
+package main.java.de.klinikum.appserver.communication.rest;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
