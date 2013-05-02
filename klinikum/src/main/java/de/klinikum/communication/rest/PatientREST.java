@@ -7,20 +7,20 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-@Path("/patient/")
+@Path("/patient")
 @Produces({ MediaType.APPLICATION_XML, MediaType.TEXT_XML,
 		MediaType.APPLICATION_JSON })
 @Consumes
 public class PatientREST {
 
-	@Path("test")
+	@Path("/test")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String test() {
 		return "Yea! ";
 	}
 
-	@Path("test2")
+	@Path("/test2")
 	@POST
 	@Produces(MediaType.APPLICATION_XML)
 	public String newPatient() {
