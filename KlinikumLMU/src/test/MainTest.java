@@ -27,9 +27,20 @@ public class MainTest {
 		Connect conn = new Connect();
 		RepositoryConnection repoCon = conn.GetRepositoryConnection();
 
-		// Daten eintragen
+		// Check Connection_Status
 		System.out.println("THIS IS THE STATUS: " + repoCon.isOpen());
 
+		//Test: Write Data to Repository
+		writeToRDFStore(repoCon);
+		
+		//Test: Read Data from Repository
+		readFromRDFStore(repoCon);
+		
+
+	}
+
+	public static void writeToRDFStore(RepositoryConnection repoCon)
+	{
 		ValueFactory f = repoCon.getValueFactory();
 		URI alice = f.createURI("http://LmuKlinikum.de/patient/alice");
 		URI bob = f.createURI("http://LmuKlinikum.de/patient/bob");
@@ -49,13 +60,17 @@ public class MainTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		// Datenauslesen
+		
+	}
+	
+	public static void readFromRDFStore(RepositoryConnection repoCon)
+	{
 		try {
 			
 			try {
 //				String queryString = "SELECT * FROM {S} rdf:type {rdfs:Person}";
 //				String queryString = "SELECT ?x ?y WHERE { ?x ?p ?y } ";
+	
 				String queryString = "SELECT ?name WHERE {<http://LmuKlinikum.de/patient/alice> <http://LmuKlinikum.de/ontology/name> ?name}";
 				TupleQuery tupleQuery = repoCon.prepareTupleQuery(
 						QueryLanguage.SPARQL, queryString);
@@ -66,19 +81,18 @@ public class MainTest {
 						Value valueOfX = bindingSet.getValue("name");
 //						Value valueOfY = bindingSet.getValue("y");
 						System.out.println(valueOfX.toString());
-//						System.out.println(valueOfY.toString());
-
 					}
-				} finally {
-					result.close();
-				}
-			} finally {
+					
+					} 
+				finally {
+						result.close();
+						}
+					} finally {
 				repoCon.close();
-			}
-		} catch (OpenRDFException e) {
+				}
+			} catch (OpenRDFException e) {
 			// handle exception
 		}
 
 	}
-
 }
