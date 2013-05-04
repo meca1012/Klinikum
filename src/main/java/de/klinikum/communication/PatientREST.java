@@ -17,6 +17,12 @@ import de.klinikum.service.PatientService;
 @Consumes
 public class PatientREST {
 
+	public PatientREST() {
+		this.patientService = new PatientService();
+	}
+
+	private PatientService patientService;
+
 	@Path("/test")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
@@ -31,20 +37,32 @@ public class PatientREST {
 		return "This should be a patient!";
 	}
 
-	@Path("/getPatient/{patientNumber}")
-	@GET
-	@Produces(MediaType.APPLICATION_XML)
-	public Patient getPatient(@PathParam("patientNumber") String patientNumber) 
-	{
-		return PatientService.getPatient(patientNumber);
-	}
-	
+	 @Path("/getPatient/{patientNumber}")
+	 @GET
+	 @Produces(MediaType.APPLICATION_XML)
+	 public Patient getPatient(@PathParam("patientNumber") String
+	 patientNumber)
+	 {
+	 return this.patientService.getPatient(patientNumber);
+	 }
+
 	@Path("/getPatient")
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
-	public Patient getPatient() 
-	{
-		return PatientService.getPatient("123123123");
+	public Patient getPatient2() {
+		Patient patient = new Patient();
+		patient.setnName("Mueller");
+		patient.setvName("Uli");
+		patient.setUri("http://spironto.de/patient/123123123");
+		return patient;
 	}
-	
+
+	public PatientService getPatientService() {
+		return patientService;
+	}
+
+	public void setPatientService(PatientService patientService) {
+		this.patientService = patientService;
+	}
+
 }
