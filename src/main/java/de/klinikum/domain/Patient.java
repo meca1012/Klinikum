@@ -2,14 +2,20 @@ package de.klinikum.domain;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class Patient implements Serializable {
 	
 	private static final long serialVersionUID = 1199647317278849602L;
 
 	private String uri;
-	
+
 	private String vName;
+	
 	private String nName;
+	
 	
 	public Patient(String uri, String vName, String nName) {
 		
@@ -17,7 +23,7 @@ public class Patient implements Serializable {
 		this.vName = vName;
 		this.nName = nName;
 	}
-
+	@XmlElement
 	public String getUri() {
 		return uri;
 	}
@@ -25,7 +31,7 @@ public class Patient implements Serializable {
 	public void setUri(String uri) {
 		this.uri = uri;
 	}
-
+	@XmlElement
 	public String getvName() {
 		return vName;
 	}
@@ -33,7 +39,7 @@ public class Patient implements Serializable {
 	public void setvName(String vName) {
 		this.vName = vName;
 	}
-
+	@XmlElement
 	public String getnName() {
 		return nName;
 	}
