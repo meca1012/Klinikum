@@ -36,14 +36,14 @@ public class Concept {
 		return texts.getValues();
 	}
 	
-	public Set<Concept> getConnectAsConcepts(SKOS property, Taxonomy taxonomy) {
-		Set<String> uris = getConnected(property);
-		Set<Concept> toReturn = new HashSet<Concept>();
-		for (String s : uris) {
-			toReturn.add(taxonomy.get(s));
-		}
-		return toReturn;
-	}
+//	public Set<Concept> getConnectAsConcepts(SKOS property, Taxonomy taxonomy) {
+//		Set<String> uris = getConnected(property);
+//		Set<Concept> toReturn = new HashSet<Concept>();
+//		for (String s : uris) {
+//			toReturn.add(taxonomy.get(s));
+//		}
+//		return toReturn;
+//	}
 	
 	public Set<String> getTexts(SKOS property) {		
 		return (texts.getValues(property));		
@@ -64,13 +64,15 @@ public class Concept {
 		else return true;
 	}
 	
-	public void addRelation(RDFTriple triple) {
-		relations.addValue(triple.getConnection(), triple.getToUri());
-	}
-	
-	public void removeRelation(RDFTriple triple) {
-		relations.removeValue(triple.getConnection(), triple.getToUri());
-	}
-	
-	public void addText(RDFLabel label)
+//	public void addRelation(RDFTriple triple) {
+//		relations.addValue(triple.getConnection(), triple.getToUri());
+//	}
+//	
+//	public void removeRelation(RDFTriple triple) {
+//		relations.removeValue(triple.getConnection(), triple.getToUri());
+//	}
+//	
+//	public void addText(RDFLabel label) {
+//		
+//	}
 }
