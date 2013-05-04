@@ -8,7 +8,7 @@ public class PatientService {
 	}
 
 	public Patient getPatient(String patientNumber) {
-		Patient p1 = new Patient(patientNumber, "Max", "Power");
+		Patient p1 = new Patient("http://spironto.de/patient/" + patientNumber, "Max", "Power");
 		return p1;
 	}
 
