@@ -1,6 +1,5 @@
 *.pydevproject
 .metadata
-.project
 bin/**
 tmp/**
 tmp/**/*
