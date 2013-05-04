@@ -47,4 +47,16 @@ public class PatientREST {
 		return PatientService.getPatient("123123123");
 	}
 	
+	@Path("/getPatient2")
+	@GET
+	@Produces(MediaType.APPLICATION_XML)
+	public Patient getPatient2() 
+	{
+		Patient patient = new Patient();
+		patient.setnName("Mueller");
+		patient.setvName("Uli");
+		patient.setUri("blabla");
+		return PatientService.getPatient("123123123");
+	}
+	
 }
