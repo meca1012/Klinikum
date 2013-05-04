@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	id="WebApp_ID" version="3.0">
 
-	<display-name>KlinikumLMU</display-name>
+	<display-name>KlinikumServer</display-name>
 
 	<!-- Auto scan REST service -->
 	<context-param>
