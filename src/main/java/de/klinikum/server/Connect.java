@@ -12,7 +12,6 @@ public class Connect {
 		String repositoryID = "TestNative";
 		
 		
-			
 		public RepositoryConnection GetRepositoryConnection() throws RepositoryException
 		{
 			Repository repository = new HTTPRepository(sesameServer, repositoryID);

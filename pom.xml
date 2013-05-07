@@ -42,42 +42,51 @@
 		</plugins>
 	</build>
 	<dependencies>
+		
+	    <dependency>
+	        <groupId>org.apache.openejb</groupId>
+	        <artifactId>tomee-embedded</artifactId>
+	         <version>1.5.2</version>
+	        </dependency>
+	    
 		<dependency>
-			<groupId>org.apache.openejb</groupId>
-			<artifactId>javaee-api</artifactId>
-			<version>6.0-5</version>
-		</dependency>
+	      <groupId>org.apache.openejb</groupId>
+	      <artifactId>javaee-api</artifactId>
+	      <version>6.0-5</version>
+	      <scope>provided</scope>
+	    </dependency>
+	    
 		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-runtime</artifactId>
 			<version>${sesame.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.tomcat</groupId>
-			<artifactId>catalina</artifactId>
-			<version>6.0.26</version>
-		</dependency>
+		
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jaxrs</artifactId>
 			<version>2.3.6.Final</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jaxb-provider</artifactId>
 			<version>2.3.6.Final</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.6.0</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.8.1</version>
 			<scope>test</scope>
 		</dependency>
+		
 	</dependencies>
 	<reporting>
 		<plugins>

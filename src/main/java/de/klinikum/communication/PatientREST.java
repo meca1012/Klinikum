@@ -1,5 +1,9 @@
 package de.klinikum.communication;
 
+import javax.ejb.Stateless;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -12,22 +16,20 @@ import de.klinikum.domain.Patient;
 import de.klinikum.service.PatientService;
 
 @Path("/patient")
-@Produces({ MediaType.APPLICATION_XML, MediaType.TEXT_XML,
-		MediaType.APPLICATION_JSON })
+@Produces({ MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_JSON })
 @Consumes
+@Stateless
 public class PatientREST {
 
-	public PatientREST() {
-		this.patientService = new PatientService();
-	}
 
+	@Inject 
 	private PatientService patientService;
-
+	
 	@Path("/test")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String test() {
-		return "Yea! ";
+		return "REST- Service Running";
 	}
 
 	@Path("/test2")
@@ -43,7 +45,12 @@ public class PatientREST {
 	 public Patient getPatient(@PathParam("patientNumber") String
 	 patientNumber)
 	 {
-	 return this.patientService.getPatient(patientNumber);
+		 System.out.println("RestFuncStart");
+		 System.out.println("PatientNumber:" + patientNumber);
+		 System.out.println("ClasseName:" + patientService.getClassName());
+		 Patient test = patientService.getPatient(patientNumber);
+		 System.out.println("RestFuncEnd");
+	 return test;
 	 }
 
 	@Path("/getPatient")
@@ -57,12 +64,12 @@ public class PatientREST {
 		return patient;
 	}
 
-	public PatientService getPatientService() {
-		return patientService;
-	}
+//	public PatientService getPatientService() {
+//		return patientService;
+//	}
 
-	public void setPatientService(PatientService patientService) {
-		this.patientService = patientService;
-	}
+//	public void setPatientService(PatientService patientService) {
+//		this.patientService = patientService;
+//	}
 
 }
