@@ -1,12 +1,12 @@
 package de.klinikum.service;
 import javax.annotation.PostConstruct;
-import javax.ejb.Stateless;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
 import de.klinikum.domain.Patient;
 
 @Named
+@RequestScoped
 public class PatientService {
 	private String className = "PatientService";
 	

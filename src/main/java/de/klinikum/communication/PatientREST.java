@@ -1,9 +1,8 @@
 package de.klinikum.communication;
 
-import javax.ejb.Stateless;
+
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -18,7 +17,7 @@ import de.klinikum.service.PatientService;
 @Path("/patient")
 @Produces({ MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_JSON })
 @Consumes
-@Stateless
+@RequestScoped
 public class PatientREST {
 
 
