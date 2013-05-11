@@ -7,9 +7,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>KlinikumServer</name>
 	<properties>
-		<sesame.version>
-			2.7.0
-		</sesame.version>
+		<sesame.version>2.7.0</sesame.version>
+		<resteasy.version>2.3.6.Final</resteasy.version>
 	</properties>
 	<packaging>war</packaging>
 	<build>
@@ -27,66 +26,69 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.3</version>
 				<configuration>
-					<webXml>WebContent\WEB-INF\web.xml</webXml>
+					<warSourceDirectory>WebContent</warSourceDirectory>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.openejb.maven</groupId>
-				<artifactId>tomee-maven-plugin</artifactId>
-				<version>1.5.2</version>
-				<configuration>
-					<tomeeVersion>1.5.2</tomeeVersion>
-					<!-- <tomeeClassifier>plus</tomeeClassifier> -->
-				</configuration>
-			</plugin>
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.apache.openejb.maven</groupId> -->
+<!-- 				<artifactId>tomee-maven-plugin</artifactId> -->
+<!-- 				<version>1.5.2</version> -->
+<!-- 				<configuration> -->
+<!-- 					<tomeeVersion>1.5.2</tomeeVersion> -->
+<!-- 				</configuration> -->
+<!-- 			</plugin> -->
 		</plugins>
 	</build>
 	<dependencies>
-		
-	    <dependency>
-	        <groupId>org.apache.openejb</groupId>
-	        <artifactId>tomee-embedded</artifactId>
-	         <version>1.5.2</version>
-	        </dependency>
-	    
+		<!-- <dependency> -->
+		<!-- <groupId>org.apache.openejb</groupId> -->
+		<!-- <artifactId>tomee-embedded</artifactId> -->
+		<!-- <version>1.5.2</version> -->
+		<!-- </dependency> -->
 		<dependency>
-	      <groupId>org.apache.openejb</groupId>
-	      <artifactId>javaee-api</artifactId>
-	      <version>6.0-5</version>
-	      <scope>provided</scope>
-	    </dependency>
-	    
+			<groupId>org.apache.openejb</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>6.0-5</version>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.openrdf.sesame</groupId>
 			<artifactId>sesame-runtime</artifactId>
 			<version>${sesame.version}</version>
 		</dependency>
-		
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jaxrs</artifactId>
-			<version>2.3.6.Final</version>
+			<version>${resteasy.version}</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-cdi</artifactId>
+			<version>${resteasy.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.jboss.resteasy</groupId>
+					<artifactId>resteasy-jaxrs</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jaxb-provider</artifactId>
-			<version>2.3.6.Final</version>
+			<version>${resteasy.version}</version>
 		</dependency>
-		
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.6.0</version>
 		</dependency>
-		
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.8.1</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 	<reporting>
 		<plugins>
