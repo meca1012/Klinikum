@@ -25,8 +25,10 @@ import org.openrdf.repository.RepositoryResult;
 import org.openrdf.repository.http.HTTPRepository;
 import org.openrdf.rio.RDFFormat;
 
-public class SimpleGraph {	
-	
+
+//CRUD
+public class SimpleGraph {
+
 	Repository theRepository = null;
 	String sesameServer = "http://localhost:8080/openrdf-sesame";
 	String repositoryID = "TestNative";
