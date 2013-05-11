@@ -1,6 +1,5 @@
 package de.klinikum.domain.util;
 
-import java.io.File;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
@@ -19,16 +18,16 @@ import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
-import org.openrdf.repository.sail.SailRepository;
+import org.openrdf.repository.http.HTTPRepository;
 import org.openrdf.rio.RDFFormat;
-import org.openrdf.sail.inferencer.fc.ForwardChainingRDFSInferencer;
-import org.openrdf.sail.nativerdf.NativeStore;
+
 
 //CRUD
 public class SimpleGraph {
-	
+
 	Repository theRepository = null;
-	String repositoryPath = "/c/dev/sesameStore";
+	String sesameServer = "http://localhost:8080/openrdf-sesame";
+	String repositoryID = "TestNative";
 	
 	// useful -local- constants
 	public static RDFFormat NTRIPLES = RDFFormat.NTRIPLES;
@@ -36,15 +35,9 @@ public class SimpleGraph {
     public static RDFFormat RDFXML = RDFFormat.RDFXML;
     public static String RDFTYPE =  RDF.TYPE.toString();
     
-    public SimpleGraph(boolean inferencing) {
-    	try {
-    		if (inferencing) {
-    			theRepository = 
-    					new SailRepository(new ForwardChainingRDFSInferencer(
-    							new NativeStore(new File(repositoryPath))));
-    		} else {
-    			theRepository = new SailRepository(new NativeStore(new File(repositoryPath)));
-    		}
+    public SimpleGraph() {
+    	try {    		
+			theRepository = new HTTPRepository(sesameServer, repositoryID);    		
     		theRepository.initialize();
     	} catch (RepositoryException e) {
     		e.printStackTrace();
