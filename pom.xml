@@ -9,6 +9,7 @@
 	<properties>
 		<sesame.version>2.7.0</sesame.version>
 		<resteasy.version>2.3.6.Final</resteasy.version>
+		<slf4j.version>1.7.5</slf4j.version>
 	</properties>
 	<packaging>war</packaging>
 	<build>
@@ -30,22 +31,22 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
-<!-- 			<plugin> -->
-<!-- 				<groupId>org.apache.openejb.maven</groupId> -->
-<!-- 				<artifactId>tomee-maven-plugin</artifactId> -->
-<!-- 				<version>1.5.2</version> -->
-<!-- 				<configuration> -->
-<!-- 					<tomeeVersion>1.5.2</tomeeVersion> -->
-<!-- 				</configuration> -->
-<!-- 			</plugin> -->
+			<plugin>
+				<groupId>org.apache.openejb.maven</groupId>
+				<artifactId>tomee-maven-plugin</artifactId>
+				<version>1.5.2</version>
+				<configuration>
+					<tomeeVersion>1.5.2</tomeeVersion>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
-		<!-- <dependency> -->
-		<!-- <groupId>org.apache.openejb</groupId> -->
-		<!-- <artifactId>tomee-embedded</artifactId> -->
-		<!-- <version>1.5.2</version> -->
-		<!-- </dependency> -->
+		<dependency>
+			<groupId>org.apache.openejb</groupId>
+			<artifactId>tomee-embedded</artifactId>
+			<version>1.5.2</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.openejb</groupId>
 			<artifactId>javaee-api</artifactId>
@@ -80,8 +81,14 @@
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.6.0</version>
+			<version>${slf4j.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

@@ -24,6 +24,7 @@ import org.openrdf.rio.RDFFormat;
 import org.openrdf.sail.inferencer.fc.ForwardChainingRDFSInferencer;
 import org.openrdf.sail.nativerdf.NativeStore;
 
+//CRUD
 public class SimpleGraph {
 	
 	Repository theRepository = null;
