@@ -1,5 +1,7 @@
 package de.klinikum.domain.util;
 
+import info.aduna.iteration.Iterations;
+
 import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
@@ -8,11 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openrdf.model.BNode;
+import org.openrdf.model.Model;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
@@ -155,15 +159,12 @@ public class SimpleGraph {
     //Tuple pattern query - find all statements with the pattern,
     //where null is a wildcard    
     
-    public List<Statement> tuplePattern(URI subject, URI predicate, Value object) {
+    public Model tuplePattern(URI subject, URI predicate, Value object) {
         try{
             RepositoryConnection con = theRepository.getConnection();
             try {
-                RepositoryResult<Statement> repres = con.getStatements(subject, predicate, object, true);
-                ArrayList<Statement> reslist = new ArrayList<Statement>();
-                while (repres.hasNext()) {
-                    reslist.add(repres.next());
-                }
+                RepositoryResult<Statement> statements = con.getStatements(subject, predicate, object, true);
+                Model reslist = Iterations.addAll(statements, new LinkedHashModel());                
                 return reslist;
             } finally {
                 con.close();
