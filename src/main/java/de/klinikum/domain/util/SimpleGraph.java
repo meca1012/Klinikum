@@ -6,8 +6,6 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.openrdf.model.BNode;
 import org.openrdf.model.Model;

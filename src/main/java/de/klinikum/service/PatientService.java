@@ -1,31 +1,13 @@
 package de.klinikum.service;
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Named;
+
+import java.util.List;
 
 import de.klinikum.domain.Patient;
 
-@Named
-@RequestScoped
-public class PatientService {
-	private String className = "PatientService";
-	
-	public String getClassName() {
-		return className;
-	}
+public interface PatientService {
 
-	public void setClassName(String className) {
-		this.className = className;
-	}
+	public abstract Patient createPatient(Patient patient);
 
-	@PostConstruct
-    public void afterCreate() {
-        System.out.println("PatientService created");
-    }
-	
-	public Patient getPatient(String patientNumber) {
-		Patient p1 = new Patient("http://spironto.de/patient/" + patientNumber, "Max", "Power");
-		return p1;
-	}
+	public abstract List<Patient> searchPatient(Patient patient);
 
 }
