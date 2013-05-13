@@ -4,15 +4,18 @@ public enum NameSpaces {
 	
 	PATIENT_TYPE("http://spironto.de/spironto#patient"),
 		
-	//Stammdaten
+	///Stammdaten
 	MASTER_DATA("http://spironto.de/spironto#is-masterData"),
 	PATIENT_NAME("http://spironto.de/spironto#has-name"),
-	//Hauptthema
+	///Hauptthema
 	MAIN_TOPIC("http://spironto.de/spironto#is-mainTopic"),
 	
-	//vordefinierte Themen
+	///vordefinierte Themen
 	
-	//Technisch
+	///Technisch
+	//ID zur generierung von einzigartigen URI's
+	LAST_ID("http://spironto.de/spironto#lastID"),
+	TYPE_DATASTORE("http://spironto.de/spironto#Datastore"),
 	DATE_ADDED("http://spironto.de/spironto#dateAdded"),	
 	DATE_LAST_MODIFIED("http://spironto.de/spironto#dateLastModified");
 	
