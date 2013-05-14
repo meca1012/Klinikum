@@ -5,6 +5,9 @@ import static de.klinikum.domain.NameSpaces.TYPE_DATASTORE;
 
 import java.io.IOException;
 
+import javax.annotation.PreDestroy;
+import javax.inject.Named;
+
 import org.openrdf.model.Literal;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -19,7 +22,7 @@ import org.openrdf.repository.RepositoryResult;
 import org.openrdf.repository.http.HTTPRepository;
 
 
-
+@Named
 public class SesameTripleStore {
 	
 	private RepositoryConnection con;
@@ -32,15 +35,22 @@ public class SesameTripleStore {
 	
 	public SesameTripleStore() throws IOException {
 		Repository repository;
-		repository = new HTTPRepository(sesameServer, repositoryID);
+		repository = new HTTPRepository(this.sesameServer, this.repositoryID);
 		try {
 			repository.initialize();
 			//TODO: check Valuefactory aus connection oder repository
 			this.valueFactory = repository.getValueFactory();
 			this.con = repository.getConnection();
+			initRepository(this.con);
+			this.con.begin();
 		} catch(RepositoryException e) {
 			throw new IOException(e);
 		}		
+	}
+	
+	@PreDestroy
+	public void closeConnection() throws RepositoryException {
+		this.con.close();
 	}
 	
 	//Methode zur Initialisierung eines Triples vom NS zur LAST_ID, welche zur generierung einer uniqueUri 
@@ -53,7 +63,7 @@ public class SesameTripleStore {
 			statements.close();
 		} else {
 			statements.close();
-			this.datastoreURI = this.valueFactory.createURI(SPIRONTO_NS + this.datastoreURI);
+			this.datastoreURI = this.valueFactory.createURI(SPIRONTO_NS);
 			addTriple(this.datastoreURI, RDF.TYPE, typeDatastore);
 			setValue(this.datastoreURI.toString(), LAST_ID.toString(), 0);
 		}
@@ -112,7 +122,7 @@ public class SesameTripleStore {
 			Statement stmt = statements.next();
 			Literal literal = (Literal) stmt.getObject();
 			statements.close();
-			return literal.intValue();			
+			return literal.intValue();
 		} catch(RepositoryException re) {
 			throw new IOException(re);
 		}
@@ -128,8 +138,11 @@ public class SesameTripleStore {
 		removeTriples(this.datastoreURI.toString(), LAST_ID.toString(), null);
 		value++;
 		setValue(this.datastoreURI.toString(), LAST_ID.toString(), value);
-		return this.valueFactory.createURI(this.datastoreURI + "-gen" + value);
+//		return this.valueFactory.createURI(this.datastoreURI + "-gen" + value);
+		return this.valueFactory.createURI("/" + value);
 	}
 	
-	
+	public URI getDatastoreURI() {
+		return datastoreURI;
+	}	
 }

@@ -1,18 +1,30 @@
 package de.klinikum.service;
+import static de.klinikum.domain.NameSpaces.PATIENT_NAME;
+import static de.klinikum.domain.NameSpaces.PATIENT_TYPE;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.openrdf.model.Literal;
+import org.openrdf.model.URI;
+import org.openrdf.model.vocabulary.RDF;
+
 import de.klinikum.domain.Patient;
+import de.klinikum.domain.util.SesameTripleStore;
 import de.klinikum.mock.PatientMock;
 
 @Named
-@RequestScoped
 public class PatientServiceImpl implements PatientService {
-	private String className = "PatientService";
+	private String className = "PatientService";	
+	
+	@Inject
+	SesameTripleStore tripleStore;
 	
 	public String getClassName() {
 		return className;
@@ -40,8 +52,17 @@ public class PatientServiceImpl implements PatientService {
 		return p1;
 	}
 	
-	public Patient createPatientRDF(Patient patient) {
-		return null;
+	@Override
+	public Patient createPatientRDF(Patient patient) throws IOException {
+		String pUri = PATIENT_TYPE + this.tripleStore.getUniqueURI().toString();
+		patient.setUri(pUri);
+		URI patientURI = this.tripleStore.getValueFactory().createURI(pUri);
+		URI patientTypeURI = this.tripleStore.getValueFactory().createURI(PATIENT_TYPE.toString());
+		this.tripleStore.addTriple(patientURI, RDF.TYPE, patientTypeURI);
+		URI hasName = this.tripleStore.getValueFactory().createURI(PATIENT_NAME.toString());
+		Literal patientName = this.tripleStore.getValueFactory().createLiteral(patient.getvName() + ", " + patient.getnName());
+		this.tripleStore.addTriple(patientURI, hasName, patientName);		
+		return patient;
 	}
 	
 

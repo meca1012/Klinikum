@@ -1,8 +1,9 @@
 package de.klinikum.communication;
 
+import java.io.IOException;
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -19,11 +20,11 @@ import de.klinikum.service.PatientServiceImpl;
 @Produces({ MediaType.APPLICATION_XML, MediaType.TEXT_XML,
 		MediaType.APPLICATION_JSON })
 @Consumes
-@RequestScoped
+@Stateless
 public class PatientREST {
 
 	@Inject
-	private PatientServiceImpl patientService;
+	PatientServiceImpl patientService;
 
 
 	@Path("/getPatient/{patientNumber}")
@@ -38,9 +39,8 @@ public class PatientREST {
 	@POST
 	@Path("/createPatient")
 	@Consumes(MediaType.APPLICATION_XML)
-	public Patient createPatient(Patient patient) {
-		Patient p1 = patientService.createPatient(patient);
-		return p1;
+	public Patient createPatientRDF(Patient patient) throws IOException {
+		return this.patientService.createPatientRDF(patient);
 	}
 
 	@POST
