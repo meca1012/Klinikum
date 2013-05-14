@@ -4,6 +4,9 @@ import static de.klinikum.domain.NameSpaces.LAST_ID;
 import static de.klinikum.domain.NameSpaces.TYPE_DATASTORE;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.annotation.PreDestroy;
 import javax.inject.Named;
@@ -15,11 +18,18 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.query.BindingSet;
+import org.openrdf.query.MalformedQueryException;
+import org.openrdf.query.QueryEvaluationException;
+import org.openrdf.query.TupleQuery;
+import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
 import org.openrdf.repository.http.HTTPRepository;
+
+
 
 
 @Named
@@ -140,9 +150,35 @@ public class SesameTripleStore {
 		setValue(this.datastoreURI.toString(), LAST_ID.toString(), value);
 //		return this.valueFactory.createURI(this.datastoreURI + "-gen" + value);
 		return this.valueFactory.createURI("/" + value);
-	}
-	
+	}	
+
 	public URI getDatastoreURI() {
 		return datastoreURI;
 	}	
+
+	//Führt eine SELECT SPARQL-Abfrage aus
+    public Set<HashMap<String,Value>> executeSelectSPARQLQuery(String queryString) throws IOException{
+    	try {
+    		TupleQuery query = this.con.prepareTupleQuery(org.openrdf.query.QueryLanguage.SPARQL, queryString);
+    		TupleQueryResult result = query.evaluate();
+    		Set<HashMap<String,Value>> resultList = new HashSet<HashMap<String,Value>>();
+    		while (result.hasNext()) {
+    			BindingSet bindingSet = result.next();
+    			Set<String> names = bindingSet.getBindingNames();
+    			HashMap<String,Value> map = new HashMap<String,Value>();
+    			for (String n : names) map.put(n, bindingSet.getValue(n));
+    			resultList.add(map);
+    		}
+    		result.close();
+    		return resultList;
+    	}
+    	catch (RepositoryException re) {
+    		throw new IOException(re);
+    	} catch (MalformedQueryException e) {
+    		throw new IOException(e);
+		} catch (QueryEvaluationException e) {
+			throw new IOException(e);
+		}
+    }
+
 }
