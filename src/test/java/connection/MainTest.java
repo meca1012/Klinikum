@@ -29,7 +29,7 @@ public class MainTest {
 		RepositoryConnection repoCon = conn.GetRepositoryConnection();
 
 		// Daten eintragen
-		System.out.println("THIS IS THE STATUS: " + repoCon.isOpen());
+		System.out.println("THIS IS THE STATUS: " + repoCon.isOpen());		
 
 		ValueFactory f = repoCon.getValueFactory();
 		URI alice = f.createURI("http://LmuKlinikum.de/patient/alice");
