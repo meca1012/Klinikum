@@ -40,6 +40,10 @@ public class PatientServiceImpl implements PatientService {
 		return p1;
 	}
 	
+	public Patient createPatientRDF(Patient patient) {
+		return null;
+	}
+	
 
 	@Override
 	public List<Patient> searchPatient(Patient patient) {
