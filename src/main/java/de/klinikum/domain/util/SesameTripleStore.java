@@ -2,6 +2,7 @@ package de.klinikum.domain.util;
 
 import static de.klinikum.domain.NameSpaces.LAST_ID;
 import static de.klinikum.domain.NameSpaces.TYPE_DATASTORE;
+import info.aduna.iteration.Iterations;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,11 +14,13 @@ import javax.annotation.PreDestroy;
 import javax.inject.Named;
 
 import org.openrdf.model.Literal;
+import org.openrdf.model.Model;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
+import org.openrdf.model.impl.LinkedHashModel;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
@@ -48,7 +51,7 @@ public class SesameTripleStore {
 	}
 	
 	@PostConstruct
-	public void SesameTripleStore() throws IOException {
+	public void initSesameTripleStore() throws IOException {
 		Repository repository;
 		repository = new HTTPRepository(this.sesameServer, this.repositoryID);
 		try {
@@ -185,5 +188,41 @@ public class SesameTripleStore {
 			throw new IOException(e);
 		}
     }
+    
+    public Model getStatementList(Resource subject, URI predicate, Value object) throws IOException, RepositoryException {
+    	RepositoryResult<Statement> statements = this.con.getStatements(subject, predicate,object, false);
+    	try {			
+			Model statementList = Iterations.addAll(statements, new LinkedHashModel());			
+			return statementList;
+		} catch (RepositoryException re) {
+			throw new IOException(re);
+		} finally {
+			statements.close();
+		}
+	}
+	
+	public Model getStatementList(String subject, String predicate, String object) throws IOException, RepositoryException {
+		URI subjectURI = null;
+		if (subject != null) subjectURI = valueFactory.createURI(subject);
+		URI predicateURI = null;
+		if (predicate != null) predicateURI = valueFactory.createURI(predicate);
+		URI objectURI = null;
+		if (object != null) objectURI = valueFactory.createURI(object);
+		return getStatementList(subjectURI, predicateURI, objectURI);
+	}
+	
+	public String getObjectString(String subjectUri, String predicateUri) throws RepositoryException, IOException {
+		URI subjectURI = null;
+		if (subjectUri != null) subjectURI = valueFactory.createURI(subjectUri);
+		URI predicateURI = null;
+		if (predicateUri != null) predicateURI = valueFactory.createURI(predicateUri);
+		URI objectURI = null;
+		Model toReturn = getStatementList(subjectURI, predicateURI, objectURI);
+		if(toReturn.size() == 1) {
+			return toReturn.objectString();
+		} else {
+			return null;
+		}
+	}
 
 }
