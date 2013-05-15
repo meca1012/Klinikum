@@ -65,7 +65,7 @@ public class PatientServiceImpl implements PatientService {
 		return patient;		
 	}
 	
-	public Address getAddressByUri(String adressUri) throws RepositoryException, IOException {		
+	public Address getAddressByUri(String adressUri) throws RepositoryException, IOException {
 		URI addressURI = this.tripleStore.getValueFactory().createURI(adressUri);
 		String addressStreet = this.tripleStore.getObjectString(addressURI.toString(), ADDRESS_HAS_ADDRESS_STREET.toString());
 		String addressCity = this.tripleStore.getObjectString(addressURI.toString(), ADDRESS_HAS_ADDRESS_CITY.toString());

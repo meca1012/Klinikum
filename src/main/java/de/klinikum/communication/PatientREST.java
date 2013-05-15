@@ -37,12 +37,12 @@ public class PatientREST {
 		String dateString = "01/08/1985";
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 				
-		Address a1 = new Address("de.spironto/address/" + "432432","Hauptstrass 12","Karlsruhe", "432433", "Deutschland", "081511833");
+		Address a1 = new Address("http://spironto.de/spironto#address-gen4","Hauptstrass 12","Karlsruhe", "432433", "Deutschland", "081511833");
 		a1.setUri("de.spironto/address/"+ "432432");		
 		
 		Patient p1 = new Patient();
 		p1.setAddress(a1);
-		p1.setUri("de.spironto/patient/"+ "432432");
+		p1.setUri("http://spironto.de/spironto#patient-gen5");
 		p1.setnName("Power");
 		p1.setvName("Max");
 		p1.setDateOfBirth(formatter.parse(dateString));
