@@ -23,6 +23,7 @@ import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.repository.RepositoryException;
 
+import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
 import de.klinikum.domain.util.SesameTripleStore;
 import de.klinikum.mock.PatientMock;
@@ -53,15 +54,24 @@ public class PatientServiceImpl implements PatientService {
 //	}
 	
 	public Patient getPatientByUri(Patient patient) throws RepositoryException, IOException {
-		String nName = this.tripleStore.getObjectString(patient.getUri().toString(), PERSON_HAS_NNAME.toString());
-		if(nName != null) {
-			patient.setnName(nName);
-		}
-		String vName = this.tripleStore.getObjectString(patient.getUri().toString(), PERSON_HAS_VNAME.toString());
-		if(vName != null) {
-			patient.setvName(vName);
-		}
+		URI patientURI = this.tripleStore.getValueFactory().createURI(patient.getUri().toString());
+		String vName = this.tripleStore.getObjectString(patientURI.toString(), PERSON_HAS_VNAME.toString());
+		String nName = this.tripleStore.getObjectString(patientURI.toString(), PERSON_HAS_NNAME.toString());		
+		String addressUri = this.tripleStore.getObjectString(patientURI.toString(), PERSON_HAS_ADDRESS.toString());
+		patient.setAddress(getAddressByUri(addressUri));
+		patient.setvName(vName);
+		patient.setnName(nName);
 		return patient;		
+	}
+	
+	public Address getAddressByUri(String adressUri) throws RepositoryException, IOException {		
+		URI addressURI = this.tripleStore.getValueFactory().createURI(adressUri);
+		String addressStreet = this.tripleStore.getObjectString(addressURI.toString(), ADDRESS_HAS_ADDRESS_STREET.toString());
+		String addressCity = this.tripleStore.getObjectString(addressURI.toString(), ADDRESS_HAS_ADDRESS_CITY.toString());
+		String addressZip = this.tripleStore.getObjectString(addressURI.toString(), ADDRESS_HAS_ADDRESS_ZIP.toString());
+		String addressCountry = this.tripleStore.getObjectString(addressURI.toString(), ADDRESS_IN_COUNTRY.toString());
+		String addressPhone = this.tripleStore.getObjectString(addressURI.toString(), ADDRESS_HAS_PHONENUMBER.toString());
+		return new Address(addressURI.toString(), addressStreet, addressCity, addressZip, addressCountry, addressPhone);
 	}
 
 
