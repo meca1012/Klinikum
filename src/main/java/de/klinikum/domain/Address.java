@@ -1,20 +1,32 @@
 package de.klinikum.domain;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 
-@XmlRootElement(name = "address")
-@XmlAccessorType(XmlAccessType.FIELD)
-public class Address {
+@XmlRootElement
+public class Address implements Serializable {
+
+	private static final long serialVersionUID = -773853139216571017L;
+	
 	private String uri;
+	
 	private String street;
+	
 	private String city;
+	
 	private String zip;
+	
 	private String country;
+	
 	private String phone;
+	
+	public Address()
+	{}
 	
 	public Address(String uri, String street, String city, String zip, String country, String phone)
 	{
@@ -26,7 +38,7 @@ public class Address {
 		this.phone = phone;
 		
 	}
-
+	
 	public String getUri() {
 		return uri;
 	}
@@ -35,7 +47,7 @@ public class Address {
 		this.uri = uri;
 	}
 	
-
+	
 	public String getStreet() {
 		return street;
 	}
@@ -52,7 +64,7 @@ public class Address {
 		this.city = city;
 	}
 	
-
+	
 	public String getZip() {
 		return zip;
 	}
@@ -60,7 +72,7 @@ public class Address {
 		this.zip = zip;
 	}
 	
-
+	
 	public String getCountry() {
 		return country;
 	}
