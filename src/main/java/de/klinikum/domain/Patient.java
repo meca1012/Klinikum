@@ -6,10 +6,10 @@ import java.util.Date;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import de.klinikum.helper.XmlDateAdapter;
 @XmlRootElement(name = "patient")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Patient implements Serializable {
@@ -24,7 +24,9 @@ public class Patient implements Serializable {
 	@XmlElement(name = "nName")
 	private String nName;
 	
-	//private Date dayOfBirth;
+	@XmlElement(name = "dateOfBirth")
+	@XmlJavaTypeAdapter(XmlDateAdapter.class)  
+	private Date dateOfBirth;
 	
 	@XmlElement(name="address")
 	private Address address;
@@ -73,12 +75,12 @@ public class Patient implements Serializable {
 	public void setAddress(Address address) {
 		this.address = address;
 	}
-//	@XmlTransient
-//	public Date getDayOfBirth() {
-//		return dayOfBirth;
-//	}
-//	public void setDayOfBirth(Date dayOfBirth) {
-//		this.dayOfBirth = dayOfBirth;
-//	}
+	
+	public Date getDateOfBirth() {
+		return dateOfBirth;
+	}
+	public void setDateOfBirth(Date dayOfBirth) {
+		this.dateOfBirth = dayOfBirth;
+	}
 	
 }

@@ -1,6 +1,7 @@
 package de.klinikum.service;
 import static de.klinikum.domain.NameSpaces.PERSON_HAS_NNAME;
 import static de.klinikum.domain.NameSpaces.PERSON_HAS_VNAME;
+import static de.klinikum.domain.NameSpaces.PERSON_HAS_DAY_OF_BIRTH;
 import static de.klinikum.domain.NameSpaces.ADDRESS_TYPE;
 import static de.klinikum.domain.NameSpaces.PERSON_HAS_ADDRESS;
 import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_ADDRESS_STREET;
@@ -83,9 +84,9 @@ public class PatientServiceImpl implements PatientService {
 		URI patientUri = this.tripleStore.getUniqueURI(PERSON_TYPE.toString());
 		URI addressUri = this.tripleStore.getUniqueURI(ADDRESS_TYPE.toString());
 		
-		//Adding URI to Patient E<lement
+		//Adding URI to Patient Element
 		patient.setUri(patientUri.toString());
-		patient.getAddress().setUri(addressUri.toString());		//		URI patientURI = this.tripleStore.getValueFactory().createURI(pUri);
+		patient.getAddress().setUri(addressUri.toString());
 		
 		//Creating Person_TYP URI -> Patient is RDF:TYPE Person
 		URI personTypeURI = this.tripleStore.getValueFactory().createURI(PERSON_TYPE.toString());
@@ -97,6 +98,7 @@ public class PatientServiceImpl implements PatientService {
 		//Creates URI pointing to Literals
 		URI hasNName = this.tripleStore.getValueFactory().createURI(PERSON_HAS_NNAME.toString());
 		URI hasVName = this.tripleStore.getValueFactory().createURI(PERSON_HAS_VNAME.toString());
+		URI hasdateOfBirth = this.tripleStore.getValueFactory().createURI(PERSON_HAS_DAY_OF_BIRTH.toString());
 		URI hasAddress = this.tripleStore.getValueFactory().createURI(PERSON_HAS_ADDRESS.toString());
 		
 		//Create Literal and Add to Sesame for FirstName
@@ -106,6 +108,11 @@ public class PatientServiceImpl implements PatientService {
 		//Create Literal and Add to Sesame for LastName
 		Literal nNameLiteral = this.tripleStore.getValueFactory().createLiteral(patient.getnName());
 		this.tripleStore.addTriple(patientUri, hasNName, nNameLiteral);
+		
+		
+		//Create Literal an Add to Sesame for DateOfBirth
+		Literal dateOfBirthLiteral = this.tripleStore.getValueFactory().createLiteral(patient.getDateOfBirth().toString());
+		this.tripleStore.addTriple(patientUri, hasdateOfBirth, dateOfBirthLiteral);
 		
 		//Create Address Element Triple
 		this.tripleStore.addTriple(patientUri, hasAddress, addressUri);

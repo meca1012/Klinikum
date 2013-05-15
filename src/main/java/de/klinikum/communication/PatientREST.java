@@ -2,6 +2,7 @@ package de.klinikum.communication;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -28,11 +29,14 @@ public class PatientREST {
 	@Inject
 	PatientServiceImpl patientService;
 
-	@Path("/getPatientXML/{patientNumber}")
+	@Path("/getPatientXML")
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
-	public Patient getPatientXML(@PathParam("patientNumber") String patientNumber) throws ParseException {
+	public Patient getPatientXML() throws ParseException {
 
+		String dateString = "01/08/1985";
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+				
 		Address a1 = new Address("de.spironto/address/" + "432432","Hauptstrass 12","Karlsruhe", "432433", "Deutschland", "081511833");
 		a1.setUri("de.spironto/address/"+ "432432");		
 		
@@ -41,6 +45,7 @@ public class PatientREST {
 		p1.setUri("de.spironto/patient/"+ "432432");
 		p1.setnName("Power");
 		p1.setvName("Max");
+		p1.setDateOfBirth(formatter.parse(dateString));
 		return p1;
 	}
 
@@ -56,6 +61,7 @@ public class PatientREST {
 	@Path("/createPatient")
 	@Consumes(MediaType.APPLICATION_XML)
 	public Patient createPatientRDF(Patient patient) throws IOException {
+		
 		return this.patientService.createPatientRDF(patient);
 	}
 	
