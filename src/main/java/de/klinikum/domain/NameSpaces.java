@@ -6,22 +6,20 @@ public enum NameSpaces {
 	
 	// RDF Type for Patient
 	// ------------------------RDF PATIENT CORE DATA------------------------------
-	PATIENT_TYPE("http://spironto.de/spironto#patient"),
+	PERSON_TYPE("http://spironto.de/spironto#patient"),
 	// RDF Predicates for Patient
 	
 
 	// RDF Type for PATEINT CORE DATA
 	// Includes Street vNAME / nName  / Nr / Zip / City / Country
-	COREDATA_TYPE("http://spironto.de/spironto#patientCoredataType"),
-	COREDATA("http://spironto.de/spironto#patientCoredata"),
-	COREDATA_VNAME("http://spironto.de/spironto#has-vname"),
-	COREDATA_NNAME("http://spironto.de/spironto#has-nname"),
-	COREDATA_DAYOFBIRTH("http://spironto.de/spironto#is-born-on"),
-	COREDATA_ADRESS_STREET("http://spironto.de/spironto#has-address-street"),
-	COREDATA_ADRESS_ZIP("http://spironto.de/spironto#has-address-zip"),
-	COREDATA_ADRESS_CITY("http://spironto.de/spironto#has-address-city"),
-	COREDATA_ADRESS_Country("http://spironto.de/spironto#has-laddress-country"),	
-	COREDATA_PHONE("http://spironto.de/spironto#has-phonenumber"),
+	PERSON_HAS_VNAME("http://spironto.de/spironto#has-vname"),
+	PERSON_HAS_NNAME("http://spironto.de/spironto#has-nname"),
+	PERSON_IS_BORN_ON("http://spironto.de/spironto#is-born-on"),
+	PERSON_HAS_ADDRESS_STREET("http://spironto.de/spironto#has-address-street"),
+	PERSON_HAS_ADDRESS_ZIP("http://spironto.de/spironto#has-address-zip"),
+	PERSON_HAS_ADDRESS_CITY("http://spironto.de/spironto#has-address-city"),
+	ADDRESS_COUNTRY("http://spironto.de/spironto#has-laddress-country"),	
+	PERSON_HAS_PHONENUMBER("http://spironto.de/spironto#has-phonenumber"),
 	
 	// ------------------------END RDF PATIENT CORE DATA------------------------------
 	
@@ -32,13 +30,13 @@ public enum NameSpaces {
 	TEXTBLOCK_TYPE("http://spironto.de/spironto#textBlock"),
 	TEXTBLOCK_TEXT("http://spironto.de/spironto#recorded-text"),
 	TEXTBLOCK_DATE("http://spironto.de/spironto#recorded-date"),
-	TEXTBLOCK_HEADTOPIC("http://spironto.de/spironto#head-topic"),
-	TEXTBLOCK_SUBTOPIC("http://spironto.de/spironto#head-topic"),
+	TEXTBLOCK_HAS_HEADCONCEPT("http://spironto.de/spironto#has-head-concept"),
+	TEXTBLOCK_HAS_CHILDCONCEP("http://spironto.de/spironto#has-child-concept"),
 		
 	// RDF Type for HeadTopic
 	// Used for SearchQuery like get everything linked to religion
-	HEADTOPIC("http://spironto.de/spironto#mainTopic"),
-
+	ONTOLOGIE_CONCEPT_TYPE("http://spironto.de/spironto#concept"),
+	
 	// RDF Type for SubTopyc 
 	// Used as Subtopic 
 	SUBTOPIC("http://spironto.de/spironto#subTopic"),

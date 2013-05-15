@@ -1,6 +1,6 @@
 package de.klinikum.service;
-import static de.klinikum.domain.NameSpaces.PATIENT_NAME;
-import static de.klinikum.domain.NameSpaces.PATIENT_TYPE;
+import static de.klinikum.domain.NameSpaces.PERSON_TYPE;
+import static de.klinikum.domain.NameSpaces.PERSON_HAS_NNAME;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,12 +54,12 @@ public class PatientServiceImpl implements PatientService {
 	
 	@Override
 	public Patient createPatientRDF(Patient patient) throws IOException {
-		String pUri = PATIENT_TYPE + this.tripleStore.getUniqueURI().toString();
+		String pUri = PERSON_TYPE + this.tripleStore.getUniqueURI().toString();
 		patient.setUri(pUri);
 		URI patientURI = this.tripleStore.getValueFactory().createURI(pUri);
-		URI patientTypeURI = this.tripleStore.getValueFactory().createURI(PATIENT_TYPE.toString());
+		URI patientTypeURI = this.tripleStore.getValueFactory().createURI(PERSON_TYPE.toString());
 		this.tripleStore.addTriple(patientURI, RDF.TYPE, patientTypeURI);
-		URI hasName = this.tripleStore.getValueFactory().createURI(PATIENT_NAME.toString());
+		URI hasName = this.tripleStore.getValueFactory().createURI(PERSON_HAS_NNAME.toString());
 		Literal patientName = this.tripleStore.getValueFactory().createLiteral(patient.getvName() + ", " + patient.getnName());
 		this.tripleStore.addTriple(patientURI, hasName, patientName);		
 		return patient;
