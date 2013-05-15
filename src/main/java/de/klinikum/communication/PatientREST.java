@@ -33,12 +33,12 @@ public class PatientREST {
 	@Produces(MediaType.APPLICATION_XML)
 	public Patient getPatientXML(@PathParam("patientNumber") String patientNumber) throws ParseException {
 
-		Address a1 = new Address("de.spironto/address/" + "432432","Hauptstrass 12","Karlsruhe", "432433", "Deutschland", "081511833");
-		a1.setUri("de.spironto/address/"+ "432432");		
+		Address a1 = new Address("http://spironto.de/spironto#address-gen5","Hauptstrass 12","Karlsruhe", "432433", "Deutschland", "081511833");
+		a1.setUri("de.spironto/address/"+ "432432");
 		
 		Patient p1 = new Patient();
 		p1.setAddress(a1);
-		p1.setUri("de.spironto/patient/"+ "432432");
+		p1.setUri("http://spironto.de/spironto#patient-gen4");
 		p1.setnName("Power");
 		p1.setvName("Max");
 		return p1;
