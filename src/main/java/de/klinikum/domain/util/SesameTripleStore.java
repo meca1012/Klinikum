@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Named;
 
@@ -43,7 +44,11 @@ public class SesameTripleStore {
 	private String repositoryID = "TestNative";
 	public static final String SPIRONTO_NS = "http://spironto.de/ns/1.0#";
 	
-	public SesameTripleStore() throws IOException {
+	public SesameTripleStore() {		
+	}
+	
+	@PostConstruct
+	public void SesameTripleStore() throws IOException {
 		Repository repository;
 		repository = new HTTPRepository(this.sesameServer, this.repositoryID);
 		try {
@@ -74,7 +79,7 @@ public class SesameTripleStore {
 		} else {
 			statements.close();
 			this.datastoreURI = this.valueFactory.createURI(SPIRONTO_NS);
-			addTriple(this.datastoreURI, RDF.TYPE, typeDatastore);
+			addTriple(this.datastoreURI.toString(), RDF.TYPE.toString(), typeDatastore.toString());
 			setValue(this.datastoreURI.toString(), LAST_ID.toString(), 0);
 		}
 	}
@@ -110,6 +115,7 @@ public class SesameTripleStore {
 		try {
 			this.con.remove(subject, predicate, object);
 		} catch(RepositoryException re) {
+			System.out.println(re.getMessage());
 			throw new IOException(re);
 		}
 	}
@@ -143,13 +149,13 @@ public class SesameTripleStore {
 	}
 	
 	//Liefert eine eindeutige URI bestehend aus "namespace -gen sequenz"
-	public URI getUniqueURI() throws IOException {
+	public URI getUniqueURI(String objectURI) throws IOException {
 		int value = getValue(this.datastoreURI.toString(), LAST_ID.toString());
 		removeTriples(this.datastoreURI.toString(), LAST_ID.toString(), null);
 		value++;
 		setValue(this.datastoreURI.toString(), LAST_ID.toString(), value);
-//		return this.valueFactory.createURI(this.datastoreURI + "-gen" + value);
-		return this.valueFactory.createURI("/" + value);
+		return this.valueFactory.createURI(objectURI + "-gen" + value);
+//		return this.valueFactory.createURI("/" + value);
 	}	
 
 	public URI getDatastoreURI() {

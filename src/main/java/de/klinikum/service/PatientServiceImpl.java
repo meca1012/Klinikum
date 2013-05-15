@@ -54,14 +54,14 @@ public class PatientServiceImpl implements PatientService {
 	
 	@Override
 	public Patient createPatientRDF(Patient patient) throws IOException {
-		String pUri = PERSON_TYPE + this.tripleStore.getUniqueURI().toString();
-		patient.setUri(pUri);
-		URI patientURI = this.tripleStore.getValueFactory().createURI(pUri);
-		URI patientTypeURI = this.tripleStore.getValueFactory().createURI(PERSON_TYPE.toString());
-		this.tripleStore.addTriple(patientURI, RDF.TYPE, patientTypeURI);
+		URI pUri = this.tripleStore.getUniqueURI(PERSON_TYPE.toString());
+		patient.setUri(pUri.toString());
+//		URI patientURI = this.tripleStore.getValueFactory().createURI(pUri);
+		URI personTypeURI = this.tripleStore.getValueFactory().createURI(PERSON_TYPE.toString());
+		this.tripleStore.addTriple(pUri, RDF.TYPE, personTypeURI);
 		URI hasName = this.tripleStore.getValueFactory().createURI(PERSON_HAS_NNAME.toString());
 		Literal patientName = this.tripleStore.getValueFactory().createLiteral(patient.getvName() + ", " + patient.getnName());
-		this.tripleStore.addTriple(patientURI, hasName, patientName);		
+		this.tripleStore.addTriple(pUri, hasName, patientName);
 		return patient;
 	}
 	
