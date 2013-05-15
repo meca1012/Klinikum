@@ -25,16 +25,16 @@ public class PatientServiceTest {
 	public void testCreatePatient() throws IOException {
 		
 		Patient patient = new Patient();
-		patient.setvName("alice");
-		patient.setnName("smith");
+		patient.setFirstName("alice");
+		patient.setLastName("smith");
 		
 		Address address = new Address(null, "Moltkestraﬂe", "Karlsruhe", "76133", "D", "00");
 		patient.setAddress(address);
 		
 		Patient patient1 = this.patientService.createPatientRDF(patient);
 		
-		assertEquals(patient.getvName(), patient1.getvName());
-		assertEquals(patient.getnName(), patient1.getnName());
+		assertEquals(patient.getFirstName(), patient1.getFirstName());
+		assertEquals(patient.getLastName(), patient1.getLastName());
 		assertNotNull(patient.getUri());
 		assertEquals(patient.getAddress().getStreet(), patient1.getAddress().getStreet());
 		assertEquals(patient.getAddress().getCity(), patient1.getAddress().getCity());
@@ -53,8 +53,8 @@ public class PatientServiceTest {
 		patient = this.patientService.getPatientByUri(patient);
 		
 		assertEquals(this.patientUri, patient.getUri());
-		assertNotNull(patient.getvName());
-		assertNotNull(patient.getnName());
+		assertNotNull(patient.getFirstName());
+		assertNotNull(patient.getLastName());
 		assertNotNull(patient.getAddress());
 	}
 }

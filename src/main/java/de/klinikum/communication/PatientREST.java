@@ -42,8 +42,8 @@ public class PatientREST {
 		Patient p1 = new Patient();
 		p1.setAddress(a1);
 		p1.setUri("http://spironto.de/spironto#patient-gen5");
-		p1.setnName("Power");
-		p1.setvName("Max");
+		p1.setLastName("Power");
+		p1.setFirstName("Max");
 		p1.setDateOfBirth(formatter.parse(dateString));
 		return p1;
 	}

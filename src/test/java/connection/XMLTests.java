@@ -37,8 +37,8 @@ public class XMLTests {
 		Patient p1 = new Patient();
 		p1.setAddress(a1);
 		p1.setUri("de.spironto/patient/"+ "432432");
-		p1.setnName("Power");
-		p1.setvName("Max");  
+		p1.setLastName("Power");
+		p1.setFirstName("Max");  
 		
 		StringWriter test = null;
 		this.marshaller.marshal(p1, test);
