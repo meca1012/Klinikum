@@ -162,11 +162,5 @@ public class PatientServiceImpl implements PatientService {
 		
 		return null;
 	}
-
-	private  String  createPatientNumber() {
-		int rnd = (int) (Math.random() * (9999999 - 1000000) + 1000000);
-		return String.valueOf(rnd);
-	}
-
 	
 }
