@@ -48,7 +48,7 @@ public class SesameTripleStore {
 	}
 	
 	@PostConstruct
-	public void SesameTripleStore() throws IOException {
+	public void InitSesameTripleStore() throws IOException {
 		Repository repository;
 		repository = new HTTPRepository(this.sesameServer, this.repositoryID);
 		try {

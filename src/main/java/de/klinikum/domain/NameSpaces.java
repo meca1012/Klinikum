@@ -7,7 +7,7 @@ public enum NameSpaces {
 	// RDF Type for Patient
 	// ------------------------RDF PATIENT + ADRESS_TYPE------------------------------
 	PERSON_TYPE("http://spironto.de/spironto#patient"),
-	ADRESS_TYPE("http://spironto.de/spironto#address"),
+	ADDRESS_TYPE("http://spironto.de/spironto#address"),
 	
 	// RDF Predicates for Patient
 	
@@ -20,11 +20,11 @@ public enum NameSpaces {
 	PERSON_HAS_ADDRESS("http://spironto.de/spironto#has-address"),
 	PERSON_HAS_TEXTBLOCK("http://spironto.de/spironto#has-textblock"),
 	PERSON_POINTS_TO_CONCEPT("http://spironto.de/spironto#person-points-to-concept"),
-	ADRESS_HAS_ADDRESS_STREET("http://spironto.de/spironto#has-address-street"),
-	ADRESS_HAS_ADDRESS_ZIP("http://spironto.de/spironto#has-address-zip"),
-	ADRESS_HAS_ADDRESS_CITY("http://spironto.de/spironto#has-address-city"),
+	ADDRESS_HAS_ADDRESS_STREET("http://spironto.de/spironto#has-address-street"),
+	ADDRESS_HAS_ADDRESS_ZIP("http://spironto.de/spironto#has-address-zip"),
+	ADDRESS_HAS_ADDRESS_CITY("http://spironto.de/spironto#has-address-city"),
 	ADDRESS_IN_COUNTRY("http://spironto.de/spironto#has-laddress-country"),	
-	ADRESS_HAS_PHONENUMBER("http://spironto.de/spironto#has-phonenumber"),
+	ADDRESS_HAS_PHONENUMBER("http://spironto.de/spironto#has-phonenumber"),
 	
 	// ------------------------END RDF PATIENT CORE DATA------------------------------
 	

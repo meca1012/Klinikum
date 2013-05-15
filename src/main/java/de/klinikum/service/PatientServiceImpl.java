@@ -1,13 +1,22 @@
 package de.klinikum.service;
 import static de.klinikum.domain.NameSpaces.PERSON_TYPE;
 import static de.klinikum.domain.NameSpaces.PERSON_HAS_NNAME;
+import static de.klinikum.domain.NameSpaces.PERSON_HAS_VNAME;
+import static de.klinikum.domain.NameSpaces.ADDRESS_TYPE;
+import static de.klinikum.domain.NameSpaces.PERSON_HAS_ADDRESS;
+import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_ADDRESS_STREET;
+import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_ADDRESS_ZIP;
+import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_ADDRESS_CITY;
+import static de.klinikum.domain.NameSpaces.ADDRESS_IN_COUNTRY;
+import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_PHONENUMBER;
+
+
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -39,29 +48,63 @@ public class PatientServiceImpl implements PatientService {
         System.out.println("PatientService created");
     }
 	
-	public Patient getPatientPatientnumber(String patientNumber) {
-		Patient p1 = new Patient("de.spironto/patient/" + patientNumber, "Max", "Power");
-		return p1;
-	}
 
-
-	@Override
-	public Patient createPatient(Patient patient) {
-		// TODO Implement Search- Functionality
-		Patient p1 = new Patient("de.spironto/patient/" + createPatientNumber() , patient.getvName(), patient.getnName());
-		return p1;
-	}
 	
 	@Override
 	public Patient createPatientRDF(Patient patient) throws IOException {
-		URI pUri = this.tripleStore.getUniqueURI(PERSON_TYPE.toString());
-		patient.setUri(pUri.toString());
-//		URI patientURI = this.tripleStore.getValueFactory().createURI(pUri);
+		
+		//Get Unique PatientURI Prefix
+		URI patientUri = this.tripleStore.getUniqueURI(PERSON_TYPE.toString());
+		URI addressUri = this.tripleStore.getUniqueURI(ADDRESS_TYPE.toString());
+		
+		//Adding URI to Patient E<lement
+		patient.setUri(patientUri.toString());
+		patient.getAddress().setUri(addressUri.toString());		//		URI patientURI = this.tripleStore.getValueFactory().createURI(pUri);
+		
+		//Creating Person_TYP URI -> Patient is RDF:TYPE Person
 		URI personTypeURI = this.tripleStore.getValueFactory().createURI(PERSON_TYPE.toString());
-		this.tripleStore.addTriple(pUri, RDF.TYPE, personTypeURI);
-		URI hasName = this.tripleStore.getValueFactory().createURI(PERSON_HAS_NNAME.toString());
-		Literal patientName = this.tripleStore.getValueFactory().createLiteral(patient.getvName() + ", " + patient.getnName());
-		this.tripleStore.addTriple(pUri, hasName, patientName);
+		URI addressTypeURI = this.tripleStore.getValueFactory().createURI(ADDRESS_TYPE.toString()); 
+		
+		this.tripleStore.addTriple(patientUri, RDF.TYPE, personTypeURI);
+		this.tripleStore.addTriple(addressUri, RDF.TYPE, addressTypeURI);
+		
+		//Creates URI pointing to Literals
+		URI hasNName = this.tripleStore.getValueFactory().createURI(PERSON_HAS_NNAME.toString());
+		URI hasVName = this.tripleStore.getValueFactory().createURI(PERSON_HAS_VNAME.toString());
+		URI hasAddress = this.tripleStore.getValueFactory().createURI(PERSON_HAS_ADDRESS.toString());
+		
+		//Create Literal and Add to Sesame for FirstName
+		Literal vNameLiteral = this.tripleStore.getValueFactory().createLiteral(patient.getvName());
+		this.tripleStore.addTriple(patientUri, hasVName, vNameLiteral);
+		
+		//Create Literal and Add to Sesame for LastName
+		Literal nNameLiteral = this.tripleStore.getValueFactory().createLiteral(patient.getnName());
+		this.tripleStore.addTriple(patientUri, hasNName, nNameLiteral);
+		
+		//Create Address Element Triple
+		this.tripleStore.addTriple(patientUri, hasAddress, addressUri);
+
+		//Create Predicate for AddressRessource
+		URI hasStreet = this.tripleStore.getValueFactory().createURI(ADDRESS_HAS_ADDRESS_STREET.toString());
+		URI hasZip = this.tripleStore.getValueFactory().createURI(ADDRESS_HAS_ADDRESS_ZIP.toString());
+		URI hasCity = this.tripleStore.getValueFactory().createURI(ADDRESS_HAS_ADDRESS_CITY.toString());
+		URI hasCountry = this.tripleStore.getValueFactory().createURI(ADDRESS_IN_COUNTRY.toString());
+		URI hasPhone = this.tripleStore.getValueFactory().createURI(ADDRESS_HAS_PHONENUMBER.toString());
+		
+		//Creating Address Literals
+		Literal adressStreetLiteral = this.tripleStore.getValueFactory().createLiteral(patient.getAddress().getStreet());
+		Literal adressZipLiteral = this.tripleStore.getValueFactory().createLiteral(patient.getAddress().getZip());
+		Literal adressCityLiteral = this.tripleStore.getValueFactory().createLiteral(patient.getAddress().getCity());
+		Literal adressCountryLiteral = this.tripleStore.getValueFactory().createLiteral(patient.getAddress().getCountry());
+		Literal adressPhoneLiteral = this.tripleStore.getValueFactory().createLiteral(patient.getAddress().getPhone());
+		
+		//Adding Literals to Triples
+		this.tripleStore.addTriple(addressUri, hasStreet, adressStreetLiteral);
+		this.tripleStore.addTriple(addressUri, hasZip, adressZipLiteral);
+		this.tripleStore.addTriple(addressUri, hasCity, adressCityLiteral);
+		this.tripleStore.addTriple(addressUri, hasCountry, adressCountryLiteral);
+		this.tripleStore.addTriple(addressUri, hasPhone, adressPhoneLiteral);
+		
 		return patient;
 	}
 	

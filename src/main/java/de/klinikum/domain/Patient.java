@@ -1,11 +1,16 @@
 package de.klinikum.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement(name = "patient")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Patient implements Serializable {
 
 	private static final long serialVersionUID = 1199647317278849602L;
@@ -15,18 +20,22 @@ public class Patient implements Serializable {
 	private String vName;
 
 	private String nName;
+	
+	//private Date dayOfBirth;
+	private Address address;
+	
 
 	public Patient() {
 	}
 
-	public Patient(String uri, String vName, String nName) {
+	public Patient(String uri, String vName, String nName, Address address) {
 
 		this.uri = uri;
 		this.vName = vName;
 		this.nName = nName;
+		this.address = address;
 	}
 
-	@XmlElement
 	public String getUri() {
 		return uri;
 	}
@@ -34,8 +43,7 @@ public class Patient implements Serializable {
 	public void setUri(String uri) {
 		this.uri = uri;
 	}
-
-	@XmlElement
+	
 	public String getvName() {
 		return vName;
 	}
@@ -44,7 +52,6 @@ public class Patient implements Serializable {
 		this.vName = vName;
 	}
 
-	@XmlElement
 	public String getnName() {
 		return nName;
 	}
@@ -52,4 +59,20 @@ public class Patient implements Serializable {
 	public void setnName(String nName) {
 		this.nName = nName;
 	}
+	 @XmlElement(name="address")
+	public Address getAddress() {
+		return address;
+	}
+	
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
+//	public Date getDayOfBirth() {
+//		return dayOfBirth;
+//	}
+//	public void setDayOfBirth(Date dayOfBirth) {
+//		this.dayOfBirth = dayOfBirth;
+//	}
+	
 }
