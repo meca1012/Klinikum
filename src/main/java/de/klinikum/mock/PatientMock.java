@@ -10,7 +10,7 @@ public class PatientMock {
 	public static List<Patient> getMockPatientList()
 	{
 		String uriHelper = "de.spironto/patient/";
-		Address a1 = new Address("Hauptstrass 12","Karlsruhe", "432433", "Deutschland", "081511833");
+		Address a1 = new Address("de.spironto/address/"+ "432432","Hauptstrass 12","Karlsruhe", "432433", "Deutschland", "081511833");
 		
 		List<Patient> mockList = new ArrayList<Patient>();
 		mockList.add(new Patient(uriHelper + "1111111", "Hanna", "Schmitt",a1));

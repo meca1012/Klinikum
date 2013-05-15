@@ -16,8 +16,9 @@ public class Address {
 	private String country;
 	private String phone;
 	
-	public Address(String street, String city, String zip, String country, String phone)
+	public Address(String uri, String street, String city, String zip, String country, String phone)
 	{
+		this.uri = uri;
 		this.street = street;
 		this.city = city;
 		this.zip = zip;
