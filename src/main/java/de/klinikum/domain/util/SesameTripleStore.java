@@ -57,7 +57,6 @@ public class SesameTripleStore {
 			this.valueFactory = repository.getValueFactory();
 			this.con = repository.getConnection();
 			initRepository(this.con);
-			this.con.begin();
 		} catch(RepositoryException e) {
 			throw new IOException(e);
 		}		
