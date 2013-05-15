@@ -21,7 +21,7 @@ public class Patient implements Serializable {
 
 	private String nName;
 	
-	//private Date dayOfBirth;
+	private Date dayOfBirth;
 	private Address address;
 	
 
@@ -68,11 +68,11 @@ public class Patient implements Serializable {
 		this.address = address;
 	}
 
-//	public Date getDayOfBirth() {
-//		return dayOfBirth;
-//	}
-//	public void setDayOfBirth(Date dayOfBirth) {
-//		this.dayOfBirth = dayOfBirth;
-//	}
+	public Date getDayOfBirth() {
+		return dayOfBirth;
+	}
+	public void setDayOfBirth(Date dayOfBirth) {
+		this.dayOfBirth = dayOfBirth;
+	}
 	
 }
