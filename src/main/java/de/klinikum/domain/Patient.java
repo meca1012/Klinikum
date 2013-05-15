@@ -18,11 +18,11 @@ public class Patient implements Serializable {
 	@XmlElement(name = "uri")
 	private String uri;
 
-	@XmlElement(name = "vName")
-	private String vName;
+	@XmlElement(name = "firstName")
+	private String firstName;
 
-	@XmlElement(name = "nName")
-	private String nName;
+	@XmlElement(name = "lastName")
+	private String lastName;
 	
 	@XmlElement(name = "dateOfBirth")
 	@XmlJavaTypeAdapter(XmlDateAdapter.class)  
@@ -35,11 +35,11 @@ public class Patient implements Serializable {
 	public Patient() {
 	}
 
-	public Patient(String uri, String vName, String nName, Address address) {
+	public Patient(String uri, String firstName, String lastName, Address address) {
 
 		this.uri = uri;
-		this.vName = vName;
-		this.nName = nName;
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.address = address;
 	}
 	
@@ -52,20 +52,20 @@ public class Patient implements Serializable {
 	}
 	
 	
-	public String getvName() {
-		return vName;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setvName(String vName) {
-		this.vName = vName;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 	
-	public String getnName() {
-		return nName;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setnName(String nName) {
-		this.nName = nName;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 	
 	public Address getAddress() {

@@ -13,9 +13,9 @@ public enum NameSpaces {
 	
 
 	// RDF Type for PATEINT CORE DATA
-	// Includes Street vNAME / nName  / Nr / Zip / City / Country
-	PERSON_HAS_VNAME("http://spironto.de/spironto#has-vname"),
-	PERSON_HAS_NNAME("http://spironto.de/spironto#has-nname"),
+	// Includes Street last name / first name  / Nr / Zip / City / Country
+	PERSON_HAS_FIRSTNAME("http://spironto.de/spironto#has-first-name"),
+	PERSON_HAS_LASTNAME("http://spironto.de/spironto#has-last-name"),
 	PERSON_HAS_DAY_OF_BIRTH("http://spironto.de/spironto#is-born-on"),
 	PERSON_HAS_ADDRESS("http://spironto.de/spironto#has-address"),
 	PERSON_HAS_TEXTBLOCK("http://spironto.de/spironto#has-textblock"),

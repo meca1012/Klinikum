@@ -11,7 +11,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import de.klinikum.domain.Address;
@@ -43,8 +42,8 @@ public class PatientREST {
 		Patient p1 = new Patient();
 		p1.setAddress(a1);
 		p1.setUri("http://spironto.de/spironto#patient-gen5");
-		p1.setnName("Power");
-		p1.setvName("Max");
+		p1.setLastName("Power");
+		p1.setFirstName("Max");
 		p1.setDateOfBirth(formatter.parse(dateString));
 		return p1;
 	}

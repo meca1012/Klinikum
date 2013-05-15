@@ -1,6 +1,6 @@
 package de.klinikum.service;
-import static de.klinikum.domain.NameSpaces.PERSON_HAS_NNAME;
-import static de.klinikum.domain.NameSpaces.PERSON_HAS_VNAME;
+import static de.klinikum.domain.NameSpaces.PERSON_HAS_LASTNAME;
+import static de.klinikum.domain.NameSpaces.PERSON_HAS_FIRSTNAME;
 import static de.klinikum.domain.NameSpaces.PERSON_HAS_DAY_OF_BIRTH;
 import static de.klinikum.domain.NameSpaces.ADDRESS_TYPE;
 import static de.klinikum.domain.NameSpaces.PERSON_HAS_ADDRESS;
@@ -56,12 +56,12 @@ public class PatientServiceImpl implements PatientService {
 	
 	public Patient getPatientByUri(Patient patient) throws RepositoryException, IOException {
 		URI patientURI = this.tripleStore.getValueFactory().createURI(patient.getUri().toString());
-		String vName = this.tripleStore.getObjectString(patientURI.toString(), PERSON_HAS_VNAME.toString());
-		String nName = this.tripleStore.getObjectString(patientURI.toString(), PERSON_HAS_NNAME.toString());		
+		String firstName = this.tripleStore.getObjectString(patientURI.toString(), PERSON_HAS_FIRSTNAME.toString());
+		String lastName = this.tripleStore.getObjectString(patientURI.toString(), PERSON_HAS_LASTNAME.toString());		
 		String addressUri = this.tripleStore.getObjectString(patientURI.toString(), PERSON_HAS_ADDRESS.toString());
 		patient.setAddress(getAddressByUri(addressUri));
-		patient.setvName(vName);
-		patient.setnName(nName);
+		patient.setFirstName(firstName);
+		patient.setLastName(lastName);
 		return patient;		
 	}
 	
@@ -96,18 +96,18 @@ public class PatientServiceImpl implements PatientService {
 		this.tripleStore.addTriple(addressUri, RDF.TYPE, addressTypeURI);
 		
 		//Creates URI pointing to Literals
-		URI hasNName = this.tripleStore.getValueFactory().createURI(PERSON_HAS_NNAME.toString());
-		URI hasVName = this.tripleStore.getValueFactory().createURI(PERSON_HAS_VNAME.toString());
+		URI hastLastName = this.tripleStore.getValueFactory().createURI(PERSON_HAS_LASTNAME.toString());
+		URI hasFirstName = this.tripleStore.getValueFactory().createURI(PERSON_HAS_FIRSTNAME.toString());
 		URI hasdateOfBirth = this.tripleStore.getValueFactory().createURI(PERSON_HAS_DAY_OF_BIRTH.toString());
 		URI hasAddress = this.tripleStore.getValueFactory().createURI(PERSON_HAS_ADDRESS.toString());
 		
 		//Create Literal and Add to Sesame for FirstName
-		Literal vNameLiteral = this.tripleStore.getValueFactory().createLiteral(patient.getvName());
-		this.tripleStore.addTriple(patientUri, hasVName, vNameLiteral);
+		Literal firstnameLiteral = this.tripleStore.getValueFactory().createLiteral(patient.getFirstName());
+		this.tripleStore.addTriple(patientUri, hasFirstName, firstnameLiteral);
 		
 		//Create Literal and Add to Sesame for LastName
-		Literal nNameLiteral = this.tripleStore.getValueFactory().createLiteral(patient.getnName());
-		this.tripleStore.addTriple(patientUri, hasNName, nNameLiteral);
+		Literal lastnameiteral = this.tripleStore.getValueFactory().createLiteral(patient.getLastName());
+		this.tripleStore.addTriple(patientUri, hastLastName, lastnameiteral);
 		
 		
 		//Create Literal an Add to Sesame for DateOfBirth
@@ -149,7 +149,7 @@ public class PatientServiceImpl implements PatientService {
 		List<Patient> returnlist = new ArrayList<Patient>();
 		for(Patient p : mocklist)
 		{
-			if(p.getnName().equals(patient.getnName()))
+			if(p.getLastName().equals(patient.getLastName()))
 			{
 				returnlist.add(p);
 			}		
@@ -162,11 +162,5 @@ public class PatientServiceImpl implements PatientService {
 		
 		return null;
 	}
-
-	private  String  createPatientNumber() {
-		int rnd = (int) (Math.random() * (9999999 - 1000000) + 1000000);
-		return String.valueOf(rnd);
-	}
-
 	
 }
