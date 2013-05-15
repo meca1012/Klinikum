@@ -13,8 +13,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
 import de.klinikum.domain.Address;
+import org.openrdf.repository.RepositoryException;
 import de.klinikum.domain.Patient;
 import de.klinikum.service.PatientServiceImpl;
 
@@ -56,6 +56,13 @@ public class PatientREST {
 	@Consumes(MediaType.APPLICATION_XML)
 	public Patient createPatientRDF(Patient patient) throws IOException {
 		return this.patientService.createPatientRDF(patient);
+	}
+	
+	@POST
+	@Path("/getPatientByUri")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Patient getPatientByUri(Patient patient) throws IOException, RepositoryException {
+		return this.patientService.getPatientByUri(patient);
 	}
 
 	@POST

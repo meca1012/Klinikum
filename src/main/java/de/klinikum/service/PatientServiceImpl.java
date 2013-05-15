@@ -1,5 +1,4 @@
 package de.klinikum.service;
-import static de.klinikum.domain.NameSpaces.PERSON_TYPE;
 import static de.klinikum.domain.NameSpaces.PERSON_HAS_NNAME;
 import static de.klinikum.domain.NameSpaces.PERSON_HAS_VNAME;
 import static de.klinikum.domain.NameSpaces.ADDRESS_TYPE;
@@ -9,8 +8,7 @@ import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_ADDRESS_ZIP;
 import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_ADDRESS_CITY;
 import static de.klinikum.domain.NameSpaces.ADDRESS_IN_COUNTRY;
 import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_PHONENUMBER;
-
-
+import static de.klinikum.domain.NameSpaces.PERSON_TYPE;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,6 +21,7 @@ import javax.inject.Named;
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.repository.RepositoryException;
 
 import de.klinikum.domain.Patient;
 import de.klinikum.domain.util.SesameTripleStore;
@@ -48,6 +47,23 @@ public class PatientServiceImpl implements PatientService {
         System.out.println("PatientService created");
     }
 	
+//	public Patient getPatientPatientnumber(String patientNumber) {
+//		Patient p1 = new Patient("de.spironto/patient/" + patientNumber, "Max", "Power");
+//		return p1;
+//	}
+	
+	public Patient getPatientByUri(Patient patient) throws RepositoryException, IOException {
+		String nName = this.tripleStore.getObjectString(patient.getUri().toString(), PERSON_HAS_NNAME.toString());
+		if(nName != null) {
+			patient.setnName(nName);
+		}
+		String vName = this.tripleStore.getObjectString(patient.getUri().toString(), PERSON_HAS_VNAME.toString());
+		if(vName != null) {
+			patient.setvName(vName);
+		}
+		return patient;		
+	}
+
 
 	
 	@Override
@@ -123,6 +139,11 @@ public class PatientServiceImpl implements PatientService {
 		}
 		
 		return returnlist;
+	}
+	
+	public List<Patient> searchPatientByName(Patient patient) {
+		
+		return null;
 	}
 
 	private  String  createPatientNumber() {
