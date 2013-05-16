@@ -18,7 +18,7 @@ import org.openrdf.repository.RepositoryException;
 
 import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
-import de.klinikum.service.PatientService;
+import de.klinikum.persistence.SesameTripleStore;
 import de.klinikum.service.PatientServiceImpl;
 
 @RunWith(Arquillian.class)
@@ -34,7 +34,8 @@ public class PatientServiceTest {
 	@Deployment
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class)
-            .addClass(PatientService.class)
+            .addClass(PatientServiceImpl.class)
+            .addClass(SesameTripleStore.class)
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 	
