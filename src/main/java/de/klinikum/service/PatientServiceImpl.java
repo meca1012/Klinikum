@@ -26,8 +26,8 @@ import org.openrdf.repository.RepositoryException;
 
 import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
-import de.klinikum.domain.util.SesameTripleStore;
 import de.klinikum.mock.PatientMock;
+import de.klinikum.persistence.SesameTripleStore;
 
 @Named
 public class PatientServiceImpl implements PatientService {
