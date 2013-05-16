@@ -180,6 +180,12 @@ public class PatientServiceImpl implements PatientService {
 		return returnlist;
 	}
 	
+	public List<Patient> searchPatientSPARQL(Patient patient) {
+		String queryString = "";
+		queryString = "SELECT ?patient WHERE {?patient " + RDF.TYPE + "" + "}";
+		return null;
+	}
+	
 	public List<Patient> searchPatientByName(Patient patient) {
 		
 		return null;
