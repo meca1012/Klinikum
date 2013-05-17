@@ -43,7 +43,6 @@ public class SesameTripleStore {
 	private ValueFactory valueFactory;
 	private String sesameServer = "http://localhost:8080/openrdf-sesame";
 	private URI datastoreURI;
-	//TODO: verschiedene store arten evaluieren
 	private String repositoryID = "TestNative";
 	public static final String SPIRONTO_NS = "http://spironto.de/ns/1.0#";
 	
@@ -56,7 +55,7 @@ public class SesameTripleStore {
 		repository = new HTTPRepository(this.sesameServer, this.repositoryID);
 		try {
 			repository.initialize();
-			//TODO: check Valuefactory aus connection oder repository
+			//TODO: check Valuefactory from connection oder repository
 			this.valueFactory = repository.getValueFactory();
 			this.con = repository.getConnection();
 			initRepository(this.con);
