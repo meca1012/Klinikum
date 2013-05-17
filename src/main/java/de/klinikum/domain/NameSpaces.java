@@ -44,11 +44,17 @@ public enum NameSpaces {
 	ONTOLOGIE_CONCEPT_TYPE("http://spironto.de/spironto#concept"),
 	ONTOLOGIE_CONCEPT_HAS_LABEL("http://spironto.de/spironto#concept-has-label"),
 
+	// Defined a Tap-Element in the GUI
+	// Predefined Topic
+	GUI_TAB_TYPE("http://spironto.de/spironto#gui-tab-type"),
+	GUI_TAB_TYPE_HAS_VALUE("http://spironto.de/spironto#gui-tab-type-has-value"),
 
-
+	
+    //GEDANKEN MACHEN
 	// Predefined Topic
 	RELIGION_TYPE("http://spironto.de/spironto#head-topic"),
-	
+
+	//GEDANKEN MACHEN
 	// PalliativeTeam 
 	// Doctors, Nurses, Social worker
 	PTEAM_TYPE("http://sprironto.de//spironto#pTeam"),
@@ -56,8 +62,8 @@ public enum NameSpaces {
 	
 	
 	
-	///Technisch
-	//ID zur generierung von einzigartigen URI's
+	///Technical
+	//ID for the generation of unique URIs
 	LAST_ID("http://spironto.de/spironto#lastID"),
 	TYPE_DATASTORE("http://spironto.de/spironto#Datastore"),
 	DATE_ADDED("http://spironto.de/spironto#dateAdded"),	

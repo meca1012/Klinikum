@@ -164,7 +164,7 @@ public class SesameTripleStore {
 		return datastoreURI;
 	}	
 
-	//Führt eine SELECT SPARQL-Abfrage aus
+	//Execute a SELECT SPARQL query
     public Set<HashMap<String,Value>> executeSelectSPARQLQuery(String queryString) throws IOException{
     	try {
     		TupleQuery query = this.con.prepareTupleQuery(org.openrdf.query.QueryLanguage.SPARQL, queryString);
