@@ -6,6 +6,7 @@
 	<artifactId>KlinikumServer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>KlinikumServer</name>
+	  	
 	<properties>
 		<sesame.version>2.7.0</sesame.version>
 		<resteasy.version>2.3.6.Final</resteasy.version>
@@ -22,8 +23,29 @@
 		<maven-checkstyle.version>2.10</maven-checkstyle.version>
 	</properties>
 	<packaging>war</packaging>
+	
+	<!--  The Repostitory/SCM/License Sextion was copied from an pom.file needed the maven site  reports
+	http://grepcode.com/file/repo1.maven.org/maven2/net.sf.scannotation/scannotation/1.0.2/META-INF/maven/org.scannotation/scannotation/pom.xml?av=f
+	Should be revied and tested but works for now 
+	-->
+	 <repositories>
+        <repository>
+            <id>jboss</id>
+            <url>http://repository.jboss.org/maven2</url>
+        </repository>
+    </repositories>
+	<scm>
+	  <connection>scm:svn:https://scannotation.svn.sourceforge.net/svnroot/scannotation/scannotation/</connection>
+	</scm>	
+	<licenses>
+		<license>
+			<name>Apache License V2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
 
-	<dependencyManagement>
+	<dependencyManagement>  
+	    
 		<dependencies>
 			<dependency>
 				<groupId>org.jboss.spec</groupId>
@@ -53,10 +75,21 @@
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
+			<dependency>
+				<groupId>org.scannotation</groupId>
+				<artifactId>scannotation</artifactId>
+				<version>1.0.3</version>
+				</dependency>		
 		</dependencies>
 	</dependencyManagement>
 
 	<dependencies>
+	    <dependency>
+			<groupId>javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.12.1.GA</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.apache.openejb</groupId>
 			<artifactId>tomee-embedded</artifactId>
@@ -130,7 +163,6 @@
 		<dependency>
 			<groupId>org.jboss.arquillian.junit</groupId>
 			<artifactId>arquillian-junit-container</artifactId>
-			<version>${arquillian.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -140,6 +172,13 @@
 			<version>1.0.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-project-info-reports-plugin</artifactId>
+			<version>2.6</version>
+			<type>maven-plugin</type>
+		</dependency>
+	    
 	</dependencies>
 
 	<build>
@@ -179,6 +218,13 @@
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<version>2.10</version>
 			</plugin>
+			<plugin>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+				 <locales>en</locales>
+				</configuration>
+				</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
