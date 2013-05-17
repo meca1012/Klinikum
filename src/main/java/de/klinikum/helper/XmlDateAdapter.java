@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
  * Datum als String (z.B. 2000-01-31) uebertragen
  */
 public class XmlDateAdapter extends XmlAdapter<String, Date> {
-	private final DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()); 
+	private final DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()); 
 	
 	@Override
 	public Date unmarshal(String date) throws ParseException {

@@ -11,6 +11,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import de.klinikum.domain.Address;
@@ -40,6 +41,7 @@ public class PatientREST {
 		a1.setUri("de.spironto/address/"+ "432432");		
 		
 		Patient p1 = new Patient();
+		p1.setPatientNumber("081512321");
 		p1.setAddress(a1);
 		p1.setUri("http://spironto.de/spironto#patient-gen5");
 		p1.setLastName("Power");
@@ -48,13 +50,13 @@ public class PatientREST {
 		return p1;
 	}
 
-//	@Path("/getPatient/{patientNumber}")
-//	@GET
-//	@Produces(MediaType.APPLICATION_XML)
-//	public Patient getPatient(@PathParam("patientNumber") String patientNumber) {
-//		Patient p1 = patientService.getPatientPatientnumber(patientNumber);
-//		return p1;
-//	}
+	@Path("/getPatientByPatientNumber/{patientNumber}")
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getPatient(@PathParam("patientNumber") String patientNumber) throws RepositoryException, IOException {
+		patientService.getPatientByPatientNumber(patientNumber);
+		return "Done";
+	}
 
 	@POST
 	@Path("/createPatient")

@@ -17,7 +17,10 @@ public class Patient implements Serializable {
 	private static final long serialVersionUID = 1199647317278849602L;
 	@XmlElement(name = "uri")
 	private String uri;
-
+	
+	@XmlElement(name = "patientNumber")
+	private String patientNumber;
+	
 	@XmlElement(name = "firstName")
 	private String firstName;
 
@@ -35,9 +38,10 @@ public class Patient implements Serializable {
 	public Patient() {
 	}
 
-	public Patient(String uri, String vName, String nName, Address address) {
+	public Patient(String uri, String patientNumber, String vName, String nName, Address address) {
 
 		this.uri = uri;
+		this.patientNumber = patientNumber;
 		this.firstName = vName;
 		this.lastName = nName;
 		this.address = address;
@@ -52,6 +56,14 @@ public class Patient implements Serializable {
 	}
 	
 	
+	public String getPatientNumber() {
+		return patientNumber;
+	}
+
+	public void setPatientNumber(String patientNumber) {
+		this.patientNumber = patientNumber;
+	}
+
 	public String getFirstName() {
 		return firstName;
 	}
