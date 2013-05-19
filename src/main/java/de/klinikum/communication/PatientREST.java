@@ -53,9 +53,8 @@ public class PatientREST {
 	@Path("/getPatientByPatientNumber/{patientNumber}")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getPatient(@PathParam("patientNumber") String patientNumber) throws RepositoryException, IOException {
-		patientService.getPatientByPatientNumber(patientNumber);
-		return "Done";
+	public Patient getPatientByPatientNumber(@PathParam("patientNumber") String patientNumber) throws RepositoryException, IOException {
+		return patientService.getPatientByPatientNumber(patientNumber);
 	}
 
 	@POST

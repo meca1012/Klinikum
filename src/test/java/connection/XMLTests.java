@@ -9,7 +9,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.JAXBContext;
 import org.apache.bval.jsr303.xml.ObjectFactory;
-import org.apache.openejb.jee.JAXBContextFactory;
 import org.junit.Before;
 import org.junit.Test;
 
