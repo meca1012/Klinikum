@@ -52,7 +52,7 @@ public class PatientREST {
 
 	@Path("/getPatientByPatientNumber/{patientNumber}")
 	@GET
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_XML)
 	public Patient getPatientByPatientNumber(@PathParam("patientNumber") String patientNumber) throws RepositoryException, IOException {
 		return patientService.getPatientByPatientNumber(patientNumber);
 	}
@@ -69,14 +69,14 @@ public class PatientREST {
 	@Path("/getPatientByUri")
 	@Consumes(MediaType.APPLICATION_XML)
 	public Patient getPatientByUri(Patient patient) throws IOException, RepositoryException {
-		return this.patientService.getPatientByUri(patient);
+		return this.patientService.getPatientByUri(patient.getUri());
 	}
 
 	@POST
 	@Path("/searchPatient")
 	@Consumes(MediaType.APPLICATION_XML)
-	public List<Patient> searchPatient(Patient patient) {
-		List<Patient> p1 = patientService.searchPatient(patient);
+	public List<Patient> searchPatient(Patient patient) throws IOException, RepositoryException {
+		List<Patient> p1 = patientService.searchPatientSPARQL(patient);
 		return p1;
 	}
 

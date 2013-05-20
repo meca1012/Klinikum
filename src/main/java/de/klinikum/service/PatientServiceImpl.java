@@ -15,6 +15,7 @@ import static de.klinikum.domain.NameSpaces.PATIENT_TYPE;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -26,8 +27,15 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Model;
 import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.query.BindingSet;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.TupleQuery;
+import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryException;
+import org.sonatype.guice.bean.binders.SpaceModule;
+
 import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
 
@@ -53,28 +61,23 @@ public class PatientServiceImpl implements PatientService {
         System.out.println("PatientService created");
     }
 	
-//	public Patient getPatientPatientnumber(String patientNumber) {
-//		Patient p1 = new Patient("de.spironto/patient/" + patientNumber, "Max", "Power");
-//		return p1;
-//	}
-	
-	public Patient getPatientByUri(Patient patient) throws RepositoryException, IOException {
-		URI patientURI = this.tripleStore.getValueFactory().createURI(patient.getUri().toString());
+	public Patient getPatientByUri(String patientUri) throws RepositoryException, IOException {
+		Patient returnPatient = new Patient();
+		URI patientURI = this.tripleStore.getValueFactory().createURI(patientUri.toString());
 		String firstName = this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_FIRST_NAME.toString());
 		String lastName = this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_FIRST_NAME.toString());	
 		String patientNumber = this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_PATIENT_NUMBER.toString());	
 		//if(patient.getAddress() != null) {
-			patient.setAddress(new Address());
+		returnPatient.setAddress(new Address());
 			String addressUri = this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_ADDRESS.toString());
-			patient.getAddress().setUri(addressUri);
-			patient.setAddress(getAddressByUri(patient.getAddress()));
+			returnPatient.getAddress().setUri(addressUri);
+			returnPatient.setAddress(getAddressByUri(returnPatient.getAddress()));
 		//}		
-		patient.setPatientNumber(patientNumber);
-		patient.setFirstName(firstName);
-		patient.setLastName(lastName);
-		return patient;		
+			returnPatient.setPatientNumber(patientNumber);
+			returnPatient.setFirstName(firstName);
+			returnPatient.setLastName(lastName);
+		return returnPatient;		
 	}
-	
 	
 	public Patient getPatientByPatientNumber(String patientNumber) throws RepositoryException, IOException {
 	
@@ -87,15 +90,11 @@ public class PatientServiceImpl implements PatientService {
 		Patient p = new Patient();
 		
 		for (Resource patientRessource : patientRessourceList) {
-			String pUri = patientRessource.toString();
-			
-			p.setUri(pUri);
-			p = this.getPatientByUri(p);
+			p = this.getPatientByUri(patientRessource.toString());
 			}
 		return p;
 		}
 
-	
 	public Address getAddressByUri(Address address) throws RepositoryException, IOException {
 		URI addressURI = this.tripleStore.getValueFactory().createURI(address.getUri().toString());
 		String addressStreet = this.tripleStore.getObjectString(addressURI.toString(), ADDRESS_HAS_ADDRESS_STREET.toString());
@@ -110,8 +109,6 @@ public class PatientServiceImpl implements PatientService {
 		address.setPhone(addressPhone);
 		return address;
 	}
-
-
 	
 	@Override
 	public Patient createPatientRDF(Patient patient) throws IOException {
@@ -195,14 +192,14 @@ public class PatientServiceImpl implements PatientService {
 		return address;
 	}
 	
-
 	@Override
 	public List<Patient> searchPatient(Patient patient) {
 		//ReturnList for PatientResults
 		List<Patient> returnPatientList = new ArrayList<Patient>();
 		
-		//If patientNumber is Set there should be just a single Patient as ReturnValue in List
-		if(!patient.getPatientNumber().isEmpty() || !patient.getPatientNumber().equals(null)) {
+		//If patientNumber is Set there should be just a single Patient as Re6turnValue in List
+	
+		if(patient.getPatientNumber() != null  && !patient.getPatientNumber().isEmpty()) {
 			//URI for Patient having a PationNumber in RDF
 			URI patientHasPatientNumber = this.tripleStore.getValueFactory().createURI(PATIENT_HAS_PATIENT_NUMBER.toString());
 			//Literals as Value for PatientNumber
@@ -210,13 +207,12 @@ public class PatientServiceImpl implements PatientService {
 						
 			Model statementList;
 			try {
-				//Gets als URIs for Patient with PatientNumer
+				//Gets all URIs for Patient with PatientNumer
 				statementList = this.tripleStore.getStatementList(null, patientHasPatientNumber , patientNumber);
+
 				Set<Resource> patientRessourceList = statementList.subjects();
 				for (Resource patientRessource : patientRessourceList) {
-					Patient p = new Patient();
-					p.setUri(patientRessource.toString());
-					returnPatientList.add(this.getPatientByUri(p));
+					returnPatientList.add(this.getPatientByUri(patientRessource.toString()));
 				}
 			
 			
@@ -231,7 +227,31 @@ public class PatientServiceImpl implements PatientService {
 		}
 				
 		//TODO: Implementate LastNameSearch
-		if(!patient.getLastName().isEmpty() || !patient.getLastName().equals(null)) {}
+		if(patient.getLastName() != null  &&  !patient.getLastName().isEmpty() ) {
+			//URI for Patient having a PationNumber in RDF
+			URI patientHasLastName = this.tripleStore.getValueFactory().createURI(PATIENT_HAS_LAST_NAME.toString());
+			//Literals as Value for PatientNumber
+			Literal lastname = this.tripleStore.getValueFactory().createLiteral(patient.getLastName());
+						
+			Model statementList;
+			try {
+				//Gets all URIs for Patient with PatientNumer
+				statementList = this.tripleStore.getStatementList(null, patientHasLastName , lastname);
+
+				Set<Resource> patientRessourceList = statementList.subjects();
+				for (Resource patientRessource : patientRessourceList) {
+					returnPatientList.add(this.getPatientByUri(patientRessource.toString()));
+				}		
+			} catch (RepositoryException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return returnPatientList;
+			
+		}
 		
 		//TODO Implementate FirstnameSearch
 		if(!patient.getFirstName().isEmpty() || !patient.getFirstName().equals(null)) {}
@@ -242,15 +262,32 @@ public class PatientServiceImpl implements PatientService {
 		return returnPatientList;
 	}
 	
-	public List<Patient> searchPatientSPARQL(Patient patient) {
-		String queryString = "";
-		queryString = "SELECT ?patient WHERE {?patient " + RDF.TYPE + "" + "}";
-		return null;
-	}
-	
-	public List<Patient> searchPatientByName(Patient patient) {
+	public List<Patient> searchPatientSPARQL(Patient patient) throws IOException, RepositoryException
+	{
+		List<Patient> returnPatientList = new ArrayList<Patient>();
+		String sparqlQuery = "SELECT ?Uri WHERE {";
+			
+		if(patient.getPatientNumber() != null  && !patient.getPatientNumber().isEmpty()) {
+			sparqlQuery += "?Uri <"+ PATIENT_HAS_PATIENT_NUMBER + ">\"" + patient.getPatientNumber() + "\". ";
+		}
+		if(patient.getLastName() != null  && !patient.getLastName().isEmpty()) {
+			sparqlQuery += "?Uri <"+ PATIENT_HAS_LAST_NAME + ">\"" + patient.getLastName() + "\". ";
+		}
+		if(patient.getFirstName() != null  && !patient.getFirstName().isEmpty()) {
+			sparqlQuery += "?Uri <"+ PATIENT_HAS_FIRST_NAME + ">\"" + patient.getFirstName() + "\"";
+		}
 		
-		return null;
-	}
+		sparqlQuery += "}";
+		System.out.println(sparqlQuery);
+		
+		Set<HashMap<String, Value>> result = this.tripleStore.executeSelectSPARQLQuery(sparqlQuery);
 	
+		for(HashMap<String, Value> item : result)
+		{
+			returnPatientList.add(this.getPatientByUri(item.get("Uri").toString()));	
+		}
+		
+		return returnPatientList;
+	}
+
 }

@@ -68,7 +68,7 @@ public class PatientServiceTest {
 	public void getPatientByUri() throws RepositoryException, IOException {
 		Patient patient = new Patient();
 		patient.setUri(this.patientUri);
-		patient = this.patientService.getPatientByUri(patient);
+		patient = this.patientService.getPatientByUri(patient.getUri());
 		
 		assertEquals(this.patientUri, patient.getUri());
 		assertNotNull(patient.getFirstName());
