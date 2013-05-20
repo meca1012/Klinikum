@@ -3,11 +3,10 @@ package connection;
 
 import java.io.StringWriter;
 
-
-
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.JAXBContext;
+
 import org.apache.bval.jsr303.xml.ObjectFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +31,7 @@ public class XMLTests {
 	@Test
 	public void test() throws JAXBException
 	{
-		Address a1 = new Address("de.spironto/address/" + "432432","Hauptstrass 12","Karlsruhe", "432433", "Deutschland", "081511833");
+		Address a1 = new Address("de.spironto/address/" + "432432","Hauptstrass", "12","Karlsruhe", "432433", "Deutschland", "081511833");
 		Patient p1 = new Patient();
 		p1.setAddress(a1);
 		p1.setUri("de.spironto/patient/"+ "432432");

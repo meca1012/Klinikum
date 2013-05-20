@@ -37,8 +37,8 @@ public class PatientREST {
 		String dateString = "01/08/1985";
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 				
-		Address a1 = new Address("http://spironto.de/spironto#address-gen4","Hauptstrass 12","Karlsruhe", "432433", "Deutschland", "081511833");
-		a1.setUri("de.spironto/address/"+ "432432");		
+		Address a1 = new Address("http://spironto.de/spironto#address-gen4","Hauptstrasse", "12","Karlsruhe", "432433", "Deutschland", "081511833");
+		a1.setUri("de.spironto/address/"+ "432432");
 		
 		Patient p1 = new Patient();
 		p1.setPatientNumber("081512321");

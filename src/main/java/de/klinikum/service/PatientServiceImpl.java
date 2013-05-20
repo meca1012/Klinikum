@@ -1,17 +1,17 @@
 package de.klinikum.service;
-import static de.klinikum.domain.NameSpaces.PATIENT_HAS_PATIENT_NUMBER;
-import static de.klinikum.domain.NameSpaces.PATIENT_HAS_LAST_NAME;
-import static de.klinikum.domain.NameSpaces.PATIENT_HAS_FIRST_NAME;
-import static de.klinikum.domain.NameSpaces.PATIENT_HAS_DATE_OF_BIRTH;
+import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_ADDRESS_CITY;
+import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_ADDRESS_STREET;
+import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_ADDRESS_STREET_NUMBER;
+import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_ADDRESS_ZIP;
+import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_PHONENUMBER;
+import static de.klinikum.domain.NameSpaces.ADDRESS_IN_COUNTRY;
 import static de.klinikum.domain.NameSpaces.ADDRESS_TYPE;
 import static de.klinikum.domain.NameSpaces.PATIENT_HAS_ADDRESS;
-import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_ADDRESS_STREET;
-import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_ADDRESS_ZIP;
-import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_ADDRESS_CITY;
-import static de.klinikum.domain.NameSpaces.ADDRESS_IN_COUNTRY;
-import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_PHONENUMBER;
+import static de.klinikum.domain.NameSpaces.PATIENT_HAS_DATE_OF_BIRTH;
+import static de.klinikum.domain.NameSpaces.PATIENT_HAS_FIRST_NAME;
+import static de.klinikum.domain.NameSpaces.PATIENT_HAS_LAST_NAME;
+import static de.klinikum.domain.NameSpaces.PATIENT_HAS_PATIENT_NUMBER;
 import static de.klinikum.domain.NameSpaces.PATIENT_TYPE;
-
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,22 +23,16 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.openrdf.model.Resource;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Model;
+import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
-import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryException;
-import org.sonatype.guice.bean.binders.SpaceModule;
 
 import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
-
 import de.klinikum.persistence.SesameTripleStore;
 
 @Named
@@ -72,7 +66,8 @@ public class PatientServiceImpl implements PatientService {
 			String addressUri = this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_ADDRESS.toString());
 			returnPatient.getAddress().setUri(addressUri);
 			returnPatient.setAddress(getAddressByUri(returnPatient.getAddress()));
-		//}		
+		//}
+			returnPatient.setUri(patientURI.toString());
 			returnPatient.setPatientNumber(patientNumber);
 			returnPatient.setFirstName(firstName);
 			returnPatient.setLastName(lastName);
@@ -98,11 +93,13 @@ public class PatientServiceImpl implements PatientService {
 	public Address getAddressByUri(Address address) throws RepositoryException, IOException {
 		URI addressURI = this.tripleStore.getValueFactory().createURI(address.getUri().toString());
 		String addressStreet = this.tripleStore.getObjectString(addressURI.toString(), ADDRESS_HAS_ADDRESS_STREET.toString());
+		String addressStreetNumber = this.tripleStore.getObjectString(addressURI.toString(), ADDRESS_HAS_ADDRESS_STREET_NUMBER.toString());
 		String addressCity = this.tripleStore.getObjectString(addressURI.toString(), ADDRESS_HAS_ADDRESS_CITY.toString());
 		String addressZip = this.tripleStore.getObjectString(addressURI.toString(), ADDRESS_HAS_ADDRESS_ZIP.toString());
 		String addressCountry = this.tripleStore.getObjectString(addressURI.toString(), ADDRESS_IN_COUNTRY.toString());
 		String addressPhone = this.tripleStore.getObjectString(addressURI.toString(), ADDRESS_HAS_PHONENUMBER.toString());
 		address.setStreet(addressStreet);
+		address.setStreetNumber(addressStreetNumber);
 		address.setCity(addressCity);
 		address.setZip(addressZip);
 		address.setCountry(addressCountry);
@@ -168,6 +165,7 @@ public class PatientServiceImpl implements PatientService {
 		this.tripleStore.addTriple(addressUri, RDF.TYPE, addressTypeURI);
 		
 		URI hasStreet = this.tripleStore.getValueFactory().createURI(ADDRESS_HAS_ADDRESS_STREET.toString());
+		URI hasStreetNumber = this.tripleStore.getValueFactory().createURI(ADDRESS_HAS_ADDRESS_STREET_NUMBER.toString());
 		URI hasZip = this.tripleStore.getValueFactory().createURI(ADDRESS_HAS_ADDRESS_ZIP.toString());
 		URI hasCity = this.tripleStore.getValueFactory().createURI(ADDRESS_HAS_ADDRESS_CITY.toString());
 		URI hasCountry = this.tripleStore.getValueFactory().createURI(ADDRESS_IN_COUNTRY.toString());
@@ -175,6 +173,7 @@ public class PatientServiceImpl implements PatientService {
 		
 		//Creating Address Literals
 		Literal adressStreetLiteral = this.tripleStore.getValueFactory().createLiteral(address.getStreet());
+		Literal adressStreetNumberLiteral = this.tripleStore.getValueFactory().createLiteral(address.getStreetNumber());
 		Literal adressZipLiteral = this.tripleStore.getValueFactory().createLiteral(address.getZip());
 		Literal adressCityLiteral = this.tripleStore.getValueFactory().createLiteral(address.getCity());
 		Literal adressCountryLiteral = this.tripleStore.getValueFactory().createLiteral(address.getCountry());
@@ -182,6 +181,7 @@ public class PatientServiceImpl implements PatientService {
 		
 		//Adding Literals to Triples
 		this.tripleStore.addTriple(addressUri, hasStreet, adressStreetLiteral);
+		this.tripleStore.addTriple(addressUri, hasStreetNumber, adressStreetNumberLiteral);
 		this.tripleStore.addTriple(addressUri, hasZip, adressZipLiteral);
 		this.tripleStore.addTriple(addressUri, hasCity, adressCityLiteral);
 		this.tripleStore.addTriple(addressUri, hasCountry, adressCountryLiteral);

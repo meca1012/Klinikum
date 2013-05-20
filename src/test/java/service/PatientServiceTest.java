@@ -46,7 +46,7 @@ public class PatientServiceTest {
 		patient.setFirstName("alice");
 		patient.setLastName("smith");
 		
-		Address address = new Address(null, "Moltkestraße", "Karlsruhe", "76133", "D", "00");
+		Address address = new Address(null, "Moltkestraße", "30", "Karlsruhe", "76133", "D", "00");
 		patient.setAddress(address);
 		
 		Patient patient1 = this.patientService.createPatientRDF(patient);
