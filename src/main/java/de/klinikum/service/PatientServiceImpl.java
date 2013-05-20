@@ -192,6 +192,7 @@ public class PatientServiceImpl implements PatientService {
 		return address;
 	}
 	
+	//NOT USED.. TODO: Delete if not needed
 	@Override
 	public List<Patient> searchPatient(Patient patient) {
 		//ReturnList for PatientResults
@@ -262,6 +263,9 @@ public class PatientServiceImpl implements PatientService {
 		return returnPatientList;
 	}
 	
+	//Searches Patients with first name , last name, and PatientNumber
+	//Uses SPARQL to Query Sesame
+	@Override
 	public List<Patient> searchPatientSPARQL(Patient patient) throws IOException, RepositoryException
 	{
 		List<Patient> returnPatientList = new ArrayList<Patient>();
