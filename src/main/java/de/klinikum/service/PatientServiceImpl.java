@@ -59,7 +59,7 @@ public class PatientServiceImpl implements PatientService {
 		Patient returnPatient = new Patient();
 		URI patientURI = this.tripleStore.getValueFactory().createURI(patientUri.toString());
 		String firstName = this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_FIRST_NAME.toString());
-		String lastName = this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_FIRST_NAME.toString());	
+		String lastName = this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_LAST_NAME.toString());	
 		String patientNumber = this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_PATIENT_NUMBER.toString());	
 		//if(patient.getAddress() != null) {
 		returnPatient.setAddress(new Address());
