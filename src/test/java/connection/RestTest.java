@@ -12,29 +12,25 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.junit.Test;
 
 public class RestTest {
-	
+
 	@Test
-	public void testConnection () throws ClientProtocolException, IOException {
-		
-	
-	DefaultHttpClient httpclient = new DefaultHttpClient();
-	HttpGet httpget = new HttpGet("http://localhost:8080/KlinikumServer-0.0.1-SNAPSHOT/rest/server/restInfo");
-	HttpResponse response = httpclient.execute(httpget);
-	HttpEntity entity = response.getEntity();
-	if (entity != null) {
-	    InputStream instream = entity.getContent();
-	    byte[] content = IOUtils.toByteArray(instream);
-	    System.out.println(response.getStatusLine());
-	    System.out.println(content.toString());
-	    try {	    	
-	    	System.out.println();  	        
-	    } finally {
-	        instream.close();
-	    }
-	}
-	}
-	}
+	public void testConnection() throws ClientProtocolException, IOException {
 
-
-
-	
+		DefaultHttpClient httpclient = new DefaultHttpClient();
+		HttpGet httpget = new HttpGet(
+				"http://localhost:8080/KlinikumServer-0.0.1-SNAPSHOT/rest/server/restInfo");
+		HttpResponse response = httpclient.execute(httpget);
+		HttpEntity entity = response.getEntity();
+		if (entity != null) {
+			InputStream instream = entity.getContent();
+			byte[] content = IOUtils.toByteArray(instream);
+			System.out.println(response.getStatusLine());
+			System.out.println(new String(content));
+			try {
+				System.out.println();
+			} finally {
+				instream.close();
+			}
+		}
+	}
+}

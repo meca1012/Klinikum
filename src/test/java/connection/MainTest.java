@@ -1,5 +1,6 @@
 package connection;
 
+import org.junit.Test;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
@@ -17,11 +18,8 @@ import de.klinikum.server.Connect;
 
 public class MainTest {
 
-	/**
-	 * @param args
-	 * @throws RepositoryException
-	 */
-	public static void main(String[] args) throws RepositoryException {
+	@Test
+	public void firstRepoTest() throws RepositoryException {
 
 		// Get RepoConnection
 		Connect conn = new Connect();
