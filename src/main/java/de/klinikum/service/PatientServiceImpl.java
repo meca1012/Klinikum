@@ -312,6 +312,13 @@ public class PatientServiceImpl implements PatientService {
 		return returnPatientList;
 	}
 	
+	@Override
+	public Patient updatePatient(Patient patient){
+		
+		
+		return patient;
+	}
+		
 	private Date getBirthDateFromString(String sDate)
 	{
 		String dateFormat = "EEE MMM dd HH:mm:ss z yyyy";
@@ -325,8 +332,7 @@ public class PatientServiceImpl implements PatientService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return newDate;
-		
+		return newDate;		
 	}
 
 }

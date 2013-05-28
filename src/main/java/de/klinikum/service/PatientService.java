@@ -15,4 +15,6 @@ public interface PatientService {
 	
 	public abstract List<Patient> searchPatientSPARQL(Patient patient) throws IOException, RepositoryException;
 
+	public abstract Patient updatePatient(Patient patient);
+
 }

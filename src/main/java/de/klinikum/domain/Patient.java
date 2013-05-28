@@ -1,6 +1,7 @@
 package de.klinikum.domain;
 
 import java.io.Serializable;
+
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -10,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import de.klinikum.helper.XmlDateAdapter;
+
 @XmlRootElement(name = "patient")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Patient implements Serializable {
