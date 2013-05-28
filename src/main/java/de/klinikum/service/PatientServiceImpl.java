@@ -293,5 +293,13 @@ public class PatientServiceImpl implements PatientService {
 		
 		return returnPatientList;
 	}
+	
+	@Override
+	public Patient updatePatient(Patient patient){
+		
+		
+		return patient;
+		
+	}
 
 }
