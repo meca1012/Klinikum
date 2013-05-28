@@ -14,10 +14,16 @@ import static de.klinikum.domain.NameSpaces.PATIENT_HAS_PATIENT_NUMBER;
 import static de.klinikum.domain.NameSpaces.PATIENT_TYPE;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
+import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -60,7 +66,12 @@ public class PatientServiceImpl implements PatientService {
 		URI patientURI = this.tripleStore.getValueFactory().createURI(patientUri.toString());
 		String firstName = this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_FIRST_NAME.toString());
 		String lastName = this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_LAST_NAME.toString());	
-		String patientNumber = this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_PATIENT_NUMBER.toString());	
+		String patientNumber = this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_PATIENT_NUMBER.toString());
+
+		Date dateOfBirth = this.getDateFromString(this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_DATE_OF_BIRTH.toString()));	
+				
+		//Date patientDate = Date.parse(dateOfBirth);
+		
 		//if(patient.getAddress() != null) {
 		returnPatient.setAddress(new Address());
 			String addressUri = this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_ADDRESS.toString());
@@ -71,6 +82,7 @@ public class PatientServiceImpl implements PatientService {
 			returnPatient.setPatientNumber(patientNumber);
 			returnPatient.setFirstName(firstName);
 			returnPatient.setLastName(lastName);
+			returnPatient.setDateOfBirth(dateOfBirth);
 		return returnPatient;		
 	}
 	
@@ -141,6 +153,7 @@ public class PatientServiceImpl implements PatientService {
 		
 		
 		//Create Literal an Add to Sesame for DateOfBirth
+		
 		Literal dateOfBirthLiteral = this.tripleStore.getValueFactory().createLiteral(patient.getDateOfBirth().toString());
 		this.tripleStore.addTriple(patientUri, hasdateOfBirth, dateOfBirthLiteral);
 		
@@ -292,6 +305,23 @@ public class PatientServiceImpl implements PatientService {
 		}
 		
 		return returnPatientList;
+	}
+	
+	private Date getDateFromString(String sDate)
+	{
+		String dateFormat = "EEE MMM dd HH:mm:ss z yyyy";
+		
+		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat,new Locale("en_US"));
+		sdf.setTimeZone(TimeZone.getTimeZone("CET"));  
+		Date newDate = null;
+		try {
+			newDate = sdf.parse(sDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return newDate;
+		
 	}
 
 }

@@ -61,15 +61,14 @@ public class PatientREST {
 	@Path("/createPatient")
 	@Consumes(MediaType.APPLICATION_XML)
 	public Patient createPatientRDF(Patient patient) throws IOException {
-		
-		return this.patientService.createPatientRDF(patient);
+			return this.patientService.createPatientRDF(patient);
 	}
 	
 	@POST
 	@Path("/getPatientByUri")
 	@Consumes(MediaType.APPLICATION_XML)
 	public Patient getPatientByUri(Patient patient) throws IOException, RepositoryException {
-		return this.patientService.getPatientByUri(patient.getUri());
+				return this.patientService.getPatientByUri(patient.getUri());
 	}
 
 	@POST
