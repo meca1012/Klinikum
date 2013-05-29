@@ -32,14 +32,14 @@ public class ConceptServiceImpl implements ConceptService {
 
 		List<Concept> concepts = new ArrayList<Concept>();
 
-		String sparqlQuery = "SELECT ?Uri ?Name WHERE {";
+		String sparqlQuery = "SELECT ?Uri ?Label WHERE {";
 
 		sparqlQuery += "<" + patient.getUri().toString() + "> <" + PATIENT_HAS_CONCEPT
 				+ "> ?Uri . ";
 
 		sparqlQuery += "?Uri <" + RDF.TYPE + "> <" + GUI_TAB_TYPE + "> . ";
 		
-		sparqlQuery += "?Uri <" + ONTOLOGIE_CONCEPT_HAS_LABEL + "> \"?Name\"}";
+		sparqlQuery += "?Uri <" + ONTOLOGIE_CONCEPT_HAS_LABEL + "> ?Label}";
 
 		Set<HashMap<String, Value>> queryResult = this.tripleStore
 				.executeSelectSPARQLQuery(sparqlQuery);
@@ -47,6 +47,7 @@ public class ConceptServiceImpl implements ConceptService {
 		for (HashMap<String, Value> item : queryResult) {
 			Concept concept = new Concept();
 			concept.setUri(item.get("Uri").toString());
+			concept.setLabel(item.get("Label").stringValue());
 			concepts.add(concept);
 		}
 
