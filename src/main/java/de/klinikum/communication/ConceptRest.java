@@ -31,15 +31,15 @@ public class ConceptRest {
     @Produces(MediaType.APPLICATION_XML)
     public List<Concept> getTabConcepts(Patient patient) throws IOException {
 
-        return this.conceptService.findTabConcepts(patient);
+        return this.conceptService.findTabConceptsOfPatient(patient);
     }
 
     @Path("/getConcepts")
     @GET
     @Produces(MediaType.APPLICATION_XML)
-    public List<Concept> getConcepts(Patient patient) {
+    public List<Concept> getConcepts(Patient patient) throws IOException {
 
-        return this.conceptService.findConcepts(patient);
+        return this.conceptService.findAllConceptsOfPatient(patient);
     }
 
     @Path("/createConcept")
@@ -55,7 +55,7 @@ public class ConceptRest {
     @Produces(MediaType.APPLICATION_XML)
     public Concept addConceptToPatient(PatientDTO pDto) throws IOException {
 
-        return this.conceptService.addConceptToPatient(pDto.getConcept(), pDto.getPatient(), pDto.isTabConcept());
+        return this.conceptService.addConceptToPatient(pDto.getConcept(), pDto.isTabConcept());
     }
 
 }

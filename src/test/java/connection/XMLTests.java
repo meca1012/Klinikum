@@ -57,7 +57,7 @@ public class XMLTests {
 		p1.setLastName("Power");
 		p1.setFirstName("Max");
 		
-		Concept c1 = new Concept("http://spironto.de/spironto#Spiritualitaet","Spiritualitaet");
+		Concept c1 = new Concept("http://spironto.de/spironto#concept-gen13","Spiritualitaet", "http://spironto.de/spironto#patient-gen11");
 		
 		PatientDTO pdto = new PatientDTO();
 		pdto.setPatient(p1);
