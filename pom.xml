@@ -6,7 +6,7 @@
 	<artifactId>KlinikumServer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>KlinikumServer</name>
-	  	
+
 	<properties>
 		<sesame.version>2.7.0</sesame.version>
 		<resteasy.version>2.3.6.Final</resteasy.version>
@@ -23,20 +23,19 @@
 		<maven-checkstyle.version>2.10</maven-checkstyle.version>
 	</properties>
 	<packaging>war</packaging>
-	
-	<!--  The Repostitory/SCM/License Sextion was copied from an pom.file needed the maven site  reports
-	http://grepcode.com/file/repo1.maven.org/maven2/net.sf.scannotation/scannotation/1.0.2/META-INF/maven/org.scannotation/scannotation/pom.xml?av=f
-	Should be revied and tested but works for now 
-	-->
-	 <repositories>
-        <repository>
-            <id>jboss</id>
-            <url>http://repository.jboss.org/maven2</url>
-        </repository>
-    </repositories>
+
+	<!-- The Repostitory/SCM/License Sextion was copied from an pom.file needed 
+		the maven site reports http://grepcode.com/file/repo1.maven.org/maven2/net.sf.scannotation/scannotation/1.0.2/META-INF/maven/org.scannotation/scannotation/pom.xml?av=f 
+		Should be revied and tested but works for now -->
+	<repositories>
+		<repository>
+			<id>jboss</id>
+			<url>http://repository.jboss.org/maven2</url>
+		</repository>
+	</repositories>
 	<scm>
-	  <connection>scm:svn:https://scannotation.svn.sourceforge.net/svnroot/scannotation/scannotation/</connection>
-	</scm>	
+		<connection>scm:svn:https://scannotation.svn.sourceforge.net/svnroot/scannotation/scannotation/</connection>
+	</scm>
 	<licenses>
 		<license>
 			<name>Apache License V2.0</name>
@@ -44,8 +43,8 @@
 		</license>
 	</licenses>
 
-	<dependencyManagement>  
-	    
+	<dependencyManagement>
+
 		<dependencies>
 			<dependency>
 				<groupId>org.jboss.spec</groupId>
@@ -79,12 +78,12 @@
 				<groupId>org.scannotation</groupId>
 				<artifactId>scannotation</artifactId>
 				<version>1.0.3</version>
-				</dependency>		
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 	<dependencies>
-	    <dependency>
+		<dependency>
 			<groupId>javassist</groupId>
 			<artifactId>javassist</artifactId>
 			<version>3.12.1.GA</version>
@@ -178,7 +177,7 @@
 			<version>2.6</version>
 			<type>maven-plugin</type>
 		</dependency>
-	    
+
 	</dependencies>
 
 	<build>
@@ -217,14 +216,17 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<version>2.10</version>
+				<configuration>
+					<configLocation>checkstyle.xml</configLocation>
+				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-site-plugin</artifactId>
 				<version>3.3</version>
 				<configuration>
-				 <locales>en</locales>
+					<locales>en</locales>
 				</configuration>
-				</plugin>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>

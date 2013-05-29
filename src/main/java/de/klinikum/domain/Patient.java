@@ -10,89 +10,89 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import de.klinikum.helper.XmlDateAdapter;
+
 @XmlRootElement(name = "patient")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Patient implements Serializable {
 
-	private static final long serialVersionUID = 1199647317278849602L;
-	@XmlElement(name = "uri")
-	private String uri;
-	
-	@XmlElement(name = "patientNumber")
-	private String patientNumber;
-	
-	@XmlElement(name = "firstName")
-	private String firstName;
+    private static final long serialVersionUID = 1199647317278849602L;
+    @XmlElement(name = "uri")
+    private String uri;
 
-	@XmlElement(name = "lastName")
-	private String lastName;
-	
-	@XmlElement(name = "dateOfBirth")
-	@XmlJavaTypeAdapter(XmlDateAdapter.class)  
-	private Date dateOfBirth;
-	
-	@XmlElement(name="address")
-	private Address address;
+    @XmlElement(name = "patientNumber")
+    private String patientNumber;
 
+    @XmlElement(name = "firstName")
+    private String firstName;
 
-	public Patient() {
-	}
+    @XmlElement(name = "lastName")
+    private String lastName;
 
-	public Patient(String uri, String patientNumber, String vName, String nName, Address address) {
+    @XmlElement(name = "dateOfBirth")
+    @XmlJavaTypeAdapter(XmlDateAdapter.class)
+    private Date dateOfBirth;
 
-		this.uri = uri;
-		this.patientNumber = patientNumber;
-		this.firstName = vName;
-		this.lastName = nName;
-		this.address = address;
-	}
-	
-	public String getUri() {
-		return uri;
-	}
+    @XmlElement(name = "address")
+    private Address address;
 
-	public void setUri(String uri) {
-		this.uri = uri;
-	}
-	
-	
-	public String getPatientNumber() {
-		return patientNumber;
-	}
+    public Patient() {
+    }
 
-	public void setPatientNumber(String patientNumber) {
-		this.patientNumber = patientNumber;
-	}
+    public Patient(String uri, String patientNumber, String vName, String nName, Address address) {
 
-	public String getFirstName() {
-		return firstName;
-	}
+        this.uri = uri;
+        this.patientNumber = patientNumber;
+        this.firstName = vName;
+        this.lastName = nName;
+        this.address = address;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	
-	public String getLastName() {
-		return lastName;
-	}
+    public String getUri() {
+        return this.uri;
+    }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-	
-	public Address getAddress() {
-		return address;
-	}
-	
-	public void setAddress(Address address) {
-		this.address = address;
-	}
-	
-	public Date getDateOfBirth() {
-		return dateOfBirth;
-	}
-	public void setDateOfBirth(Date dayOfBirth) {
-		this.dateOfBirth = dayOfBirth;
-	}
-	
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
+    public String getPatientNumber() {
+        return this.patientNumber;
+    }
+
+    public void setPatientNumber(String patientNumber) {
+        this.patientNumber = patientNumber;
+    }
+
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return this.lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Address getAddress() {
+        return this.address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public Date getDateOfBirth() {
+        return this.dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dayOfBirth) {
+        this.dateOfBirth = dayOfBirth;
+    }
+
 }

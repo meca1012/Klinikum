@@ -5,7 +5,7 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	id="WebApp_ID" version="3.0">
 
-   
+
 	<display-name>KlinikumServer</display-name>
 
 	<!-- Auto scan REST service -->
@@ -13,12 +13,12 @@
 		<param-name>resteasy.scan</param-name>
 		<param-value>true</param-value>
 	</context-param>
-	
+
 	<context-param>
 		<param-name>resteasy.injector.factory</param-name>
 		<param-value>org.jboss.resteasy.cdi.CdiInjectorFactory</param-value>
 	</context-param>
-	
+
 
 	<!-- this need same with resteasy servlet url-pattern -->
 	<context-param>
@@ -28,23 +28,21 @@
 
 	<listener>
 		<listener-class>
-			org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap
-		</listener-class>
+			org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
 	</listener>
 
 
 	<servlet>
 		<servlet-name>resteasy-servlet</servlet-name>
 		<servlet-class>
-			org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
-		</servlet-class>
+			org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>resteasy-servlet</servlet-name>
 		<url-pattern>/rest/*</url-pattern>
 	</servlet-mapping>
-	
+
 </web-app>
 
 
