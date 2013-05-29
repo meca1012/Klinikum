@@ -26,34 +26,32 @@ public class ConceptServiceImpl implements ConceptService {
 
 	@Inject
 	SesameTripleStore tripleStore;
-
+	
 	@Override
-	public List<Concept> findTabConcepts(Patient patient) throws IOException {
+    public List<Concept> findTabConcepts(Patient patient) throws IOException {
 
-		List<Concept> concepts = new ArrayList<Concept>();
+        List<Concept> concepts = new ArrayList<Concept>();
 
-		String sparqlQuery = "SELECT ?Uri ?Label WHERE {";
+        String sparqlQuery = "SELECT ?Uri ?Label WHERE {";
 
-		sparqlQuery += "<" + patient.getUri().toString() + "> <" + PATIENT_HAS_CONCEPT
-				+ "> ?Uri . ";
+        sparqlQuery += "<" + patient.getUri().toString() + "> <" + PATIENT_HAS_CONCEPT + "> ?Uri . ";
 
-		sparqlQuery += "?Uri <" + RDF.TYPE + "> <" + GUI_TAB_TYPE + "> . ";
-		
-		sparqlQuery += "?Uri <" + ONTOLOGIE_CONCEPT_HAS_LABEL + "> ?Label}";
+        sparqlQuery += "?Uri <" + RDF.TYPE + "> <" + GUI_TAB_TYPE + "> . ";
 
-		Set<HashMap<String, Value>> queryResult = this.tripleStore
-				.executeSelectSPARQLQuery(sparqlQuery);
+        sparqlQuery += "?Uri <" + ONTOLOGIE_CONCEPT_HAS_LABEL + "> \"?Label\"}";
 
-		for (HashMap<String, Value> item : queryResult) {
-			Concept concept = new Concept();
-			concept.setUri(item.get("Uri").toString());
-			concept.setLabel(item.get("Label").stringValue());
-			concepts.add(concept);
-		}
+        Set<HashMap<String, Value>> queryResult = this.tripleStore.executeSelectSPARQLQuery(sparqlQuery);
 
-		return concepts;
+        for (HashMap<String, Value> item : queryResult) {
+            Concept concept = new Concept();
+            concept.setUri(item.get("Uri").toString());
+            concept.setLabel(item.get("Label").stringValue());
+            concepts.add(concept);
+        }
 
-	}
+        return concepts;
+
+    }
 
 	@Override
 	public Concept createConcept(Concept concept) {
@@ -67,8 +65,7 @@ public class ConceptServiceImpl implements ConceptService {
 	}
 
 	@Override
-	public Concept addConceptToPatient(Concept concept, Patient patient,
-			boolean tabConcept) throws IOException {
+	public Concept addConceptToPatient(Concept concept, Patient patient, boolean tabConcept) throws IOException {
 		
 //		TODO: prüfen ob Concept bereits vorhanden
 		
