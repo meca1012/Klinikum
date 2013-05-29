@@ -74,25 +74,48 @@ public class Patient implements Serializable {
     public String getLastName() {
         return this.lastName;
     }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public Address getAddress() {
-        return this.address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
-    public Date getDateOfBirth() {
-        return this.dateOfBirth;
-    }
-
-    public void setDateOfBirth(Date dayOfBirth) {
-        this.dateOfBirth = dayOfBirth;
-    }
-
+    
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	
+	public Address getAddress() {
+		return address;
+	}
+	
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+	
+	public Date getDateOfBirth() {
+		return dateOfBirth;
+	}
+	public void setDateOfBirth(Date dayOfBirth) {
+		this.dateOfBirth = dayOfBirth;
+	}
+	
+	public boolean isValid()
+	{	
+		if(this.uri == null) {
+			
+		} else {
+			if(!this.uri.isEmpty())
+				return false;
+		}		
+		
+		if(this.patientNumber.isEmpty())
+			return false;
+		
+		if(this.firstName.isEmpty())
+			return false;
+		
+		if(this.lastName.isEmpty())
+			return false;
+	
+		if(this.dateOfBirth == null)
+			return false;
+		
+		return true;
+		
+	}
 }
