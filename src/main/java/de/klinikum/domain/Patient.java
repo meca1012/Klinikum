@@ -1,7 +1,6 @@
 package de.klinikum.domain;
 
 import java.io.Serializable;
-
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -98,8 +97,12 @@ public class Patient implements Serializable {
 	
 	public boolean isValid()
 	{	
-		if(!this.uri.isEmpty())
-			return false;
+		if(this.uri == null) {
+			
+		} else {
+			if(!this.uri.isEmpty())
+				return false;
+		}		
 		
 		if(this.patientNumber.isEmpty())
 			return false;
