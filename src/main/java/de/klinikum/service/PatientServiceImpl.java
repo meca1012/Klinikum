@@ -205,6 +205,18 @@ public class PatientServiceImpl implements PatientService {
 		return address;
 	}
 	
+	
+	//Update Patient
+	@Override
+	public boolean updatePatientRDF(Patient patient) throws IOException {
+		
+		//Get Unique PatientURI Prefix
+		URI patientUri = this.tripleStore.getUniqueURI(PATIENT_TYPE.toString());
+		
+		return true;	
+	}
+		
+	
 	//NOT USED.. TODO: Delete if not needed
 	@Override
 	public List<Patient> searchPatient(Patient patient) {

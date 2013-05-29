@@ -36,7 +36,6 @@ public class Patient implements Serializable {
 	@XmlElement(name="address")
 	private Address address;
 
-
 	public Patient() {
 	}
 
@@ -95,6 +94,27 @@ public class Patient implements Serializable {
 	}
 	public void setDateOfBirth(Date dayOfBirth) {
 		this.dateOfBirth = dayOfBirth;
+	}
+	
+	public boolean isValid()
+	{	
+		if(!this.uri.isEmpty())
+			return false;
+		
+		if(this.patientNumber.isEmpty())
+			return false;
+		
+		if(this.firstName.isEmpty())
+			return false;
+		
+		if(this.lastName.isEmpty())
+			return false;
+	
+		if(this.dateOfBirth == null)
+			return false;
+		
+		return true;
+		
 	}
 	
 }
