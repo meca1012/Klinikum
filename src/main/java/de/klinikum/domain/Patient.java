@@ -1,6 +1,7 @@
 package de.klinikum.domain;
 
 import java.io.Serializable;
+
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -10,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import de.klinikum.helper.XmlDateAdapter;
+
 @XmlRootElement(name = "patient")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Patient implements Serializable {
@@ -33,7 +35,6 @@ public class Patient implements Serializable {
 	
 	@XmlElement(name="address")
 	private Address address;
-
 
 	public Patient() {
 	}
@@ -93,6 +94,27 @@ public class Patient implements Serializable {
 	}
 	public void setDateOfBirth(Date dayOfBirth) {
 		this.dateOfBirth = dayOfBirth;
+	}
+	
+	public boolean isValid()
+	{	
+		if(!this.uri.isEmpty())
+			return false;
+		
+		if(this.patientNumber.isEmpty())
+			return false;
+		
+		if(this.firstName.isEmpty())
+			return false;
+		
+		if(this.lastName.isEmpty())
+			return false;
+	
+		if(this.dateOfBirth == null)
+			return false;
+		
+		return true;
+		
 	}
 	
 }

@@ -17,4 +17,6 @@ public interface PatientService {
 	
 	public abstract boolean updatePatientRDF(Patient patient) throws IOException;
 
+	public abstract Patient updatePatient(Patient patient);
+
 }

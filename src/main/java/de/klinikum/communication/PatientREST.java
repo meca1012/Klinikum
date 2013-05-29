@@ -63,7 +63,10 @@ public class PatientREST {
 	@Path("/createPatient")
 	@Consumes(MediaType.APPLICATION_XML)
 	public Patient createPatientRDF(Patient patient) throws IOException {
+		if(patient.isValid())
 			return this.patientService.createPatientRDF(patient);
+		
+		return null;
 	}
 	
 	@POST

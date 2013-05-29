@@ -68,7 +68,7 @@ public class PatientServiceImpl implements PatientService {
 		String lastName = this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_LAST_NAME.toString());	
 		String patientNumber = this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_PATIENT_NUMBER.toString());
 
-		Date dateOfBirth = this.getDateFromString(this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_DATE_OF_BIRTH.toString()));	
+		Date dateOfBirth = this.getBirthDateFromString(this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_DATE_OF_BIRTH.toString()));	
 				
 		//Date patientDate = Date.parse(dateOfBirth);
 		
@@ -306,6 +306,11 @@ public class PatientServiceImpl implements PatientService {
 			sparqlQuery += "?Uri <"+ PATIENT_HAS_FIRST_NAME + ">\"" + patient.getFirstName() + "\"";
 		}
 		
+		if(patient.getDateOfBirth() != null) {
+			
+			sparqlQuery += "?Uri <"+ PATIENT_HAS_DATE_OF_BIRTH + ">\"" + patient.getDateOfBirth().toString() + "\"";
+		}
+		
 		sparqlQuery += "}";
 		System.out.println(sparqlQuery);
 		
@@ -319,7 +324,14 @@ public class PatientServiceImpl implements PatientService {
 		return returnPatientList;
 	}
 	
-	private Date getDateFromString(String sDate)
+	@Override
+	public Patient updatePatient(Patient patient){
+		
+		
+		return patient;
+	}
+		
+	private Date getBirthDateFromString(String sDate)
 	{
 		String dateFormat = "EEE MMM dd HH:mm:ss z yyyy";
 		
@@ -332,8 +344,7 @@ public class PatientServiceImpl implements PatientService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return newDate;
-		
+		return newDate;		
 	}
 
 }
