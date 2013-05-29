@@ -87,7 +87,7 @@ public class PatientREST {
 	@POST
 	@Path("/updatePatient")
 	@Consumes(MediaType.APPLICATION_XML)
-	public Response updatePatientRDF(Patient patient) throws IOException {
+	public Response updatePatientRDF(Patient patient) throws IOException, RepositoryException {
 		if(patientService.updatePatientRDF(patient)){
 		return Response
 					.status(Response.Status.OK)

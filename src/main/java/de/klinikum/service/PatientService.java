@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.openrdf.repository.RepositoryException;
 
+import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
 
 public interface PatientService {
@@ -15,8 +16,9 @@ public interface PatientService {
 	
 	public abstract List<Patient> searchPatientSPARQL(Patient patient) throws IOException, RepositoryException;
 	
-	public abstract boolean updatePatientRDF(Patient patient) throws IOException;
+	public abstract boolean updatePatientRDF(Patient patient) throws IOException, RepositoryException;
+	
+	public abstract boolean updateAddressRDF(Address address) throws IOException, RepositoryException;
+	
 
-	public abstract Patient updatePatient(Patient patient);
-
-}
+	}
