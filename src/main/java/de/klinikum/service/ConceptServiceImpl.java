@@ -32,12 +32,14 @@ public class ConceptServiceImpl implements ConceptService {
 
 		List<Concept> concepts = new ArrayList<Concept>();
 
-		String sparqlQuery = "SELECT ?Uri WHERE {";
+		String sparqlQuery = "SELECT ?Uri ?Name WHERE {";
 
 		sparqlQuery += "<" + patient.getUri().toString() + "> <" + PATIENT_HAS_CONCEPT
 				+ "> ?Uri . ";
 
-		sparqlQuery += "?Uri <" + RDF.TYPE + "> <" + GUI_TAB_TYPE + ">}";
+		sparqlQuery += "?Uri <" + RDF.TYPE + "> <" + GUI_TAB_TYPE + "> . ";
+		
+		sparqlQuery += "?Uri <" + ONTOLOGIE_CONCEPT_HAS_LABEL + "> \"?Name\"}";
 
 		Set<HashMap<String, Value>> queryResult = this.tripleStore
 				.executeSelectSPARQLQuery(sparqlQuery);
