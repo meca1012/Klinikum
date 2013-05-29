@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.openrdf.repository.RepositoryException;
+
 import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
 import de.klinikum.service.PatientServiceImpl;
@@ -54,8 +55,6 @@ public class PatientREST {
         p1.setDateOfBirth(formatter.parse(dateString));
         return p1;
     }
-    
-    
 
     @Path("/getPatientByPatientNumber/{patientNumber}")
     @GET
@@ -88,22 +87,15 @@ public class PatientREST {
         return p1;
     }
 
-	@POST
-	@Path("/updatePatient")
-	@Consumes(MediaType.APPLICATION_XML)
-	public Response updatePatientRDF(Patient patient) throws IOException {
-		if(patientService.updatePatientRDF(patient)){
-		return Response
-					.status(Response.Status.OK)
-					.entity("ok")
-					.build();
-					
-		}
-		return Response
-				.status(Response.Status.NOT_MODIFIED)
-				.entity("not moified")
-				.build();
-		
-		}
-	}
+    @POST
+    @Path("/updatePatient")
+    @Consumes(MediaType.APPLICATION_XML)
+    public Response updatePatientRDF(Patient patient) throws IOException {
+        if (this.patientService.updatePatientRDF(patient)) {
+            return Response.status(Response.Status.OK).entity("ok").build();
 
+        }
+        return Response.status(Response.Status.NOT_MODIFIED).entity("not moified").build();
+
+    }
+}
