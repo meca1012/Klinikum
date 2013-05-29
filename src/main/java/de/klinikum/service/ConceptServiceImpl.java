@@ -1,9 +1,9 @@
 package de.klinikum.service;
 
 import static de.klinikum.domain.NameSpaces.GUI_TAB_TYPE;
-import static de.klinikum.domain.NameSpaces.PATIENT_HAS_CONCEPT;
-import static de.klinikum.domain.NameSpaces.ONTOLOGIE_CONCEPT_TYPE;
 import static de.klinikum.domain.NameSpaces.ONTOLOGIE_CONCEPT_HAS_LABEL;
+import static de.klinikum.domain.NameSpaces.ONTOLOGIE_CONCEPT_TYPE;
+import static de.klinikum.domain.NameSpaces.PATIENT_HAS_CONCEPT;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,10 +34,10 @@ public class ConceptServiceImpl implements ConceptService {
 
 		String sparqlQuery = "SELECT ?Uri WHERE {";
 
-		sparqlQuery += patient.getUri().toString() + " <" + PATIENT_HAS_CONCEPT
+		sparqlQuery += "<" + patient.getUri().toString() + "> <" + PATIENT_HAS_CONCEPT
 				+ "> ?Uri . ";
 
-		sparqlQuery += "?Uri " + RDF.TYPE + " <" + GUI_TAB_TYPE + ">";
+		sparqlQuery += "?Uri <" + RDF.TYPE + "> <" + GUI_TAB_TYPE + ">}";
 
 		Set<HashMap<String, Value>> queryResult = this.tripleStore
 				.executeSelectSPARQLQuery(sparqlQuery);
@@ -71,6 +71,9 @@ public class ConceptServiceImpl implements ConceptService {
 		
 //		Concept anlegen
 		URI conceptUri = this.tripleStore.getUniqueURI(ONTOLOGIE_CONCEPT_TYPE.toString());
+		
+		concept.setUri(conceptUri.toString());
+		
 		URI conceptTypeUri = this.tripleStore.getValueFactory().createURI(ONTOLOGIE_CONCEPT_TYPE.toString());
 			
 		this.tripleStore.addTriple(conceptUri, RDF.TYPE, conceptTypeUri);

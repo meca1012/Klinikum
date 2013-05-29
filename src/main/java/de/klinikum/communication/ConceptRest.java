@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 
 import de.klinikum.domain.Concept;
 import de.klinikum.domain.Patient;
+import de.klinikum.domain.PatientDTO;
 import de.klinikum.service.ConceptService;
 
 @Path("/concept")
@@ -27,7 +28,7 @@ public class ConceptRest {
 	ConceptService conceptService;
 	
 	@Path("/getTabConcepts")
-	@GET
+	@POST
 	@Produces(MediaType.APPLICATION_XML)
 	public List<Concept> getTabConcepts(Patient patient) throws IOException {
 		
@@ -53,9 +54,9 @@ public class ConceptRest {
 	@Path("/addConceptToPatient")
 	@POST
 	@Produces(MediaType.APPLICATION_XML)
-	public Concept addConceptToPatient(Concept concept, Patient patient, boolean tabConcept) throws IOException {
+	public Concept addConceptToPatient(PatientDTO pDto) throws IOException {
 	
-		return this.conceptService.addConceptToPatient(concept, patient, tabConcept);	
+		return this.conceptService.addConceptToPatient(pDto.getConcept(), pDto.getPatient(), pDto.isTabConcept());	
 	}
 
 }
