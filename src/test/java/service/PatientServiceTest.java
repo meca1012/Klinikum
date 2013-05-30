@@ -125,20 +125,7 @@ public class PatientServiceTest {
 		// TODO: implement me
 	}
 
-	@Test
-	public void updatePatientRDFTest() throws IOException {
-		boolean result = this.patientService.updatePatientRDF(this.patient);
-		System.out.println(result);
-		// TODO: implement me
-	}
-
-	@Test
-	public void updatePatientTest() {
-		Patient patient = new Patient();
-		patient = this.patientService.updatePatient(patient);
-		// TODO: implement me
-	}
-	
+		
 	//Test UpdatePatient 
 	@Test
 	public void testUpdatePatient() throws IOException, RepositoryException {
