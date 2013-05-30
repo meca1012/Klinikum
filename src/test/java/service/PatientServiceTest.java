@@ -79,15 +79,42 @@ public class PatientServiceTest {
 		assertNotNull(patient.getAddress());
 	}
 	
-	//TODO 
+	//Test UpdatePatient 
 	@Test
 	public void testUpdatePatient() throws IOException, RepositoryException {
 		
-		Patient patient = new Patient();
+		//Create
+		Patient patient = new Patient();		
+		patient.setFirstName("klaus");
+		patient.setLastName("blau");
+		patient.setPatientNumber("3456");
+		Address address = new Address(null, "Moltkestraße", "30", "Karlsruhe", "76133", "D", "00");
+		patient.setAddress(address);
 		patient = this.patientService.createPatientRDF(patient);
 		
+		//Update
+		patient.setFirstName("hans");
+		patient.setLastName("gelb");
+		patient.setPatientNumber("6789");
+		Address address1 = new Address(null, "Kaiserstraße", "40", "Stuttgart", "78999", "D", "09");
+		patient.setAddress(address1);
+		this.patientService.updatePatientRDF(patient);		
 		
+		Patient patient1 = this.patientService.getPatientByUri(patient.getUri());
 		
+		assertEquals(patient.getFirstName(), patient1.getFirstName());
+		assertEquals(patient.getLastName(), patient1.getLastName());
+		assertEquals(patient.getPatientNumber(), patient1.getPatientNumber());
+		assertNotNull(patient.getUri());
+		assertEquals(patient.getAddress().getStreet(), patient1.getAddress().getStreet());
+		assertEquals(patient.getAddress().getStreetNumber(), patient1.getAddress().getStreetNumber());
+		assertEquals(patient.getAddress().getCity(), patient1.getAddress().getCity());
+		assertEquals(patient.getAddress().getZip(), patient1.getAddress().getZip());
+		assertEquals(patient.getAddress().getCountry(), patient1.getAddress().getCountry());
+		assertEquals(patient.getAddress().getPhone(), patient1.getAddress().getPhone());
+		assertNotNull(patient.getAddress().getUri());
+		
+		this.patientUri = patient1.getUri();
 				
 	}
 	
