@@ -45,6 +45,7 @@ public class PatientServiceTest {
 		Patient patient = new Patient();
 		patient.setFirstName("alice");
 		patient.setLastName("smith");
+		patient.setPatientNumber("12345");
 		
 		Address address = new Address(null, "Moltkestraﬂe", "30", "Karlsruhe", "76133", "D", "00");
 		patient.setAddress(address);
@@ -53,8 +54,10 @@ public class PatientServiceTest {
 		
 		assertEquals(patient.getFirstName(), patient1.getFirstName());
 		assertEquals(patient.getLastName(), patient1.getLastName());
+		assertEquals(patient.getPatientNumber(), patient1.getPatientNumber());
 		assertNotNull(patient.getUri());
 		assertEquals(patient.getAddress().getStreet(), patient1.getAddress().getStreet());
+		assertEquals(patient.getAddress().getStreetNumber(), patient1.getAddress().getStreetNumber());
 		assertEquals(patient.getAddress().getCity(), patient1.getAddress().getCity());
 		assertEquals(patient.getAddress().getZip(), patient1.getAddress().getZip());
 		assertEquals(patient.getAddress().getCountry(), patient1.getAddress().getCountry());
@@ -75,4 +78,18 @@ public class PatientServiceTest {
 		assertNotNull(patient.getLastName());
 		assertNotNull(patient.getAddress());
 	}
+	
+	//TODO 
+	@Test
+	public void testUpdatePatient() throws IOException, RepositoryException {
+		
+		Patient patient = new Patient();
+		patient = this.patientService.createPatientRDF(patient);
+		
+		
+		
+				
+	}
+	
+	
 }
