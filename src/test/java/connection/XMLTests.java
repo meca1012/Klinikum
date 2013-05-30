@@ -24,7 +24,7 @@ public class XMLTests {
 
 	@Before
 	public void setUp() throws Exception {
-		context = JAXBContext.newInstance(new Class[] { Patient.class });
+		context = JAXBContext.newInstance(new Class[] { Patient.class, PatientDTO.class });
 		factory = new ObjectFactory();
 		marshaller = context.createMarshaller();
 	}
@@ -47,6 +47,7 @@ public class XMLTests {
 		System.out.println(result);
 
 	}
+	
 	
 	@Test
 	public void generateXML() throws JAXBException {

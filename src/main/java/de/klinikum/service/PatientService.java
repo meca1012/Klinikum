@@ -8,13 +8,16 @@ import org.openrdf.repository.RepositoryException;
 import de.klinikum.domain.Patient;
 
 public interface PatientService {
-	
-	public abstract Patient createPatientRDF(Patient patient) throws IOException;
 
-	public abstract List<Patient> searchPatient(Patient patient);
-	
-	public abstract List<Patient> searchPatientSPARQL(Patient patient) throws IOException, RepositoryException;
+    Patient createPatientRDF(Patient patient) throws IOException;
 
-	public abstract Patient updatePatient(Patient patient);
 
+
+    List<Patient> searchPatient(Patient patient);
+
+    List<Patient> searchPatientSPARQL(Patient patient) throws IOException, RepositoryException;
+
+	boolean updatePatientRDF(Patient patient) throws IOException;
+
+	Patient updatePatient(Patient patient);
 }
