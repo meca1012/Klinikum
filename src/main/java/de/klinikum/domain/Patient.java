@@ -98,19 +98,19 @@ public class Patient implements Serializable {
 	
 	public boolean isValid()
 	{	
-		if(!this.uri.isEmpty())
+		if (this.uri != null || !this.uri.isEmpty())
 			return false;
 		
-		if(this.patientNumber.isEmpty())
+		if (this.patientNumber == null || this.patientNumber.isEmpty())
 			return false;
 		
-		if(this.firstName.isEmpty())
+		if (this.firstName == null || this.firstName.isEmpty())
 			return false;
 		
-		if(this.lastName.isEmpty())
+		if (this.lastName == null ||this.lastName.isEmpty())
 			return false;
 	
-		if(this.dateOfBirth == null)
+		if (this.dateOfBirth == null)
 			return false;
 		
 		return true;

@@ -7,6 +7,7 @@ import info.aduna.iteration.Iterations;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -33,17 +34,37 @@ import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
 import org.openrdf.repository.http.HTTPRepository;
 
+import de.klinikum.helper.PropertyLoader;
+
 @Named
 public class SesameTripleStore {
 
+	private static String configName = "sesame.properties";
+	private static String serverLinkKey = "server.link";
+	private static String repositoryKey = "server.repository";
+	
+	private PropertyLoader propertyLoader;
 	private RepositoryConnection con;
 	private ValueFactory valueFactory;
+
 	private String sesameServer = "http://localhost:8080/openrdf-sesame";
 	private URI datastoreURI;
 	private String repositoryID = "TestNative";
 	public static final String SPIRONTO_NS = "http://spironto.de/ns/1.0#";
+	
+	//intitiate TripleStore an load properties from sesame.properties
+	//ServerLink=http\://localhost\:8080/openrdf-sesame
+	//RepositoryID=TestNative
 
 	public SesameTripleStore() {
+		try {
+			Properties propFile = propertyLoader.load(configName);
+			this.sesameServer = propFile.getProperty(serverLinkKey);
+			this.repositoryID = propFile.getProperty(repositoryKey);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	@PostConstruct

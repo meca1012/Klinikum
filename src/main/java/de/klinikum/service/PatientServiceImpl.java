@@ -56,10 +56,6 @@ public class PatientServiceImpl implements PatientService {
 		this.className = className;
 	}
 
-	@PostConstruct
-    public void afterCreate() {
-        System.out.println("PatientService created");
-    }
 	
 	public Patient getPatientByUri(String patientUri) throws RepositoryException, IOException {
 		Patient returnPatient = new Patient();
