@@ -414,7 +414,7 @@ public class PatientServiceImpl implements PatientService {
             sparqlQuery += "?Uri <" + PATIENT_HAS_LAST_NAME + ">\"" + patient.getLastName() + "\". ";
         }
         if (patient.getFirstName() != null && !patient.getFirstName().isEmpty()) {
-            sparqlQuery += "?Uri <" + PATIENT_HAS_FIRST_NAME + ">\"" + patient.getFirstName() + "\"";
+            sparqlQuery += "?Uri <" + PATIENT_HAS_FIRST_NAME + ">\"" + patient.getFirstName() + "\". ";
         }
 
         if (patient.getDateOfBirth() != null) {
