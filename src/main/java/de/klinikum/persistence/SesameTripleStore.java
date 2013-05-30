@@ -40,24 +40,28 @@ import de.klinikum.helper.PropertyLoader;
 public class SesameTripleStore {
 
 
-	private static String configName = "sesame.properties";
-	private static String serverLinkKey = "server.link";
-	private static String repositoryKey = "server.repository";
+	private static final String configName = "sesame.properties";
+	private static final String serverLinkKey = "server.link";
+	private static final String repositoryKey = "server.repository";
+	private static final String spirontoNsKey = "spironto.namespace";
 	
 	private PropertyLoader propertyLoader;
 	private RepositoryConnection con;
 	private ValueFactory valueFactory;
 
-	private String sesameServer = "http://localhost:8080/openrdf-sesame";
+	private String sesameServer;
 	private URI datastoreURI;
-	private String repositoryID = "TestNative";
-	public static final String SPIRONTO_NS = "http://spironto.de/ns/1.0#";
+	private String repositoryID;
+	public String spirontoNs;
 	
 	public SesameTripleStore() {
 		try {
+			propertyLoader = new PropertyLoader();
 			Properties propFile = propertyLoader.load(configName);
 			this.sesameServer = propFile.getProperty(serverLinkKey);
 			this.repositoryID = propFile.getProperty(repositoryKey);
+			this.spirontoNs = propFile.getProperty(spirontoNsKey);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -97,7 +101,7 @@ public class SesameTripleStore {
         }
         else {
             statements.close();
-            this.datastoreURI = this.valueFactory.createURI(SPIRONTO_NS);
+            this.datastoreURI = this.valueFactory.createURI(spirontoNs);
             this.addTriple(this.datastoreURI.toString(), RDF.TYPE.toString(), typeDatastore.toString());
             this.setValue(this.datastoreURI.toString(), LAST_ID.toString(), 0);
         }
