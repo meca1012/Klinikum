@@ -9,16 +9,15 @@ import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
 
 public interface PatientService {
-	
-	public abstract Patient createPatientRDF(Patient patient) throws IOException;
 
-	public abstract List<Patient> searchPatient(Patient patient);
-	
-	public abstract List<Patient> searchPatientSPARQL(Patient patient) throws IOException, RepositoryException;
-	
-	public abstract boolean updatePatientRDF(Patient patient) throws IOException, RepositoryException;
-	
-	public abstract boolean updateAddressRDF(Address address) throws IOException, RepositoryException;
-	
+    Patient createPatientRDF(Patient patient) throws IOException;
 
-	}
+    List<Patient> searchPatient(Patient patient);
+
+    List<Patient> searchPatientSPARQL(Patient patient) throws IOException, RepositoryException;
+
+	boolean updatePatientRDF(Patient patient) throws IOException, RepositoryException;
+	
+	boolean updateAddressRDF(Address address) throws IOException, RepositoryException;	
+}
+

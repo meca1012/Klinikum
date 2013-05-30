@@ -15,67 +15,66 @@ import de.klinikum.helper.XmlDateAdapter;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Patient implements Serializable {
 
-	private static final long serialVersionUID = 1199647317278849602L;
-	@XmlElement(name = "uri")
-	private String uri;
-	
-	@XmlElement(name = "patientNumber")
-	private String patientNumber;
-	
-	@XmlElement(name = "firstName")
-	private String firstName;
+    private static final long serialVersionUID = 1199647317278849602L;
+    @XmlElement(name = "uri")
+    private String uri;
 
-	@XmlElement(name = "lastName")
-	private String lastName;
-	
-	@XmlElement(name = "dateOfBirth")
-	@XmlJavaTypeAdapter(XmlDateAdapter.class)  
-	private Date dateOfBirth;
-	
-	@XmlElement(name="address")
-	private Address address;
+    @XmlElement(name = "patientNumber")
+    private String patientNumber;
 
-	public Patient() {
-	}
+    @XmlElement(name = "firstName")
+    private String firstName;
 
-	public Patient(String uri, String patientNumber, String vName, String nName, Address address) {
+    @XmlElement(name = "lastName")
+    private String lastName;
 
-		this.uri = uri;
-		this.patientNumber = patientNumber;
-		this.firstName = vName;
-		this.lastName = nName;
-		this.address = address;
-	}
-	
-	public String getUri() {
-		return uri;
-	}
+    @XmlElement(name = "dateOfBirth")
+    @XmlJavaTypeAdapter(XmlDateAdapter.class)
+    private Date dateOfBirth;
 
-	public void setUri(String uri) {
-		this.uri = uri;
-	}
-	
-	
-	public String getPatientNumber() {
-		return patientNumber;
-	}
+    @XmlElement(name = "address")
+    private Address address;
 
-	public void setPatientNumber(String patientNumber) {
-		this.patientNumber = patientNumber;
-	}
+    public Patient() {
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public Patient(String uri, String patientNumber, String vName, String nName, Address address) {
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	
-	public String getLastName() {
-		return lastName;
-	}
+        this.uri = uri;
+        this.patientNumber = patientNumber;
+        this.firstName = vName;
+        this.lastName = nName;
+        this.address = address;
+    }
 
+    public String getUri() {
+        return this.uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
+    public String getPatientNumber() {
+        return this.patientNumber;
+    }
+
+    public void setPatientNumber(String patientNumber) {
+        this.patientNumber = patientNumber;
+    }
+
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return this.lastName;
+    }
+    
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
@@ -119,5 +118,4 @@ public class Patient implements Serializable {
 		return true;
 		
 	}
-	
 }
