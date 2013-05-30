@@ -63,6 +63,23 @@ public class PatientREST {
             throws RepositoryException, IOException {
         return this.patientService.getPatientByPatientNumber(patientNumber);
     }
+    
+	@POST
+	@Path("/updatePatient")
+	@Consumes(MediaType.APPLICATION_XML)
+	public Response updatePatientRDF(Patient patient) throws IOException, RepositoryException {
+		if(patientService.updatePatientRDF(patient)){
+		return Response
+					.status(Response.Status.OK)
+					.entity("ok")
+					.build();					
+		}
+		return Response
+				.status(Response.Status.NOT_MODIFIED)
+				.entity("not moified")
+				.build();		
+	}
+	
 
     @POST
     @Path("/createPatient")
@@ -86,16 +103,5 @@ public class PatientREST {
         List<Patient> p1 = this.patientService.searchPatientSPARQL(patient);
         return p1;
     }
-
-    @POST
-    @Path("/updatePatient")
-    @Consumes(MediaType.APPLICATION_XML)
-    public Response updatePatientRDF(Patient patient) throws IOException {
-        if (this.patientService.updatePatientRDF(patient)) {
-            return Response.status(Response.Status.OK).entity("ok").build();
-
-        }
-        return Response.status(Response.Status.NOT_MODIFIED).entity("not moified").build();
-
-    }
+    
 }

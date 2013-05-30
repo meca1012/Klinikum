@@ -63,7 +63,6 @@ public class MainTest {
                         BindingSet bindingSet = result.next();
                         Value valueOfX = bindingSet.getValue("name");
                         // Value valueOfY = bindingSet.getValue("y");
-                        System.out.println(valueOfX.stringValue());
                         System.out.println(valueOfX.toString());
                         // System.out.println(valueOfY.toString());
 

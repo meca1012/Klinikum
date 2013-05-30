@@ -31,4 +31,8 @@ public interface PatientService {
 
 	Address createAddressRDF(Address address) throws IOException;
 
+	boolean updatePatientRDF(Patient patient) throws IOException, RepositoryException;
+	
+	boolean updateAddressRDF(Address address) throws IOException, RepositoryException;	
 }
+
