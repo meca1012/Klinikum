@@ -1,6 +1,7 @@
 package de.klinikum.communication;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -12,9 +13,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.openrdf.repository.RepositoryException;
+
 import de.klinikum.domain.Concept;
 import de.klinikum.domain.Patient;
-import de.klinikum.domain.PatientDTO;
 import de.klinikum.service.ConceptService;
 
 @Path("/concept")
@@ -25,6 +27,24 @@ public class ConceptRest {
 
     @Inject
     private ConceptService conceptService;
+    
+    @Path("/getConceptXML")
+    @GET
+    @Produces(MediaType.APPLICATION_XML)
+	public Concept getConceptXML() throws ParseException {
+
+    	Concept conceptToConnect = new Concept();
+    	conceptToConnect.setLabel("connectedTestConcept");
+    	conceptToConnect.setUri("http://spironto.de/spironto#concept-gen15");
+    	conceptToConnect.setPatientUri("http://spironto.de/spironto#patient-gen11");
+    	
+		Concept concept = new Concept();
+		concept.setLabel("TestConcept");
+		concept.addConnectedConcepts(conceptToConnect);
+		concept.setUri("http://spironto.de/spironto#concept-gen16");
+		concept.setPatientUri("http://spironto.de/spironto#patient-gen11");
+		return concept;
+	}
 
     @Path("/getTabConcepts")
     @POST
@@ -35,7 +55,7 @@ public class ConceptRest {
     }
 
     @Path("/getConcepts")
-    @GET
+    @POST
     @Produces(MediaType.APPLICATION_XML)
     public List<Concept> getConcepts(Patient patient) throws IOException {
 
@@ -45,17 +65,46 @@ public class ConceptRest {
     @Path("/createConcept")
     @POST
     @Produces(MediaType.APPLICATION_XML)
-    public Concept createConcept(Concept concept) {
+    public Concept createConcept(Concept concept) throws IOException {
 
-        return this.conceptService.createConcept(concept);
+        return this.conceptService.addConceptToPatient(concept);
     }
-
-    @Path("/addConceptToPatient")
+    
+    @Path("/connectConcepts")
     @POST
     @Produces(MediaType.APPLICATION_XML)
-    public Concept addConceptToPatient(PatientDTO pDto) throws IOException {
+    public Concept connectConcepts(Concept concept) throws IOException {
 
-        return this.conceptService.addConceptToPatient(pDto.getConcept(), pDto.isTabConcept());
+    	if (concept.getConnectedConcepts() == null) {
+    		return null;
+    	} else {
+    		if (concept.getConnectedConcepts().size() == 1) {
+    			this.conceptService.connectSingleConcept(concept, concept.getConnectedConcepts().get(0));
+    		} else {
+    			this.conceptService.connectMultipleConcepts(concept, concept.getConnectedConcepts());
+    		}
+    	}
+        return concept;
     }
+    
+	@Path("/getConceptByUriFetchDirektConnected")
+	@POST
+	@Produces(MediaType.APPLICATION_XML)
+	public Concept addConceptToPatient(Concept concept) throws IOException,
+			RepositoryException {
+
+		concept = this.conceptService.getConceptByUri(concept.getUri());
+		concept.setConnectedConcepts(this.conceptService
+				.getDirectConnected(concept));
+		return concept;
+	}
+
+//    @Path("/addConceptToPatient")
+//    @POST
+//    @Produces(MediaType.APPLICATION_XML)
+//    public Concept addConceptToPatient(PatientDTO pDto) throws IOException {
+//
+//        return this.conceptService.addConceptToPatient(pDto.getConcept(), pDto.isTabConcept());
+//    }
 
 }

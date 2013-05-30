@@ -16,6 +16,7 @@ import javax.inject.Inject;
 
 import org.openrdf.model.Literal;
 import org.openrdf.model.Model;
+import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.RDF;
@@ -35,7 +36,7 @@ public class ConceptServiceImpl implements ConceptService {
 
         List<Concept> concepts = new ArrayList<Concept>();
 
-        String sparqlQuery = "SELECT ?Uri ?Label WHERE {";
+        String sparqlQuery = "SELECT DISTINCT ?Uri ?Label WHERE {";
 
         sparqlQuery += "<" + patient.getUri().toString() + "> <" + PATIENT_HAS_CONCEPT + "> ?Uri . ";
         
@@ -92,6 +93,9 @@ public class ConceptServiceImpl implements ConceptService {
 	
 	@Override
 	public void connectSingleConcept(Concept from, Concept to) throws IOException {
+		if (this.tripleStore.repositoryHasStatement(from.getUri(), ONTOLOGIE_CONCEPT_LINKED_TO.toString(), to.getUri())) {
+			return;
+		}
 		this.tripleStore.addTriple(from.getUri(), ONTOLOGIE_CONCEPT_LINKED_TO.toString(), to.getUri());		
 	}
 	
@@ -108,7 +112,7 @@ public class ConceptServiceImpl implements ConceptService {
 	}
 	
 	@Override
-	public List<Concept> getConnectedConceptsOfConcept(Concept concept) throws IOException {
+	public List<Concept> getDirectConnected(Concept concept) throws IOException {
 		
 		List<Concept> connectedConcepts = new ArrayList<Concept>();		
 		
@@ -161,28 +165,56 @@ public class ConceptServiceImpl implements ConceptService {
 		if (!isTabConcept(tabConcept)) {
 			return null;
 		}
-		// TODO rekursive Methode die alle verknüpften Concepte zurück liefert.
-		return null;
-	}
-
-	@Override
-	public Concept createConcept(Concept concept) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void connectMultipleConcepts(Concept from, List<Concept> to) {
-		// TODO Auto-generated method stub
+		List<Concept> conceptsToReturn = new ArrayList<Concept>();
+		conceptsToReturn = getConnected(tabConcept.getUri(), conceptsToReturn);
+		return conceptsToReturn;
 		
+	}
+	
+	@Override
+	public List<Concept> getConnected(String conceptUri, List<Concept> connected) throws RepositoryException, IOException {
+			
+		 Model statementList;
+	     try {
+	         statementList = this.tripleStore.getStatementList(conceptUri, ONTOLOGIE_CONCEPT_LINKED_TO.toString(), null);	
+	         if (statementList.size() > 1) {
+		         for (Statement conceptStatement : statementList) {
+		        	 getConnected(conceptStatement.getObject().stringValue(), connected);
+		         }
+	         } else {
+	        	 connected.add(getConceptByUri(statementList.objectURI().toString()));
+	         }
+	         return connected;
+	     } catch (RepositoryException re) {
+	    	 throw new IOException(re);
+	     }
+	}
+	
+	@Override
+	public Concept getConceptByUri(String conceptUri) throws RepositoryException, IOException {
+		Concept conceptToReturn = new Concept();
+		conceptToReturn.setUri(conceptUri);
+		
+		String sparqlQuery = "SELECT ?Label ?patientUri WHERE {";
+		sparqlQuery += "<" + conceptUri + "> <" + ONTOLOGIE_CONCEPT_HAS_LABEL + "> ?Label . ";
+		sparqlQuery += "?patientUri <" + PATIENT_HAS_CONCEPT + "> <" + conceptUri + ">}";
+		Set<HashMap<String, Value>> queryResult = this.tripleStore.executeSelectSPARQLQuery(sparqlQuery);		
+		for (HashMap<String, Value> item : queryResult) {
+			conceptToReturn.setLabel(item.get("Label").stringValue());
+			conceptToReturn.setPatientUri(item.get("patientUri").toString());
+		}
+		return conceptToReturn;
+	}	
+
+	@Override
+	public void connectMultipleConcepts(Concept from, List<Concept> to) throws IOException {
+		for (Concept c : to) {
+			connectSingleConcept(from, c);
+		}		
 	}
 
 	@Override
 	public boolean isTabConcept(Concept concept) throws RepositoryException, IOException {
-		 Model statementList = this.tripleStore.getStatementList(concept.getUri(), RDF.TYPE.toString(), GUI_TAB_TYPE.toString());
-		 if (statementList.isEmpty()) {
-			 return false;
-		 }
-		 return true;
+		return this.tripleStore.repositoryHasStatement(concept.getUri(), RDF.TYPE.toString(), GUI_TAB_TYPE.toString());		
 	}
 }

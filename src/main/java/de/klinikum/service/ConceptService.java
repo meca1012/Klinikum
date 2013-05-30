@@ -11,22 +11,24 @@ import de.klinikum.domain.Patient;
 public interface ConceptService {
 
 	List<Concept> findTabConceptsOfPatient(Patient patient) throws IOException;
-
+	
+	Concept addConceptToPatient(Concept concept) throws IOException;
+	
+	void connectSingleConcept(Concept from, Concept to) throws IOException;
+	
+	Concept addTabConcept(Concept concept) throws IOException;
+	
+	List<Concept> getDirectConnected(Concept concept) throws IOException;
+	
 	List<Concept> findAllConceptsOfPatient(Patient patient) throws IOException;
 	
 	List<Concept> findConceptsOfTabConcept(Concept tabConcept) throws RepositoryException, IOException;
 	
-	Concept createConcept(Concept concept);
+	List<Concept> getConnected(String conceptUri, List<Concept> connected) throws RepositoryException, IOException;
 	
-	Concept addConceptToPatient(Concept concept) throws IOException;
+	Concept getConceptByUri(String conceptUri) throws RepositoryException, IOException;
 	
-	Concept addTabConcept(Concept concept) throws IOException;
-	
-	void connectSingleConcept(Concept from, Concept to) throws IOException;
-	
-	void connectMultipleConcepts(Concept from, List<Concept> to);
-
-	List<Concept> getConnectedConceptsOfConcept(Concept concept) throws IOException;
+	void connectMultipleConcepts(Concept from, List<Concept> to) throws IOException;
 	
 	boolean isTabConcept(Concept concept) throws RepositoryException, IOException;
 }
