@@ -302,5 +302,29 @@ public class SesameTripleStore {
             return null;
         }
     }
+    
+    public boolean repositoryHasStatement(Resource subject, URI predicate, Value object) throws IOException {
+    	boolean toReturn = false;
+    	try {
+    		toReturn = this.con.hasStatement(subject, predicate, object, false);
+    		return toReturn;
+        }
+        catch (RepositoryException re) {
+        	throw new IOException(re);
+        }    	
+    }
+    
+    public boolean repositoryHasStatement(String subjectUri, String predicateUri, String objectUri) throws IOException {
+    	URI subjectURI = null;
+        if (subjectUri != null)
+            subjectURI = this.valueFactory.createURI(subjectUri);
+        URI predicateURI = null;
+        if (predicateUri != null)
+            predicateURI = this.valueFactory.createURI(predicateUri);
+        URI objectURI = null;
+        if (objectUri != null)
+            objectURI = this.valueFactory.createURI(objectUri);
+        return repositoryHasStatement(subjectURI, predicateURI, objectURI);
+    }
 
 }

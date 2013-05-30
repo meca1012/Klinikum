@@ -44,6 +44,8 @@ public enum NameSpaces {
 	// Used for SearchQuery like get everything linked to religion
 	ONTOLOGIE_CONCEPT_TYPE("http://spironto.de/spironto#concept"),
 	ONTOLOGIE_CONCEPT_HAS_LABEL("http://spironto.de/spironto#concept-has-label"),
+	ONTOLOGIE_CONCEPT_LINKED_TO("http://spironto.de/spironto#concept-linked-to"),
+	LINK_HAS_LABEL("http://spironto.de/spironto#link-has-label"),
 	
 	//	RDF Type for Ontology
 	PATIENT_HAS_CONCEPT("http://spironto.de/spironto#patient-has-concept"),

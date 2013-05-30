@@ -1,11 +1,15 @@
 package de.klinikum.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import edu.emory.mathcs.backport.java.util.Collections;
 
 @XmlRootElement(name = "concept")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -21,13 +25,20 @@ public class Concept implements Serializable {
 
     @XmlElement(name = "label")
     private String label;
+    
+    @XmlElement(name = "patientUri")
+    private String patientUri;
+    
+    @XmlElement(name = "connectedConcepts")
+    private List<Concept> connectedConcepts;
 
     public Concept() {
     }
 
-    public Concept(String uri, String label) {
+    public Concept(String uri, String label, String patientUri) {
         this.uri = uri;
         this.label = label;
+        this.patientUri = patientUri;
     }
 
     public String getUri() {
@@ -46,4 +57,37 @@ public class Concept implements Serializable {
         this.label = label;
     }
 
+	public String getPatientUri() {
+		return patientUri;
+	}
+
+	public void setPatientUri(String patientUri) {
+		this.patientUri = patientUri;
+	}
+
+	public List<Concept> getConnectedConcepts() {
+		if (this.connectedConcepts == null) {
+			return null;
+		}
+		return Collections.unmodifiableList(this.connectedConcepts);
+	}
+
+	public void setConnectedConcepts(List<Concept> connectedConcepts) {
+		if (this.connectedConcepts == null) {
+			this.connectedConcepts = connectedConcepts;
+			return;
+		}
+		this.connectedConcepts.clear();
+		if (this.connectedConcepts != null) {
+			this.connectedConcepts.addAll(connectedConcepts);
+		}		
+	}
+	
+	public Concept addConnectedConcepts(Concept concept) {
+		if (this.connectedConcepts == null) {
+			this.connectedConcepts = new ArrayList<Concept>();
+		}
+		this.connectedConcepts.add(concept);
+		return this;
+	}	
 }
