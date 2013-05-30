@@ -26,21 +26,27 @@ import de.klinikum.service.ConceptService;
 public class ConceptRest {
 
     @Inject
-    private ConceptService conceptService;
-    
+    ConceptService conceptService;
+  
     @Path("/getConceptXML")
     @GET
     @Produces(MediaType.APPLICATION_XML)
 	public Concept getConceptXML() throws ParseException {
 
-    	Concept conceptToConnect = new Concept();
-    	conceptToConnect.setLabel("connectedTestConcept");
-    	conceptToConnect.setUri("http://spironto.de/spironto#concept-gen15");
-    	conceptToConnect.setPatientUri("http://spironto.de/spironto#patient-gen11");
+    	Concept conceptToConnect1 = new Concept();
+    	conceptToConnect1.setLabel("connectedTestConcept1");
+    	conceptToConnect1.setUri("http://spironto.de/spironto#concept-gen15");
+    	conceptToConnect1.setPatientUri("http://spironto.de/spironto#patient-gen11");
+    	
+    	Concept conceptToConnect2 = new Concept();
+    	conceptToConnect2.setLabel("connectedTestConcept2");
+    	conceptToConnect2.setUri("http://spironto.de/spironto#concept-gen16");
+    	conceptToConnect2.setPatientUri("http://spironto.de/spironto#patient-gen11");
     	
 		Concept concept = new Concept();
 		concept.setLabel("TestConcept");
-		concept.addConnectedConcepts(conceptToConnect);
+		concept.addConnectedConcepts(conceptToConnect1);
+		concept.addConnectedConcepts(conceptToConnect2);
 		concept.setUri("http://spironto.de/spironto#concept-gen16");
 		concept.setPatientUri("http://spironto.de/spironto#patient-gen11");
 		return concept;
