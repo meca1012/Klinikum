@@ -213,7 +213,7 @@ public class PatientServiceImpl implements PatientService {
         return address;
     }
 
-    //TODO: Update Patient
+    //Update Patient
 	@Override
 	public boolean updatePatientRDF(Patient patient) throws IOException, RepositoryException {				
 					
@@ -263,7 +263,7 @@ public class PatientServiceImpl implements PatientService {
 		return true;	
 	}
 	
-//TODO: Update Address
+		//Update Address
 		@Override
 		public boolean updateAddressRDF(Address address) throws IOException, RepositoryException {
 			
