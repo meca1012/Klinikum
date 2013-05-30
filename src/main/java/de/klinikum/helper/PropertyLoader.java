@@ -12,7 +12,6 @@ public class PropertyLoader {
     
 	public PropertyLoader() { 
     	this.props = new Properties();
-    	
     }
    
     public Properties load(String propsName) throws Exception {

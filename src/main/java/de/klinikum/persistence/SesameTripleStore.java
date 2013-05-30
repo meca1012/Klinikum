@@ -32,7 +32,15 @@ import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.RepositoryResult;
+import org.openrdf.repository.config.RepositoryConfig;
+import org.openrdf.repository.config.RepositoryConfigException;
+import org.openrdf.repository.config.RepositoryImplConfig;
 import org.openrdf.repository.http.HTTPRepository;
+import org.openrdf.repository.manager.RemoteRepositoryManager;
+import org.openrdf.repository.manager.RepositoryManager;
+import org.openrdf.repository.sail.config.SailRepositoryConfig;
+import org.openrdf.sail.config.SailImplConfig;
+import org.openrdf.sail.nativerdf.config.NativeStoreConfig;
 
 import de.klinikum.helper.PropertyLoader;
 
@@ -42,45 +50,76 @@ public class SesameTripleStore {
 
 	private static final String configName = "sesame.properties";
 	private static final String serverLinkKey = "server.link";
-	private static final String repositoryKey = "server.repository";
+	private static final String repositoryIdKey = "server.repositoryId";
+	private static final String repositoryTextKey = "server.repositoryText";
 	private static final String spirontoNsKey = "spironto.namespace";
 	
 	private PropertyLoader propertyLoader;
+	private RepositoryManager repoManager;
 	private RepositoryConnection con;
 	private ValueFactory valueFactory;
 
 	private String sesameServer;
 	private URI datastoreURI;
 	private String repositoryID;
-	public String spirontoNs;
+	private String repositoryText;
+	private String spirontoNs;
 	
+	/**
+	 * Creates SesameTripleStore Object and reads the ConfigData from /de/klinikum/properties/sesame.properties
+	 */
 	public SesameTripleStore() {
 		try {
 			propertyLoader = new PropertyLoader();
 			Properties propFile = propertyLoader.load(configName);
 			this.sesameServer = propFile.getProperty(serverLinkKey);
-			this.repositoryID = propFile.getProperty(repositoryKey);
+			this.repositoryID = propFile.getProperty(repositoryIdKey);
+			this.repositoryText = propFile.getProperty(repositoryTextKey);
 			this.spirontoNs = propFile.getProperty(spirontoNsKey);
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 	}
-
+/**
+ * Initiats TripeStoreClass / starts connection to SesameServer
+ * If no Repository could be found with the SesameId given by the ConfigFile method will try to create a new Store with
+ * the given properties.
+ * @throws IOException
+ */
     @PostConstruct
     public void initSesameTripleStore() throws IOException {
-        Repository repository;
+
+    	Repository repository;
         repository = new HTTPRepository(this.sesameServer, this.repositoryID);
+        
         try {
             repository.initialize();
-            // TODO: check Valuefactory from connection oder repository
             this.valueFactory = repository.getValueFactory();
             this.con = repository.getConnection();
             this.initRepository(this.con);
         }
+        
         catch (RepositoryException e) {
-            throw new IOException(e);
+        	
+        	SailImplConfig sailImplConfig = new NativeStoreConfig(); 
+       	 	RepositoryImplConfig repImplConfig = new SailRepositoryConfig(sailImplConfig);
+        	RepositoryConfig repConfig = new RepositoryConfig(this.repositoryID, this.repositoryText, repImplConfig);
+       	        	
+        	try {
+        		repoManager = new RemoteRepositoryManager(this.sesameServer);
+        		repoManager.initialize();
+        		repoManager.addRepositoryConfig(repConfig);    		
+				initSesameTripleStore();
+				
+			} catch (RepositoryException e1) {
+				e1.printStackTrace();
+			} catch (RepositoryConfigException e1) {
+				e1.printStackTrace();
+			}   	 
+        	 
         }
     }
 
@@ -89,8 +128,6 @@ public class SesameTripleStore {
         this.con.close();
     }
 
-    // Methode zur Initialisierung eines Triples vom NS zur LAST_ID, welche zur
-    // generierung einer uniqueUri
     public void initRepository(RepositoryConnection con) throws RepositoryException, IOException {
         URI typeDatastore = this.valueFactory.createURI(TYPE_DATASTORE.toString());
         RepositoryResult<Statement> statements = this.con.getStatements(null, RDF.TYPE, typeDatastore, false);
@@ -178,7 +215,6 @@ public class SesameTripleStore {
         this.addTriple(subjectURI, predicateURI, value);
     }
 
-    // Liefert eine eindeutige URI bestehend aus "namespace -gen sequenz"
     public URI getUniqueURI(String objectURI) throws IOException {
         int value = this.getValue(this.datastoreURI.toString(), LAST_ID.toString());
         this.removeTriples(this.datastoreURI.toString(), LAST_ID.toString(), null);

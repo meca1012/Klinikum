@@ -106,6 +106,16 @@
 			<version>${sesame.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.openrdf.sesame</groupId>
+			<artifactId>sesame-sail-nativerdf</artifactId>
+			<version>${sesame.version}</version>
+		</dependency>
+		<dependency>
+				<groupId>org.openrdf.sesame</groupId>
+				<artifactId>sesame-repository-http</artifactId>
+				<version>${sesame.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jaxrs</artifactId>
 			<version>${resteasy.version}</version>
@@ -181,15 +191,15 @@
 	</dependencies>
 
 	<build>
-	    <resources>
-        <resource>
-            <directory>src/main/java</directory>
-            <includes>
-                <include>**/*.properties</include>
-            </includes>
-        </resource>
-    </resources>
-    
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
+		</resources>
+
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
