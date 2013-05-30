@@ -19,9 +19,7 @@ public interface PatientService {
 
     List<Patient> searchPatientSPARQL(Patient patient) throws IOException, RepositoryException;
 
-	boolean updatePatientRDF(Patient patient) throws IOException;
-
-	Patient updatePatient(Patient patient);
+	boolean updatePatientRDF(Patient patient) throws IOException, RepositoryException;
 
 	Address getAddressByUri(Address address) throws RepositoryException,
 			IOException;
@@ -31,8 +29,6 @@ public interface PatientService {
 
 	Address createAddressRDF(Address address) throws IOException;
 
-	boolean updatePatientRDF(Patient patient) throws IOException, RepositoryException;
-	
 	boolean updateAddressRDF(Address address) throws IOException, RepositoryException;	
 }
 

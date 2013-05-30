@@ -46,7 +46,7 @@ public class PatientServiceImpl implements PatientService {
     private String className = "PatientService";
 
     @Inject
-    private SesameTripleStore tripleStore;
+    SesameTripleStore tripleStore;
 
     @PostConstruct
     public void afterCreate() {
@@ -458,6 +458,3 @@ public class PatientServiceImpl implements PatientService {
     }
 
 }
-
-
-
