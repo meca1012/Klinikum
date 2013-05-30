@@ -26,8 +26,8 @@ import de.klinikum.service.ConceptService;
 public class ConceptRest {
 
     @Inject
-    private ConceptService conceptService;
-    
+    ConceptService conceptService;
+  
     @Path("/getConceptXML")
     @GET
     @Produces(MediaType.APPLICATION_XML)
