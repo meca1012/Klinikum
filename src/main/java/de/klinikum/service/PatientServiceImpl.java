@@ -48,19 +48,11 @@ public class PatientServiceImpl implements PatientService {
     @Inject
     private SesameTripleStore tripleStore;
 
-    public String getClassName() {
-        return this.className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
     @PostConstruct
     public void afterCreate() {
-        System.out.println("PatientService created");
     }
 
+    @Override
     public Patient getPatientByUri(String patientUri) throws RepositoryException, IOException {
         Patient returnPatient = new Patient();
         URI patientURI = this.tripleStore.getValueFactory().createURI(patientUri.toString());
@@ -88,6 +80,7 @@ public class PatientServiceImpl implements PatientService {
         return returnPatient;
     }
 
+    @Override
     public Patient getPatientByPatientNumber(String patientNumber) throws RepositoryException, IOException {
 
         URI patientHasPatientNUmber = this.tripleStore.getValueFactory().createURI(
@@ -105,6 +98,7 @@ public class PatientServiceImpl implements PatientService {
         return p;
     }
 
+    @Override
     public Address getAddressByUri(Address address) throws RepositoryException, IOException {
         URI addressURI = this.tripleStore.getValueFactory().createURI(address.getUri().toString());
         String addressStreet = this.tripleStore.getObjectString(addressURI.toString(),
@@ -176,6 +170,7 @@ public class PatientServiceImpl implements PatientService {
         return patient;
     }
 
+    @Override
     public Address createAddressRDF(Address address) throws IOException {
 
         URI addressUri = this.tripleStore.getUniqueURI(ADDRESS_TYPE.toString());
@@ -216,7 +211,7 @@ public class PatientServiceImpl implements PatientService {
     // Update Patient
     @Override
     public boolean updatePatientRDF(Patient patient) throws IOException {
-
+		// TODO: implement me
         // Get Unique PatientURI Prefix
         URI patientUri = this.tripleStore.getUniqueURI(PATIENT_TYPE.toString());
 
@@ -323,7 +318,6 @@ public class PatientServiceImpl implements PatientService {
         }
 
         sparqlQuery += "}";
-        System.out.println(sparqlQuery);
 
         Set<HashMap<String, Value>> result = this.tripleStore.executeSelectSPARQLQuery(sparqlQuery);
 
@@ -336,7 +330,7 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public Patient updatePatient(Patient patient) {
-
+		// TODO: implement me
         return patient;
     }
 
@@ -354,6 +348,14 @@ public class PatientServiceImpl implements PatientService {
             e.printStackTrace();
         }
         return newDate;
+    }
+    
+    public String getClassName() {
+        return this.className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 
 }

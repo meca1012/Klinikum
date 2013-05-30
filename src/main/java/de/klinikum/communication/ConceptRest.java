@@ -24,7 +24,7 @@ import de.klinikum.service.ConceptService;
 public class ConceptRest {
 
     @Inject
-    private ConceptService conceptService;
+    ConceptService conceptService;
 
     @Path("/getTabConcepts")
     @POST
