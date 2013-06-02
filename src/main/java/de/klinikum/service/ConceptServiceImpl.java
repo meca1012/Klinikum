@@ -96,7 +96,9 @@ public class ConceptServiceImpl implements ConceptService {
 		if (this.tripleStore.repositoryHasStatement(from.getUri(), ONTOLOGIE_CONCEPT_LINKED_TO.toString(), to.getUri())) {
 			return;
 		}
-		this.tripleStore.addTriple(from.getUri(), ONTOLOGIE_CONCEPT_LINKED_TO.toString(), to.getUri());		
+		this.tripleStore.addTriple(from.getUri(), ONTOLOGIE_CONCEPT_LINKED_TO.toString(), to.getUri());
+		from.addConnectedConcepts(to);
+		to.addConnectedConcepts(from);
 	}
 	
 	@Override

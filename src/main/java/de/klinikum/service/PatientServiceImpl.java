@@ -15,15 +15,11 @@ import static de.klinikum.domain.NameSpaces.PATIENT_HAS_PATIENT_NUMBER;
 import static de.klinikum.domain.NameSpaces.PATIENT_TYPE;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
-import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -39,6 +35,7 @@ import org.openrdf.repository.RepositoryException;
 
 import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
+import de.klinikum.helper.DateUtil;
 import de.klinikum.persistence.SesameTripleStore;
 
 @Named
@@ -61,7 +58,7 @@ public class PatientServiceImpl implements PatientService {
         String patientNumber = this.tripleStore.getObjectString(patientURI.toString(),
                 PATIENT_HAS_PATIENT_NUMBER.toString());
 
-        Date dateOfBirth = this.getBirthDateFromString(this.tripleStore.getObjectString(patientURI.toString(),
+        Date dateOfBirth = DateUtil.getBirthDateFromString(this.tripleStore.getObjectString(patientURI.toString(),
                 PATIENT_HAS_DATE_OF_BIRTH.toString()));
 
         // Date patientDate = Date.parse(dateOfBirth);
@@ -431,23 +428,7 @@ public class PatientServiceImpl implements PatientService {
         }
 
         return returnPatientList;
-    }
-
-    private Date getBirthDateFromString(String sDate) {
-        String dateFormat = "EEE MMM dd HH:mm:ss z yyyy";
-
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, new Locale("en_US"));
-        sdf.setTimeZone(TimeZone.getTimeZone("CET"));
-        Date newDate = null;
-        try {
-            newDate = sdf.parse(sDate);
-        }
-        catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return newDate;
-    }
+    }   
     
     public String getClassName() {
         return this.className;
