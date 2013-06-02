@@ -50,7 +50,7 @@ public class TextBlockServiceImpl implements TextBlockService {
 		this.tripleStore.addTriple(textBlockUri, hasDateUri , createdLiteral);
 		this.tripleStore.addTriple(textBlockUri, hasTextUri , textLiteral);
 		
-		if (textBlock.getConcepts() != null || !textBlock.getConcepts().isEmpty()) {
+		if (textBlock.getConcepts() != null) {
 			for (Concept c : textBlock.getConcepts()) {
 				addConceptToTextBlock(textBlock, c);
 			}

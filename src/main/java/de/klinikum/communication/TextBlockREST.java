@@ -1,6 +1,8 @@
 package de.klinikum.communication;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -29,16 +31,26 @@ public class TextBlockREST {
 		@Path("/getTextBlockXML")
 	    @GET
 	    @Produces(MediaType.APPLICATION_XML)
-	    public TextBlock getTextBlockXML() {
-			return null;
+	    public TextBlock getTextBlockXML() throws ParseException {
+			
+			String dateString = "01/08/2013";
+			SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+			
+			TextBlock textBlock = new TextBlock();
+			textBlock.setUri("http://spironto.de/spironto#textBlock-gen3");
+			textBlock.setPatientUri("http://spironto.de/spironto#patient-gen11");
+			textBlock.setCreated(formatter.parse(dateString));
+			textBlock.setText("This is a wonderfull endless text about the most important patient N°11");
+			textBlock.setConcepts(null);
+			return textBlock;
 		}
 		
-		@Path("/getTextBlock")
-	    @GET
+		@Path("/getTextBlockByUri")
+	    @POST
 	    @Produces(MediaType.APPLICATION_XML)
-	    public TextBlock getTextBlock(){
-			return this.textBlockService.findTextBlock();
-		}
+	    public TextBlock getTextBlock(TextBlock textBlock) throws IOException{
+			return this.textBlockService.findTextBlock(textBlock.getUri());
+		}	  
 		
 		@Path("/createTextBlock")
 	    @POST
