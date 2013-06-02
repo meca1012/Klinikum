@@ -72,30 +72,32 @@ public class TextBlockServiceImpl implements TextBlockService {
 	}
 	
 	@Override
-	public List<TextBlock> findTextBlocks(Patient patient) {
+	public List<TextBlock> findTextBlocks(Patient patient) throws IOException {
 
 		List<TextBlock> textBlocks = new ArrayList<TextBlock>();
 
-		// String sparqlQuery = "SELECT ?Uri ?Label WHERE {";
-		//
-		// sparqlQuery += "<" + patient.getUri().toString() + "> <" +
-		// PATIENT_HAS_CONCEPT + "> ?Uri . ";
-		//
-		// sparqlQuery += "?Uri <" + RDF.TYPE + "> <" + ONTOLOGIE_CONCEPT_TYPE +
-		// "> . ";
-		//
-		// sparqlQuery += "?Uri <" + ONTOLOGIE_CONCEPT_HAS_LABEL + "> ?Label}";
-		//
-		// Set<HashMap<String, Value>> queryResult =
-		// this.tripleStore.executeSelectSPARQLQuery(sparqlQuery);
-		//
-		// for (HashMap<String, Value> item : queryResult) {
-		// Concept concept = new Concept();
-		// concept.setUri(item.get("Uri").toString());
-		// concept.setLabel(item.get("Label").stringValue());
-		// concept.setPatientUri(patient.getUri());
-		// concepts.add(concept);
-		// }
+		 String sparqlQuery = "SELECT ?Uri ?text ?created WHERE {";
+		
+		 sparqlQuery += "<" + patient.getUri().toString() + "> <" + PATIENT_HAS_TEXTBLOCK + "> ?Uri . ";
+		
+		 sparqlQuery += "?Uri <" + RDF.TYPE + "> <" + TEXTBLOCK_TYPE + "> . ";
+		
+		 sparqlQuery += "?Uri <" + TEXTBLOCK_HAS_TEXT + "> ?text . ";
+		 
+		 sparqlQuery += "?Uri <" + TEXTBLOCK_HAS_DATE + "> ?created }";
+		
+		 Set<HashMap<String, Value>> queryResult =
+		 this.tripleStore.executeSelectSPARQLQuery(sparqlQuery);
+		
+		 for (HashMap<String, Value> item : queryResult) {
+				TextBlock textBlock = new TextBlock();
+				textBlock.setUri(item.get("Uri").toString());
+				textBlock.setPatientUri(patient.getUri());
+				textBlock.setCreated(DateUtil.getBirthDateFromString(item.get("created").stringValue()));
+				textBlock.setText(item.get("text").stringValue());
+		 textBlocks.add(textBlock);
+		 }
+		 
 		return textBlocks;
 	}
 
