@@ -23,7 +23,7 @@ import de.klinikum.service.ConceptService;
 @Produces({ MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_JSON })
 @Consumes
 @Stateless
-public class ConceptRest {
+public class ConceptREST {
 
     @Inject
     ConceptService conceptService;

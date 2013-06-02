@@ -32,7 +32,7 @@ import de.klinikum.service.PatientServiceImpl;
 public class PatientREST {
 
     @Inject
-    private PatientServiceImpl patientService;
+    PatientServiceImpl patientService;
 
     @Path("/getPatientXML")
     @GET

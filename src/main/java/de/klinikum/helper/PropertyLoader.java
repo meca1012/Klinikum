@@ -1,4 +1,5 @@
 package de.klinikum.helper;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
