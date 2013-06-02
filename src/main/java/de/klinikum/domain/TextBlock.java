@@ -27,6 +27,9 @@ public class TextBlock implements Serializable {
 	@XmlElement(name = "text")
 	String text;
 	
+	@XmlElement(name = "patientUri")
+	String patientUri;
+	
 	@XmlElement(name = "concepts")
 	List<Concept> concepts;
 	
@@ -61,6 +64,14 @@ public class TextBlock implements Serializable {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	public String getPatientUri() {
+		return patientUri;
+	}
+
+	public void setPatientUri(String patientUri) {
+		this.patientUri = patientUri;
 	}
 
 	public List<Concept> getConcepts() {
