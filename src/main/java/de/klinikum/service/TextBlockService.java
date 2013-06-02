@@ -15,7 +15,7 @@ public interface TextBlockService {
 
 	List<TextBlock> findTextBlocks(Patient patient);
 
-	TextBlock findTextBlock(String uri);
+	TextBlock findTextBlock(String uri) throws IOException;
 
 	TextBlock addConceptToTextBlock(TextBlock textBlock, Concept concept)
 			throws IOException;

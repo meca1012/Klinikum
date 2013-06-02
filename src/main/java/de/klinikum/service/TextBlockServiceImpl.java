@@ -22,6 +22,7 @@ import org.openrdf.model.vocabulary.RDF;
 import de.klinikum.domain.Concept;
 import de.klinikum.domain.Patient;
 import de.klinikum.domain.TextBlock;
+import de.klinikum.helper.DateUtil;
 import de.klinikum.persistence.SesameTripleStore;
 
 public class TextBlockServiceImpl implements TextBlockService {
@@ -99,7 +100,7 @@ public class TextBlockServiceImpl implements TextBlockService {
 	}
 
 	@Override
-	public TextBlock findTextBlock(String textBlockUri) {
+	public TextBlock findTextBlock(String textBlockUri) throws IOException {
 
 		TextBlock textBlock = new TextBlock();
 		textBlock.setUri(textBlockUri);
@@ -114,7 +115,7 @@ public class TextBlockServiceImpl implements TextBlockService {
 				.executeSelectSPARQLQuery(sparqlQuery);
 		for (HashMap<String, Value> item : queryResult) {
 			textBlock.setText(item.get("text").stringValue());
-			textBlock.setCreated(item.get("created").stringValue());
+			textBlock.setCreated(DateUtil.getBirthDateFromString(item.get("created").stringValue()));
 			textBlock.setPatientUri(item.get("patientUri").toString());
 		}
 		return textBlock;
