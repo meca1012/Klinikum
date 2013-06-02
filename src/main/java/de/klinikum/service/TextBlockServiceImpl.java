@@ -1,12 +1,18 @@
 package de.klinikum.service;
 
+import de.klinikum.domain.TextBlock;
+
 public class TextBlockServiceImpl implements TextBlockService{
 	
-	public void createText(){
+	@Override
+	public TextBlock createTextBlock(){
+		return null;
 		
 	};
 	
-	public void findText(){
+	@Override
+	public TextBlock findTextBlock(){
+		return null;
 		
 	};
 

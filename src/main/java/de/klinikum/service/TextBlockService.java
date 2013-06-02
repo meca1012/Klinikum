@@ -4,8 +4,8 @@ import de.klinikum.domain.TextBlock;
 
 public interface TextBlockService {
 	
-	TextBlock createText();
-	
-	TextBlock findText();
+	TextBlock findTextBlock();
+
+	TextBlock createTextBlock();
 
 }
