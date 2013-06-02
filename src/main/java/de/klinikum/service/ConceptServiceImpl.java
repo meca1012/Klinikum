@@ -103,11 +103,7 @@ public class ConceptServiceImpl implements ConceptService {
 	public Concept addTabConcept(Concept concept) throws IOException {
 		
 		concept = addConceptToPatient(concept);
-		
-		URI conceptUri = this.tripleStore.getValueFactory().createURI(concept.getUri());		
-		URI tabTypeUri = this.tripleStore.getValueFactory().createURI(GUI_TAB_TYPE.toString());
-		this.tripleStore.addTriple(conceptUri, RDF.TYPE, tabTypeUri);
-		
+		this.tripleStore.addTriple(concept.getUri(), RDF.TYPE.toString(), GUI_TAB_TYPE.toString());		
 		return concept;
 	}
 	

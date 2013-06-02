@@ -76,6 +76,14 @@ public class ConceptRest {
         return this.conceptService.addConceptToPatient(concept);
     }
     
+    @Path("/createTabConcept")
+    @POST
+    @Produces(MediaType.APPLICATION_XML)
+    public Concept createTabConcept(Concept concept) throws IOException {
+
+        return this.conceptService.addTabConcept(concept);
+    }
+    
     @Path("/connectConcepts")
     @POST
     @Produces(MediaType.APPLICATION_XML)
