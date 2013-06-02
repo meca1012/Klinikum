@@ -13,7 +13,7 @@ public interface TextBlockService {
 
 	TextBlock createTextBlock(TextBlock textBlock) throws IOException;
 
-	List<TextBlock> findTextBlocks(Patient patient);
+	List<TextBlock> findTextBlocks(Patient patient) throws IOException;
 
 	TextBlock findTextBlock(String uri) throws IOException;
 
