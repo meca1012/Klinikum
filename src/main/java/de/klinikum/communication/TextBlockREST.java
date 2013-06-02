@@ -3,6 +3,7 @@ package de.klinikum.communication;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -13,6 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import de.klinikum.domain.Patient;
 import de.klinikum.domain.TextBlock;
 import de.klinikum.service.TextBlockService;
 
@@ -59,4 +61,11 @@ public class TextBlockREST {
 			return this.textBlockService.createTextBlock(textBlock);
 		}
 
+		@Path("/getTextBlocks")
+	    @POST
+	    @Produces(MediaType.APPLICATION_XML)
+	    public List<TextBlock> getTextBlocks(Patient patient) throws IOException {
+			return this.textBlockService.findTextBlocks(patient);
+		}
+		
 }
