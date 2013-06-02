@@ -83,7 +83,7 @@ public class ConceptServiceImpl implements ConceptService {
 		
 		this.tripleStore.addTriple(conceptUri, conceptHasLabelUri, conceptLabelLiteral);
 		
-		if (concept.getConnectedConcepts() != null) {
+		if (concept.getConnectedConcepts() != null || !concept.getConnectedConcepts().isEmpty()) {
 			for (Concept c : concept.getConnectedConcepts()) {
 				connectSingleConcept(concept, c);
 			}
