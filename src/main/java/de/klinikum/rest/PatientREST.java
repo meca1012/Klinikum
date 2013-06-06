@@ -20,7 +20,7 @@ import org.openrdf.repository.RepositoryException;
 
 import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
-import de.klinikum.service.PatientServiceImpl;
+import de.klinikum.service.Implementation.PatientServiceImpl;
 
 /**
  * 

@@ -16,7 +16,7 @@ import javax.ws.rs.core.MediaType;
 
 import de.klinikum.domain.Patient;
 import de.klinikum.domain.TextBlock;
-import de.klinikum.service.TextBlockService;
+import de.klinikum.service.Interfaces.TextBlockService;
 
 /**
  * 

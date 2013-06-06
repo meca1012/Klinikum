@@ -17,7 +17,7 @@ import org.openrdf.repository.RepositoryException;
 
 import de.klinikum.domain.Concept;
 import de.klinikum.domain.Patient;
-import de.klinikum.service.ConceptService;
+import de.klinikum.service.Interfaces.ConceptService;
 
 @Path("/concept")
 @Produces({ MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_JSON })

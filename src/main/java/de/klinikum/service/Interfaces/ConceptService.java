@@ -1,4 +1,4 @@
-package de.klinikum.service;
+package de.klinikum.service.Interfaces;
 
 import java.io.IOException;
 import java.util.List;
