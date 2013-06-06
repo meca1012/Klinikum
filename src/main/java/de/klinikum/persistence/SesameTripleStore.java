@@ -42,6 +42,7 @@ import org.openrdf.repository.sail.config.SailRepositoryConfig;
 import org.openrdf.sail.config.SailImplConfig;
 import org.openrdf.sail.nativerdf.config.NativeStoreConfig;
 
+import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.helper.PropertyLoader;
 
 @Named
@@ -227,7 +228,7 @@ public class SesameTripleStore {
     }
 
     // Execute a SELECT SPARQL query
-    public Set<HashMap<String, Value>> executeSelectSPARQLQuery(String queryString) throws IOException {
+    public Set<HashMap<String, Value>> executeSelectSPARQLQuery(String queryString) throws SpirontoException {
         try {
             TupleQuery query = this.con.prepareTupleQuery(org.openrdf.query.QueryLanguage.SPARQL, queryString);
             TupleQueryResult result = query.evaluate();
@@ -246,13 +247,13 @@ public class SesameTripleStore {
         }
         catch (RepositoryException re) {
         	re.printStackTrace();
-            throw new IOException(re);
+            throw new SpirontoException(re);
         }
-        catch (MalformedQueryException e) {
-            throw new IOException(e);
+        catch (MalformedQueryException mqe) {
+            throw new SpirontoException(mqe);
         }
-        catch (QueryEvaluationException e) {
-            throw new IOException(e);
+        catch (QueryEvaluationException qee) {
+            throw new SpirontoException(qee);
         }
     }
 

@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.openrdf.model.Value;
 
+import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.service.SesameServiceImpl;
 
 @Path("/sparql")
@@ -28,9 +29,10 @@ public class SesameRest {
     @POST
     @Path("/executequery")
     @Consumes(MediaType.TEXT_PLAIN)
-    public Set<HashMap<String, Value>> executeSPARQLQuery(String queryString) throws IOException {
-        String text = queryString;
-        return this.SesameService.executeSPARQLQuery(text);
+    public Set<HashMap<String, Value>> executeSPARQLQuery(String queryString) {
+    	try{
+        return this.SesameService.executeSPARQLQuery(queryString);}catch(SpirontoException e)
+        {e.printStackTrace();}
     }
 
 }
