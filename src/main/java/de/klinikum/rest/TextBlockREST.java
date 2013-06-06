@@ -14,6 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import de.klinikum.domain.Concept;
 import de.klinikum.domain.Patient;
 import de.klinikum.domain.TextBlock;
 import de.klinikum.exceptions.SpirontoException;
@@ -68,5 +69,12 @@ public class TextBlockREST {
     public List<TextBlock> getTextBlocks(Patient patient) throws IOException, SpirontoException {
         return this.textBlockService.findTextBlocks(patient);
     }
-
+    
+    @Path("/addConceptToTextBlock")
+    @POST
+    @Produces(MediaType.APPLICATION_XML)
+    public TextBlock addConceptToTextBlock(TextBlock textBlock, Concept concept) throws IOException, SpirontoException {
+        return this.textBlockService.addConceptToTextBlock(textBlock, concept);
+    }
+    
 }

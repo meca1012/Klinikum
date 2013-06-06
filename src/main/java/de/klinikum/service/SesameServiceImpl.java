@@ -13,7 +13,7 @@ import de.klinikum.persistence.SesameTripleStore;
 public class SesameServiceImpl implements SesameService {
 
     @Inject
-    private SesameTripleStore tripleStore;
+    SesameTripleStore tripleStore;
 
     @Override
     public Set<HashMap<String, Value>> executeSPARQLQuery(String queryString) throws SpirontoException {
