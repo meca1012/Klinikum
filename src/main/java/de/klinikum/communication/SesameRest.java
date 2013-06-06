@@ -18,21 +18,25 @@ import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.service.SesameServiceImpl;
 
 @Path("/sparql")
-@Produces({ MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_JSON })
+@Produces({ MediaType.APPLICATION_XML, MediaType.TEXT_XML,
+		MediaType.APPLICATION_JSON })
 @Consumes
 @RequestScoped
 public class SesameRest {
 
-    @Inject
-    private SesameServiceImpl SesameService;
+	@Inject
+	private SesameServiceImpl SesameService;
 
-    @POST
-    @Path("/executequery")
-    @Consumes(MediaType.TEXT_PLAIN)
-    public Set<HashMap<String, Value>> executeSPARQLQuery(String queryString) {
-    	try{
-        return this.SesameService.executeSPARQLQuery(queryString);}catch(SpirontoException e)
-        {e.printStackTrace();}
-    }
+	@POST
+	@Path("/executequery")
+	@Consumes(MediaType.TEXT_PLAIN)
+	public Set<HashMap<String, Value>> executeSPARQLQuery(String queryString) {
+		try {
+			return this.SesameService.executeSPARQLQuery(queryString);
+		} catch (SpirontoException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 }
