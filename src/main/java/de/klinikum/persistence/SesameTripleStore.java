@@ -247,6 +247,7 @@ public class SesameTripleStore {
             return resultList;
         }
         catch (RepositoryException re) {
+        	re.printStackTrace();
             throw new IOException(re);
         }
         catch (MalformedQueryException e) {
