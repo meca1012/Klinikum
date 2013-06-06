@@ -1,4 +1,4 @@
-package de.klinikum.service;
+package de.klinikum.service.Implementation;
 
 import static de.klinikum.domain.NameSpaces.GUI_TAB_TYPE;
 import static de.klinikum.domain.NameSpaces.ONTOLOGIE_CONCEPT_HAS_LABEL;
@@ -25,11 +25,12 @@ import org.openrdf.repository.RepositoryException;
 import de.klinikum.domain.Concept;
 import de.klinikum.domain.Patient;
 import de.klinikum.persistence.SesameTripleStore;
+import de.klinikum.service.Interfaces.ConceptService;
 
 public class ConceptServiceImpl implements ConceptService {
 
 	@Inject
-	SesameTripleStore tripleStore;
+	private SesameTripleStore tripleStore;
 	
 	@Override
     public List<Concept> findTabConceptsOfPatient(Patient patient) throws IOException {

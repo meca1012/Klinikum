@@ -33,7 +33,7 @@ public class Patient implements Serializable {
 	@XmlJavaTypeAdapter(XmlDateAdapter.class)  
 	private Date dateOfBirth;
 	
-	@XmlElement(name="address")
+	@XmlElement(name = "address")
 	private Address address;
 
 	public Patient() {
@@ -96,8 +96,7 @@ public class Patient implements Serializable {
 		this.dateOfBirth = dayOfBirth;
 	}
 	
-	public boolean isValid()
-	{	
+	public boolean isValid() {	
 		if (this.uri != null || !this.uri.isEmpty())
 			return false;
 		
@@ -107,7 +106,7 @@ public class Patient implements Serializable {
 		if (this.firstName == null || this.firstName.isEmpty())
 			return false;
 		
-		if (this.lastName == null ||this.lastName.isEmpty())
+		if (this.lastName == null || this.lastName.isEmpty())
 			return false;
 	
 		if (this.dateOfBirth == null)

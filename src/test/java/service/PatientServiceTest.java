@@ -23,7 +23,7 @@ import org.openrdf.repository.RepositoryException;
 import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
 import de.klinikum.persistence.SesameTripleStore;
-import de.klinikum.service.PatientServiceImpl;
+import de.klinikum.service.Implementation.PatientServiceImpl;
 
 @RunWith(Arquillian.class)
 public class PatientServiceTest {
@@ -105,7 +105,6 @@ public class PatientServiceTest {
 		assertNotNull(patient.getAddress());
 	}
 
-	// TODO: searchPatient deprecated
 	@Ignore
 	@Test
 	public void searchPatientTest() {

@@ -1,4 +1,4 @@
-package de.klinikum.service;
+package de.klinikum.service.Implementation;
 
 import static de.klinikum.domain.NameSpaces.PATIENT_HAS_TEXTBLOCK;
 import static de.klinikum.domain.NameSpaces.TEXTBLOCK_HAS_DATE;
@@ -24,6 +24,7 @@ import de.klinikum.domain.Patient;
 import de.klinikum.domain.TextBlock;
 import de.klinikum.helper.DateUtil;
 import de.klinikum.persistence.SesameTripleStore;
+import de.klinikum.service.Interfaces.TextBlockService;
 
 public class TextBlockServiceImpl implements TextBlockService {
 

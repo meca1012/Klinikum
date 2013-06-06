@@ -1,4 +1,4 @@
-package de.klinikum.communication;
+package de.klinikum.rest;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -17,7 +17,7 @@ import org.openrdf.repository.RepositoryException;
 
 import de.klinikum.domain.Concept;
 import de.klinikum.domain.Patient;
-import de.klinikum.service.ConceptService;
+import de.klinikum.service.Interfaces.ConceptService;
 
 @Path("/concept")
 @Produces({ MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_JSON })
@@ -91,10 +91,12 @@ public class ConceptREST {
 
     	if (concept.getConnectedConcepts() == null) {
     		return null;
-    	} else {
+    	     } 
+    	else {
     		if (concept.getConnectedConcepts().size() == 1) {
     			this.conceptService.connectSingleConcept(concept, concept.getConnectedConcepts().get(0));
-    		} else {
+    		} 
+    	else {
     			this.conceptService.connectMultipleConcepts(concept, concept.getConnectedConcepts());
     		}
     	}

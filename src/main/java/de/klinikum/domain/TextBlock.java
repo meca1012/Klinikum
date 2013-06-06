@@ -19,19 +19,19 @@ public class TextBlock implements Serializable {
 	private static final long serialVersionUID = 1051914267061275536L;
 
 	@XmlElement(name = "uri")
-	String uri;
+	private String uri;
 	
 	@XmlElement(name = "created")
-	Date created;
+	private Date created;
 	
 	@XmlElement(name = "text")
-	String text;
+	private String text;
 	
 	@XmlElement(name = "patientUri")
-	String patientUri;
+	private String patientUri;
 	
 	@XmlElement(name = "concepts")
-	List<Concept> concepts;
+	private List<Concept> concepts;
 	
 	public TextBlock() {
 	}
