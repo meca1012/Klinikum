@@ -30,7 +30,7 @@ import de.klinikum.service.Interfaces.ConceptService;
 public class ConceptServiceImpl implements ConceptService {
 
 	@Inject
-	SesameTripleStore tripleStore;
+	private SesameTripleStore tripleStore;
 	
 	@Override
     public List<Concept> findTabConceptsOfPatient(Patient patient) throws IOException {

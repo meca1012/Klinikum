@@ -91,10 +91,12 @@ public class ConceptREST {
 
     	if (concept.getConnectedConcepts() == null) {
     		return null;
-    	} else {
+    	     } 
+    	else {
     		if (concept.getConnectedConcepts().size() == 1) {
     			this.conceptService.connectSingleConcept(concept, concept.getConnectedConcepts().get(0));
-    		} else {
+    		} 
+    	else {
     			this.conceptService.connectMultipleConcepts(concept, concept.getConnectedConcepts());
     		}
     	}

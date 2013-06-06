@@ -50,7 +50,7 @@ public class TextBlockREST {
 		@Path("/getTextBlockByUri")
 	    @POST
 	    @Produces(MediaType.APPLICATION_XML)
-	    public TextBlock getTextBlock(TextBlock textBlock) throws IOException{
+	    public TextBlock getTextBlock(TextBlock textBlock) throws IOException {
 			return this.textBlockService.findTextBlock(textBlock.getUri());
 		}	  
 		
