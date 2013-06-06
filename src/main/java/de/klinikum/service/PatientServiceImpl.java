@@ -357,7 +357,6 @@ public class PatientServiceImpl implements PatientService {
             return returnPatientList;
         }
 
-        // TODO: Implementate LastNameSearch
         if (patient.getLastName() != null && !patient.getLastName().isEmpty()) {
             // URI for Patient having a PationNumber in RDF
             URI patientHasLastName = this.tripleStore.getValueFactory().createURI(PATIENT_HAS_LAST_NAME.toString());

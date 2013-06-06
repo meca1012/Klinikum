@@ -105,7 +105,6 @@ public class PatientServiceTest {
 		assertNotNull(patient.getAddress());
 	}
 
-	// TODO: searchPatient deprecated
 	@Ignore
 	@Test
 	public void searchPatientTest() {
