@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 
 import de.klinikum.domain.Patient;
 import de.klinikum.domain.TextBlock;
+import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.service.Interfaces.TextBlockService;
 
 /**
@@ -26,46 +27,46 @@ import de.klinikum.service.Interfaces.TextBlockService;
 @Consumes
 @Stateless
 public class TextBlockREST {
-	
-	@Inject
-	TextBlockService textBlockService;
-	
-		@Path("/getTextBlockXML")
-	    @GET
-	    @Produces(MediaType.APPLICATION_XML)
-	    public TextBlock getTextBlockXML() throws ParseException {
-			
-			String dateString = "01/08/2013";
-			SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-			
-			TextBlock textBlock = new TextBlock();
-			textBlock.setUri("http://spironto.de/spironto#textBlock-gen3");
-			textBlock.setPatientUri("http://spironto.de/spironto#patient-gen11");
-			textBlock.setCreated(formatter.parse(dateString));
-			textBlock.setText("This is a wonderfull endless text about the most important patient N°11");
-			textBlock.setConcepts(null);
-			return textBlock;
-		}
-		
-		@Path("/getTextBlockByUri")
-	    @POST
-	    @Produces(MediaType.APPLICATION_XML)
-	    public TextBlock getTextBlock(TextBlock textBlock) throws IOException {
-			return this.textBlockService.findTextBlock(textBlock.getUri());
-		}	  
-		
-		@Path("/createTextBlock")
-	    @POST
-	    @Produces(MediaType.APPLICATION_XML)
-	    public TextBlock createTextBlock(TextBlock textBlock) throws IOException {
-			return this.textBlockService.createTextBlock(textBlock);
-		}
 
-		@Path("/getTextBlocks")
-	    @POST
-	    @Produces(MediaType.APPLICATION_XML)
-	    public List<TextBlock> getTextBlocks(Patient patient) throws IOException {
-			return this.textBlockService.findTextBlocks(patient);
-		}
-		
+    @Inject
+    TextBlockService textBlockService;
+
+    @Path("/getTextBlockXML")
+    @GET
+    @Produces(MediaType.APPLICATION_XML)
+    public TextBlock getTextBlockXML() throws ParseException {
+
+        String dateString = "01/08/2013";
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+
+        TextBlock textBlock = new TextBlock();
+        textBlock.setUri("http://spironto.de/spironto#textBlock-gen3");
+        textBlock.setPatientUri("http://spironto.de/spironto#patient-gen11");
+        textBlock.setCreated(formatter.parse(dateString));
+        textBlock.setText("This is a wonderfull endless text about the most important patient N°11");
+        textBlock.setConcepts(null);
+        return textBlock;
+    }
+
+    @Path("/getTextBlockByUri")
+    @POST
+    @Produces(MediaType.APPLICATION_XML)
+    public TextBlock getTextBlock(TextBlock textBlock) throws IOException, SpirontoException {
+        return this.textBlockService.findTextBlock(textBlock.getUri());
+    }
+
+    @Path("/createTextBlock")
+    @POST
+    @Produces(MediaType.APPLICATION_XML)
+    public TextBlock createTextBlock(TextBlock textBlock) throws IOException {
+        return this.textBlockService.createTextBlock(textBlock);
+    }
+
+    @Path("/getTextBlocks")
+    @POST
+    @Produces(MediaType.APPLICATION_XML)
+    public List<TextBlock> getTextBlocks(Patient patient) throws IOException, SpirontoException {
+        return this.textBlockService.findTextBlocks(patient);
+    }
+
 }

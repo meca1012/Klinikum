@@ -17,6 +17,7 @@ import org.openrdf.repository.RepositoryException;
 
 import de.klinikum.domain.Concept;
 import de.klinikum.domain.Patient;
+import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.service.Interfaces.ConceptService;
 
 @Path("/concept")
@@ -27,35 +28,35 @@ public class ConceptREST {
 
     @Inject
     ConceptService conceptService;
-  
+
     @Path("/getConceptXML")
     @GET
     @Produces(MediaType.APPLICATION_XML)
-	public Concept getConceptXML() throws ParseException {
+    public Concept getConceptXML() throws ParseException {
 
-    	Concept conceptToConnect1 = new Concept();
-    	conceptToConnect1.setLabel("connectedTestConcept1");
-    	conceptToConnect1.setUri("http://spironto.de/spironto#concept-gen15");
-    	conceptToConnect1.setPatientUri("http://spironto.de/spironto#patient-gen11");
-    	
-    	Concept conceptToConnect2 = new Concept();
-    	conceptToConnect2.setLabel("connectedTestConcept2");
-    	conceptToConnect2.setUri("http://spironto.de/spironto#concept-gen16");
-    	conceptToConnect2.setPatientUri("http://spironto.de/spironto#patient-gen11");
-    	
-		Concept concept = new Concept();
-		concept.setLabel("TestConcept");
-		concept.addConnectedConcepts(conceptToConnect1);
-		concept.addConnectedConcepts(conceptToConnect2);
-		concept.setUri("http://spironto.de/spironto#concept-gen16");
-		concept.setPatientUri("http://spironto.de/spironto#patient-gen11");
-		return concept;
-	}
+        Concept conceptToConnect1 = new Concept();
+        conceptToConnect1.setLabel("connectedTestConcept1");
+        conceptToConnect1.setUri("http://spironto.de/spironto#concept-gen15");
+        conceptToConnect1.setPatientUri("http://spironto.de/spironto#patient-gen11");
+
+        Concept conceptToConnect2 = new Concept();
+        conceptToConnect2.setLabel("connectedTestConcept2");
+        conceptToConnect2.setUri("http://spironto.de/spironto#concept-gen16");
+        conceptToConnect2.setPatientUri("http://spironto.de/spironto#patient-gen11");
+
+        Concept concept = new Concept();
+        concept.setLabel("TestConcept");
+        concept.addConnectedConcepts(conceptToConnect1);
+        concept.addConnectedConcepts(conceptToConnect2);
+        concept.setUri("http://spironto.de/spironto#concept-gen16");
+        concept.setPatientUri("http://spironto.de/spironto#patient-gen11");
+        return concept;
+    }
 
     @Path("/getTabConcepts")
     @POST
     @Produces(MediaType.APPLICATION_XML)
-    public List<Concept> getTabConcepts(Patient patient) throws IOException {
+    public List<Concept> getTabConcepts(Patient patient) throws IOException, SpirontoException {
 
         return this.conceptService.findTabConceptsOfPatient(patient);
     }
@@ -63,7 +64,7 @@ public class ConceptREST {
     @Path("/getConcepts")
     @POST
     @Produces(MediaType.APPLICATION_XML)
-    public List<Concept> getConcepts(Patient patient) throws IOException {
+    public List<Concept> getConcepts(Patient patient) throws IOException, SpirontoException {
 
         return this.conceptService.findAllConceptsOfPatient(patient);
     }
@@ -75,7 +76,7 @@ public class ConceptREST {
 
         return this.conceptService.addConceptToPatient(concept);
     }
-    
+
     @Path("/createTabConcept")
     @POST
     @Produces(MediaType.APPLICATION_XML)
@@ -83,44 +84,42 @@ public class ConceptREST {
 
         return this.conceptService.addTabConcept(concept);
     }
-    
+
     @Path("/connectConcepts")
     @POST
     @Produces(MediaType.APPLICATION_XML)
     public Concept connectConcepts(Concept concept) throws IOException {
 
-    	if (concept.getConnectedConcepts() == null) {
-    		return null;
-    	     } 
-    	else {
-    		if (concept.getConnectedConcepts().size() == 1) {
-    			this.conceptService.connectSingleConcept(concept, concept.getConnectedConcepts().get(0));
-    		} 
-    	else {
-    			this.conceptService.connectMultipleConcepts(concept, concept.getConnectedConcepts());
-    		}
-    	}
+        if (concept.getConnectedConcepts() == null) {
+            return null;
+        }
+        else {
+            if (concept.getConnectedConcepts().size() == 1) {
+                this.conceptService.connectSingleConcept(concept, concept.getConnectedConcepts().get(0));
+            }
+            else {
+                this.conceptService.connectMultipleConcepts(concept, concept.getConnectedConcepts());
+            }
+        }
         return concept;
     }
-    
-	@Path("/getConceptByUriFetchDirektConnected")
-	@POST
-	@Produces(MediaType.APPLICATION_XML)
-	public Concept addConceptToPatient(Concept concept) throws IOException,
-			RepositoryException {
 
-		concept = this.conceptService.getConceptByUri(concept.getUri());
-		concept.setConnectedConcepts(this.conceptService
-				.getDirectConnected(concept));
-		return concept;
-	}
+    @Path("/getConceptByUriFetchDirektConnected")
+    @POST
+    @Produces(MediaType.APPLICATION_XML)
+    public Concept addConceptToPatient(Concept concept) throws IOException, RepositoryException, SpirontoException {
 
-//    @Path("/addConceptToPatient")
-//    @POST
-//    @Produces(MediaType.APPLICATION_XML)
-//    public Concept addConceptToPatient(PatientDTO pDto) throws IOException {
-//
-//        return this.conceptService.addConceptToPatient(pDto.getConcept(), pDto.isTabConcept());
-//    }
+        concept = this.conceptService.getConceptByUri(concept.getUri());
+        concept.setConnectedConcepts(this.conceptService.getDirectConnected(concept));
+        return concept;
+    }
+
+    // @Path("/addConceptToPatient")
+    // @POST
+    // @Produces(MediaType.APPLICATION_XML)
+    // public Concept addConceptToPatient(PatientDTO pDto) throws IOException {
+    //
+    // return this.conceptService.addConceptToPatient(pDto.getConcept(), pDto.isTabConcept());
+    // }
 
 }

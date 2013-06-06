@@ -20,6 +20,7 @@ import org.openrdf.repository.RepositoryException;
 
 import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
+import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.service.Implementation.PatientServiceImpl;
 
 /**
@@ -63,23 +64,16 @@ public class PatientREST {
             throws RepositoryException, IOException {
         return this.patientService.getPatientByPatientNumber(patientNumber);
     }
-    
-	@POST
-	@Path("/updatePatient")
-	@Consumes(MediaType.APPLICATION_XML)
-	public Response updatePatientRDF(Patient patient) throws IOException, RepositoryException {
-		if (patientService.updatePatientRDF(patient)) {
-		return Response
-					.status(Response.Status.OK)
-					.entity("ok")
-					.build();					
-		}
-		return Response
-				.status(Response.Status.NOT_MODIFIED)
-				.entity("not moified")
-				.build();		
-	}
-	
+
+    @POST
+    @Path("/updatePatient")
+    @Consumes(MediaType.APPLICATION_XML)
+    public Response updatePatientRDF(Patient patient) throws IOException, RepositoryException {
+        if (this.patientService.updatePatientRDF(patient)) {
+            return Response.status(Response.Status.OK).entity("ok").build();
+        }
+        return Response.status(Response.Status.NOT_MODIFIED).entity("not moified").build();
+    }
 
     @POST
     @Path("/createPatient")
@@ -99,9 +93,9 @@ public class PatientREST {
     @POST
     @Path("/searchPatient")
     @Consumes(MediaType.APPLICATION_XML)
-    public List<Patient> searchPatient(Patient patient) throws IOException, RepositoryException {
+    public List<Patient> searchPatient(Patient patient) throws IOException, RepositoryException, SpirontoException {
         List<Patient> p1 = this.patientService.searchPatientSPARQL(patient);
         return p1;
     }
-    
+
 }
