@@ -1,4 +1,4 @@
-package de.klinikum.communication;
+package de.klinikum.rest;
 
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.Consumes;

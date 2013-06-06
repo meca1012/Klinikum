@@ -1,4 +1,4 @@
-package de.klinikum.communication;
+package de.klinikum.rest;
 
 import java.io.IOException;
 import java.text.ParseException;
