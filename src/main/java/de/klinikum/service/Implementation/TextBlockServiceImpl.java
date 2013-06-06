@@ -54,7 +54,7 @@ public class TextBlockServiceImpl implements TextBlockService {
 
         if (textBlock.getConcepts() != null) {
             for (Concept c : textBlock.getConcepts()) {
-                this.addConceptToTextBlock(textBlock, c);
+                this.tripleStore.addTriple(textBlock.getUri(), TEXTBLOCK_POINTS_TO_CONCEPT.toString(), c.getUri());
             }
         }
         return textBlock;
