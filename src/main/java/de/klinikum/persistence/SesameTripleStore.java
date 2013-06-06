@@ -112,14 +112,14 @@ public class SesameTripleStore {
         		repoManager = new RemoteRepositoryManager(this.sesameServer);
         		repoManager.initialize();
         		repoManager.addRepositoryConfig(repConfig);    		
-				initSesameTripleStore();
-				
-			} catch (RepositoryException e1) {
+				initSesameTripleStore();			
+			}     	
+        	catch (RepositoryException e1) {
 				e1.printStackTrace();
-			} catch (RepositoryConfigException e1) {
+			} 
+        	catch (RepositoryConfigException e1) {
 				e1.printStackTrace();
-			}   	 
-        	 
+			}   	  	 
         }
     }
 
@@ -177,8 +177,6 @@ public class SesameTripleStore {
             this.con.remove(subject, predicate, object);
         }
         catch (RepositoryException re) {
-            // TODO: durch logger ersetzten
-            System.out.println(re.getMessage());
             throw new IOException(re);
         }
     }

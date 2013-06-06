@@ -1,4 +1,4 @@
-package de.klinikum.communication;
+package de.klinikum.rest;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -16,7 +16,7 @@ import javax.ws.rs.core.MediaType;
 
 import de.klinikum.domain.Patient;
 import de.klinikum.domain.TextBlock;
-import de.klinikum.service.TextBlockService;
+import de.klinikum.service.Interfaces.TextBlockService;
 
 /**
  * 
@@ -50,7 +50,7 @@ public class TextBlockREST {
 		@Path("/getTextBlockByUri")
 	    @POST
 	    @Produces(MediaType.APPLICATION_XML)
-	    public TextBlock getTextBlock(TextBlock textBlock) throws IOException{
+	    public TextBlock getTextBlock(TextBlock textBlock) throws IOException {
 			return this.textBlockService.findTextBlock(textBlock.getUri());
 		}	  
 		

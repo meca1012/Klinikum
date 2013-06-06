@@ -1,4 +1,4 @@
-package de.klinikum.service;
+package de.klinikum.service.Implementation;
 
 import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_ADDRESS_CITY;
 import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_ADDRESS_STREET;
@@ -37,6 +37,7 @@ import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
 import de.klinikum.helper.DateUtil;
 import de.klinikum.persistence.SesameTripleStore;
+import de.klinikum.service.Interfaces.PatientService;
 
 @Named
 public class PatientServiceImpl implements PatientService {
@@ -357,7 +358,6 @@ public class PatientServiceImpl implements PatientService {
             return returnPatientList;
         }
 
-        // TODO: Implementate LastNameSearch
         if (patient.getLastName() != null && !patient.getLastName().isEmpty()) {
             // URI for Patient having a PationNumber in RDF
             URI patientHasLastName = this.tripleStore.getValueFactory().createURI(PATIENT_HAS_LAST_NAME.toString());

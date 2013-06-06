@@ -1,7 +1,6 @@
 package de.klinikum.helper;
 
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Properties;
 
  
@@ -17,7 +16,7 @@ public class PropertyLoader {
    
     public Properties load(String propsName) throws Exception {
         this.props = new Properties();
-        this.in = getClass().getResourceAsStream("/de/klinikum/properties/" + propsName);
+        this.in = getClass().getResourceAsStream(propPackage + propsName);
         this.props.load(in);
         return props;
     }

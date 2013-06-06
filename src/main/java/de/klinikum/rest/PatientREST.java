@@ -1,4 +1,4 @@
-package de.klinikum.communication;
+package de.klinikum.rest;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -20,7 +20,7 @@ import org.openrdf.repository.RepositoryException;
 
 import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
-import de.klinikum.service.PatientServiceImpl;
+import de.klinikum.service.Implementation.PatientServiceImpl;
 
 /**
  * 
@@ -68,7 +68,7 @@ public class PatientREST {
 	@Path("/updatePatient")
 	@Consumes(MediaType.APPLICATION_XML)
 	public Response updatePatientRDF(Patient patient) throws IOException, RepositoryException {
-		if(patientService.updatePatientRDF(patient)){
+		if (patientService.updatePatientRDF(patient)) {
 		return Response
 					.status(Response.Status.OK)
 					.entity("ok")
