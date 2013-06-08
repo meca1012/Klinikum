@@ -40,9 +40,15 @@ public class ConceptREST {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ConceptREST.class);
 
-    @Inject
+    //CDI of ConceptService.class
+	@Inject
     ConceptService conceptService;
 
+    /**
+     * 
+     * @return Returns a standard XML- Parse of an ConceptObject 
+     * @throws ParseException
+     */
     @Path("/getConceptXML")
     @GET
     @Produces(MediaType.APPLICATION_XML)
@@ -66,15 +72,31 @@ public class ConceptREST {
         concept.setPatientUri("http://spironto.de/spironto#patient-gen11");
         return concept;
     }
-
+    
+    /**
+     * 
+     * @param patient -> Consumes an PatientObject from GUI- side 
+     * and searches for TabConcepts linked to this Patient
+     * @return TabConcepts linked to given Patient
+     * TabConcepts are the Concepts to build the UI Main- Tabs 
+     * @throws IOException
+     * @throws SpirontoException
+     */
     @Path("/getTabConcepts")
     @POST
     @Produces(MediaType.APPLICATION_XML)
     public List<Concept> getTabConcepts(Patient patient) throws IOException, SpirontoException {
-
         return this.conceptService.findTabConceptsOfPatient(patient);
     }
 
+    /**
+     * 
+     * @param patient -> Consumes an PatienObject from GUI- side
+     * @return -> Returns a List of concepts connected to the Patient. This is a collection of 
+     * normal OntologieConcepts 
+     * @throws IOException
+     * @throws SpirontoException
+     */
     @Path("/getConcepts")
     @POST
     @Produces(MediaType.APPLICATION_XML)
@@ -82,7 +104,14 @@ public class ConceptREST {
 
         return this.conceptService.findAllConceptsOfPatient(patient);
     }
-
+    
+    /**
+     * 
+     * @param concept -> Consumes an ConceptObject from GUI- side
+     * Purpose: Stores given Concept to SesameStore
+     * @return
+     * @throws IOException
+     */
     @Path("/createConcept")
     @POST
     @Produces(MediaType.APPLICATION_XML)
@@ -91,6 +120,13 @@ public class ConceptREST {
         return this.conceptService.addConceptToPatient(concept);
     }
 
+    /**
+     * 
+     * @param concept -> Consumes ConceptType with is created as TabConcept
+     * Purpose: Creates TabConcepts needed for GUI build
+     * @return: Returns Created TabConcept with URI as identifier
+     * @throws IOException
+     */
     @Path("/createTabConcept")
     @POST
     @Produces(MediaType.APPLICATION_XML)
@@ -99,6 +135,12 @@ public class ConceptREST {
         return this.conceptService.addTabConcept(concept);
     }
 
+    /**
+     * 
+     * @param concept -> Consumes an conceptObject from GUI- side
+     * @return: Returns connected concepts
+     * @throws IOException
+     */
     @Path("/connectConcepts")
     @POST
     @Produces(MediaType.APPLICATION_XML)
@@ -118,6 +160,15 @@ public class ConceptREST {
         return concept;
     }
 
+    /**
+     * 
+     * @param Consumes an conceptObject from GUI- side
+     * Purpose: Returns directly connected concepts to given  
+     * @return
+     * @throws IOException
+     * @throws RepositoryException
+     * @throws SpirontoException
+     */
     @Path("/getConceptByUriFetchDirectConnected")
     @POST
     @Produces(MediaType.APPLICATION_XML)
