@@ -37,7 +37,7 @@ public class AppStartup {
 
     }
 
-    public void createTestData() {
+    public void createTestData() throws IOException {
 
         try {
             triplestore.removeTriples(null, RDF.TYPE, null);
@@ -160,13 +160,8 @@ public class AppStartup {
         textBlock2.setCreated(new Date(4, 4, 4014));
         textBlock2.setConcepts(concept4.getConnectedConcepts());
 
-        try {
-            textBlock1 = this.textBlockService.createTextBlock(textBlock1);
-            textBlock2 = this.textBlockService.createTextBlock(textBlock2);
-        } catch (TripleStoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        textBlock1 = this.textBlockService.createTextBlock(textBlock1);
+        textBlock2 = this.textBlockService.createTextBlock(textBlock2);
 
     }
 

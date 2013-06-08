@@ -7,6 +7,7 @@ import org.openrdf.repository.RepositoryException;
 
 import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
+import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.exceptions.TripleStoreException;
 
 public interface PatientService {
@@ -17,7 +18,7 @@ public interface PatientService {
 
     List<Patient> searchPatient(Patient patient) throws TripleStoreException;
 
-    List<Patient> searchPatientSPARQL(Patient patient) throws TripleStoreException;
+    List<Patient> searchPatientSPARQL(Patient patient) throws TripleStoreException, SpirontoException;
 
     boolean updatePatientRDF(Patient patient) throws IOException, RepositoryException;
 

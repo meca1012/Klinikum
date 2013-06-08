@@ -1,5 +1,6 @@
 package de.klinikum.rest;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -47,6 +48,12 @@ public class SesameREST {
 	@Path("/createTestData")
 	@Produces(MediaType.TEXT_PLAIN)
 	public void createTestData() {
-	    this.startup.createTestData();        
+	    try {
+            this.startup.createTestData();
+        }
+        catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }        
 	}
 }

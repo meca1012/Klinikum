@@ -35,6 +35,7 @@ import org.openrdf.repository.RepositoryException;
 
 import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
+import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.exceptions.TripleStoreException;
 import de.klinikum.helper.DateUtil;
 import de.klinikum.persistence.SesameTripleStore;
@@ -460,7 +461,7 @@ public class PatientServiceImpl implements PatientService {
 	// Searches Patients with first name , last name, and PatientNumber
 	// Uses SPARQL to Query Sesame
 	@Override
-	public List<Patient> searchPatientSPARQL(Patient patient) throws TripleStoreException {
+	public List<Patient> searchPatientSPARQL(Patient patient) throws SpirontoException {
 		List<Patient> returnPatientList = new ArrayList<Patient>();
 		String sparqlQuery = "SELECT ?Uri WHERE {";
 
