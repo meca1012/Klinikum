@@ -45,12 +45,12 @@ public class PatientREST {
 
         Address a1 = new Address("http://spironto.de/spironto#address-gen4", "Hauptstrasse", "12", "Karlsruhe",
                 "432433", "Deutschland", "081511833");
-        a1.setUri("de.spironto/address/" + "432432");
+        a1.setUri("http://spironto.de/spironto#address-gen2");
 
         Patient p1 = new Patient();
         p1.setPatientNumber("081512321");
         p1.setAddress(a1);
-        p1.setUri("http://spironto.de/spironto#patient-gen5");
+        p1.setUri("http://spironto.de/spironto#patient-gen1");
         p1.setLastName("Power");
         p1.setFirstName("Max");
         p1.setDateOfBirth(formatter.parse(dateString));
