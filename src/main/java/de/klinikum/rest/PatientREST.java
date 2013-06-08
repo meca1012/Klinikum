@@ -71,13 +71,16 @@ public class PatientREST {
 	@Path("/getPatientByPatientNumber/{patientNumber}")
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
-	public Patient getPatientByPatientNumber(@PathParam("patientNumber") String patientNumber) throws SpirontoException {
+	public Patient getPatientByPatientNumber(@PathParam("patientNumber") String patientNumber) 
+	                                                                    throws SpirontoException {
 		try {
 			return this.patientService.getPatientByPatientNumber(patientNumber);
-		} catch (TripleStoreException e) {
+		} 
+		    catch (TripleStoreException e) {
 			e.printStackTrace();
 			throw new SpirontoException("Error getting patient: " + e.toString(), e);
-		} catch (Exception e) {
+		} 
+		    catch (Exception e) {
 			e.printStackTrace();
 			throw new SpirontoException("Error getting patient: " + e.toString(), e);
 		}
@@ -101,12 +104,14 @@ public class PatientREST {
 	public Patient createPatientRDF(Patient patient) throws SpirontoException {
 		try {
 			return this.patientService.createPatientRDF(patient);
-		} catch (TripleStoreException e) {
-			e.printStackTrace();
-			throw new SpirontoException("Error creating patient: " + e.toString(), e);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new SpirontoException("Error creating patient: " + e.toString(), e);
+		}
+		    catch (TripleStoreException e) {
+    			e.printStackTrace();
+    			throw new SpirontoException("Error creating patient: " + e.toString(), e);
+		} 
+		    catch (Exception e) {
+    			e.printStackTrace();
+    			throw new SpirontoException("Error creating patient: " + e.toString(), e);
 		}
 
 	}
@@ -117,10 +122,12 @@ public class PatientREST {
 	public Patient getPatientByUri(Patient patient) throws SpirontoException {
 		try {
 			return this.patientService.getPatientByUri(patient.getUri());
-		} catch (TripleStoreException e) {
+		}
+		catch (TripleStoreException e) {
 			e.printStackTrace();
 			throw new SpirontoException("Error getting patient: " + e.toString(), e);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 			throw new SpirontoException("Error getting patient: " + e.toString(), e);
 		}
@@ -133,10 +140,12 @@ public class PatientREST {
 		try {
 			List<Patient> p1 = this.patientService.searchPatientSPARQL(patient);
 			return p1;
-		} catch (TripleStoreException e) {
+		}
+		catch (TripleStoreException e) {
 			e.printStackTrace();
 			throw new SpirontoException("Error searching patient: " + e.toString(), e);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 			throw new SpirontoException("Error searching patient: " + e.toString(), e);
 		}

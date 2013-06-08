@@ -86,6 +86,7 @@ public class ConceptREST {
     @POST
     @Produces(MediaType.APPLICATION_XML)
     public List<Concept> getTabConcepts(Patient patient) throws IOException, SpirontoException {
+        
         return this.conceptService.findTabConceptsOfPatient(patient);
     }
 
