@@ -105,7 +105,7 @@ public class SesameTripleStore {
         
         catch (RepositoryException e) {
         	
-        	SailImplConfig sailImplConfig = new NativeStoreConfig(); 
+        	SailImplConfig sailImplConfig = new NativeStoreConfig();
        	 	RepositoryImplConfig repImplConfig = new SailRepositoryConfig(sailImplConfig);
         	RepositoryConfig repConfig = new RepositoryConfig(this.repositoryID, this.repositoryText, repImplConfig);
        	        	
@@ -142,6 +142,22 @@ public class SesameTripleStore {
             this.datastoreURI = this.valueFactory.createURI(spirontoNs);
             this.addTriple(this.datastoreURI.toString(), RDF.TYPE.toString(), typeDatastore.toString());
             this.setValue(this.datastoreURI.toString(), LAST_ID.toString(), 0);
+        }
+    }
+    
+    /**
+     * Helper method for TestData creation. Creates the DataStore Triple for uri generation.
+     */    
+    public void setDatastoreTriple() {
+        try {
+            URI typeDatastore = this.valueFactory.createURI(TYPE_DATASTORE.toString());
+            this.datastoreURI = this.valueFactory.createURI(spirontoNs);
+            this.addTriple(this.datastoreURI.toString(), RDF.TYPE.toString(), typeDatastore.toString());
+            this.setValue(this.datastoreURI.toString(), LAST_ID.toString(), 0);
+        }
+        catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 

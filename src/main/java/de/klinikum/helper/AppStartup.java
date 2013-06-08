@@ -40,6 +40,7 @@ public class AppStartup {
         
         try {
             triplestore.removeTriples(null, RDF.TYPE, null);
+            triplestore.setDatastoreTriple();
         }
         catch (IOException e) {
             // TODO Auto-generated catch block
