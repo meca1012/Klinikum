@@ -124,6 +124,28 @@ public class AppStartup {
             e.printStackTrace();
         }
         
+        Concept tabConcept1 = new Concept();
+        tabConcept1.setLabel("tabConcept1");
+        tabConcept1.setPatientUri(patient1.getUri());
+        
+        Concept tabConcept2 = new Concept();
+        tabConcept2.setLabel("tabConcept2");
+        tabConcept2.setPatientUri(patient1.getUri());
+        
+        Concept tabConcept3 = new Concept();
+        tabConcept3.setLabel("tabConcept3");
+        tabConcept3.setPatientUri(patient1.getUri());
+        
+        try {
+            tabConcept1 = conceptService.addTabConcept(tabConcept1);
+            tabConcept2 = conceptService.addTabConcept(tabConcept2);
+            tabConcept3 = conceptService.addTabConcept(tabConcept3);
+        }
+        catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
         //TextBlock
         TextBlock textBlock1 = new TextBlock();
         textBlock1.setText("This is a so important text, that you can't imagine how endless its context is.");

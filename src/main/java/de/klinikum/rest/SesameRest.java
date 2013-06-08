@@ -1,12 +1,12 @@
 package de.klinikum.rest;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Set;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import org.openrdf.model.Value;
 
 import de.klinikum.exceptions.SpirontoException;
+import de.klinikum.helper.AppStartup;
 import de.klinikum.service.SesameServiceImpl;
 
 @Path("/sparql")
@@ -26,6 +27,9 @@ public class SesameRest {
 
 	@Inject
 	private SesameServiceImpl SesameService;
+	
+	@Inject
+	AppStartup startup;
 
 	@POST
 	@Path("/executequery")
@@ -38,5 +42,11 @@ public class SesameRest {
 			return null;
 		}
 	}
-
+	
+	@GET
+	@Path("/createTestData")
+	@Produces(MediaType.TEXT_PLAIN)
+	public void createTestData() {
+	    this.startup.createTestData();        
+	}
 }
