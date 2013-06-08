@@ -23,6 +23,7 @@ import org.openrdf.repository.RepositoryException;
 import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
+import de.klinikum.exceptions.TripleStoreException;
 import de.klinikum.persistence.SesameTripleStore;
 import de.klinikum.service.Implementation.PatientServiceImpl;
 
@@ -37,7 +38,7 @@ public class PatientServiceTest {
     Patient patient;
 
     @Before
-    public void before() throws IOException {
+    public void before() throws TripleStoreException {
         this.patient = new Patient();
         this.patient.setFirstName("Alice");
         this.patient.setLastName("Smith");
@@ -58,7 +59,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    public void createPatientRDFTest() throws IOException {
+    public void createPatientRDFTest() throws TripleStoreException {
 
         Patient patient = new Patient();
         patient.setFirstName("alice");
@@ -92,7 +93,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    public void getPatientByUriTest() throws RepositoryException, IOException {
+    public void getPatientByUriTest() throws TripleStoreException {
         Patient patient = new Patient();
         patient = this.patientService.getPatientByUri(this.patient.getUri());
 
@@ -104,7 +105,7 @@ public class PatientServiceTest {
 
     @Ignore
     @Test
-    public void searchPatientTest() {
+    public void searchPatientTest() throws TripleStoreException {
 
         List<Patient> patients = this.patientService.searchPatient(this.patient);
         // TODO: implement me
@@ -120,7 +121,7 @@ public class PatientServiceTest {
 
     // Test UpdatePatient
     @Test
-    public void testUpdatePatient() throws IOException, RepositoryException {
+    public void testUpdatePatient() throws IOException, RepositoryException, TripleStoreException {
 
         // Create
         Patient patient = new Patient();

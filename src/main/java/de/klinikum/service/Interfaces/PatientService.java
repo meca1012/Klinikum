@@ -7,25 +7,25 @@ import org.openrdf.repository.RepositoryException;
 
 import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
-import de.klinikum.exceptions.SpirontoException;
+import de.klinikum.exceptions.TripleStoreException;
 
 public interface PatientService {
 
-    Patient getPatientByUri(String patientUri) throws RepositoryException, IOException;
+    Patient getPatientByUri(String patientUri) throws TripleStoreException;
 
-    Patient createPatientRDF(Patient patient) throws IOException;
+    Patient createPatientRDF(Patient patient) throws TripleStoreException;
 
-    List<Patient> searchPatient(Patient patient);
+    List<Patient> searchPatient(Patient patient) throws TripleStoreException;
 
-    List<Patient> searchPatientSPARQL(Patient patient) throws RepositoryException, SpirontoException, IOException;
+    List<Patient> searchPatientSPARQL(Patient patient) throws TripleStoreException;
 
     boolean updatePatientRDF(Patient patient) throws IOException, RepositoryException;
 
-    Address getAddressByUri(Address address) throws RepositoryException, IOException;
+    Address getAddressByUri(Address address) throws TripleStoreException;
 
-    Patient getPatientByPatientNumber(String patientNumber) throws RepositoryException, IOException;
+    Patient getPatientByPatientNumber(String patientNumber) throws TripleStoreException;
 
-    Address createAddressRDF(Address address) throws IOException;
+    Address createAddressRDF(Address address) throws TripleStoreException;
 
     boolean updateAddressRDF(Address address) throws IOException, RepositoryException;
 }
