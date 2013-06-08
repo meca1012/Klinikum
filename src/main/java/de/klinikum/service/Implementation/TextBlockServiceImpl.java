@@ -9,6 +9,7 @@ import static de.klinikum.domain.NameSpaces.TEXTBLOCK_TYPE;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -46,7 +47,9 @@ public class TextBlockServiceImpl implements TextBlockService {
 
         this.tripleStore.addTriple(textBlockUri, RDF.TYPE, textBlockTypeUri);
         this.tripleStore.addTriple(textBlock.getPatientUri(), PATIENT_HAS_TEXTBLOCK.toString(), textBlock.getUri());
-
+        
+        Date date = new Date(System.currentTimeMillis());
+        textBlock.setCreated(DateUtil.getBirthDateFromString(date.toString()));
         Literal createdLiteral = this.tripleStore.getValueFactory().createLiteral(textBlock.getCreated());
         Literal textLiteral = this.tripleStore.getValueFactory().createLiteral(textBlock.getText());
 
