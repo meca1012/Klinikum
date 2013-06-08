@@ -86,11 +86,12 @@ public class ConceptServiceImpl implements ConceptService {
 
         this.tripleStore.addTriple(conceptUri, conceptHasLabelUri, conceptLabelLiteral);
 
-        if (concept.getConnectedConcepts() != null) {
-            if (!concept.getConnectedConcepts().isEmpty()) {
-                for (Concept c : concept.getConnectedConcepts()) {
-                    this.connectSingleConcept(concept, c);
+        if (concept.getConnectedConcepts() != null) {            
+            for (Concept c : concept.getConnectedConcepts()) {
+                if (!conceptExists(c)) {
+                    addConceptToPatient(c);
                 }
+                this.connectSingleConcept(concept, c);
             }
         }
         return concept;
@@ -223,5 +224,13 @@ public class ConceptServiceImpl implements ConceptService {
     @Override
     public boolean isTabConcept(Concept concept) throws RepositoryException, IOException {
         return this.tripleStore.repositoryHasStatement(concept.getUri(), RDF.TYPE.toString(), GUI_TAB_TYPE.toString());
+    }
+    
+    public boolean conceptExists(Concept concept) throws IOException {
+        if (concept.getUri() == null) {
+            return false;
+        } else {
+            return this.tripleStore.repositoryHasStatement(concept.getUri(), RDF.TYPE.toString(), ONTOLOGIE_CONCEPT_TYPE.toString());
+        }
     }
 }
