@@ -40,31 +40,27 @@ public class PatientREST {
 	@Inject
 	PatientServiceImpl patientService;
 
-	@Path("/getPatientXML")
-	@GET
-	@Produces(MediaType.APPLICATION_XML)
-	public Patient getPatientXML() {
-		try {
-			String dateString = "01/08/1985";
-			SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+    @Path("/getPatientXML")
+    @GET
+    @Produces(MediaType.APPLICATION_XML)
+    public Patient getPatientXML() throws ParseException {
 
-			Address a1 = new Address("http://spironto.de/spironto#address-gen4", "Hauptstrasse", "12", "Karlsruhe",
-					"432433", "Deutschland", "081511833");
-			a1.setUri("de.spironto/address/" + "432432");
+        String dateString = "01/08/1985";
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 
-			Patient p1 = new Patient();
-			p1.setPatientNumber("081512321");
-			p1.setAddress(a1);
-			p1.setUri("http://spironto.de/spironto#patient-gen5");
-			p1.setLastName("Power");
-			p1.setFirstName("Max");
-			p1.setDateOfBirth(formatter.parse(dateString));
-			return p1;
-		} catch (ParseException pe) {
-			pe.printStackTrace();
-		}
-		return null;
-	}
+        Address a1 = new Address("http://spironto.de/spironto#address-gen4", "Hauptstrasse", "12", "Karlsruhe",
+                "432433", "Deutschland", "081511833");
+        a1.setUri("http://spironto.de/spironto#address-gen2");
+
+        Patient p1 = new Patient();
+        p1.setPatientNumber("081512321");
+        p1.setAddress(a1);
+        p1.setUri("http://spironto.de/spironto#patient-gen1");
+        p1.setLastName("Power");
+        p1.setFirstName("Max");
+        p1.setDateOfBirth(formatter.parse(dateString));
+        return p1;
+    }
 
 	@Path("/getPatientByPatientNumber/{patientNumber}")
 	@GET

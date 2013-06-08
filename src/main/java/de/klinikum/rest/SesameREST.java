@@ -1,22 +1,21 @@
 package de.klinikum.rest;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Set;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.openrdf.model.Value;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import de.klinikum.exceptions.SpirontoException;
+import de.klinikum.helper.AppStartup;
 import de.klinikum.service.SesameServiceImpl;
 
 @Path("/sparql")
@@ -25,12 +24,12 @@ import de.klinikum.service.SesameServiceImpl;
 @Consumes
 @RequestScoped
 public class SesameREST {
-	
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(SesameREST.class);
 
 	@Inject
-	private SesameServiceImpl SesameService;
+	SesameServiceImpl SesameService;
+	
+	@Inject
+	AppStartup startup;
 
 	@POST
 	@Path("/executequery")
@@ -43,5 +42,11 @@ public class SesameREST {
 			return null;
 		}
 	}
-
+	
+	@GET
+	@Path("/createTestData")
+	@Produces(MediaType.TEXT_PLAIN)
+	public void createTestData() {
+	    this.startup.createTestData();        
+	}
 }

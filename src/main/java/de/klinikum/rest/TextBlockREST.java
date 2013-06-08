@@ -1,8 +1,9 @@
 package de.klinikum.rest;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -18,6 +19,7 @@ import de.klinikum.domain.Concept;
 import de.klinikum.domain.Patient;
 import de.klinikum.domain.TextBlock;
 import de.klinikum.exceptions.SpirontoException;
+import de.klinikum.helper.DateUtil;
 import de.klinikum.service.Interfaces.TextBlockService;
 
 /**
@@ -37,13 +39,11 @@ public class TextBlockREST {
     @Produces(MediaType.APPLICATION_XML)
     public TextBlock getTextBlockXML() throws ParseException {
 
-        String dateString = "01/08/2013";
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-
         TextBlock textBlock = new TextBlock();
         textBlock.setUri("http://spironto.de/spironto#textBlock-gen3");
         textBlock.setPatientUri("http://spironto.de/spironto#patient-gen11");
-        textBlock.setCreated(formatter.parse(dateString));
+        Timestamp tstamp = new Timestamp(new Date().getTime());
+        textBlock.setCreated(DateUtil.getBirthDateFromString(tstamp.toString()));
         textBlock.setText("This is a wonderfull endless text about the most important patient N°11");
         textBlock.setConcepts(null);
         return textBlock;

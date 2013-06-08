@@ -1,5 +1,6 @@
 package de.klinikum.service.Implementation;
 
+import static de.klinikum.domain.NameSpaces.ONTOLOGIE_CONCEPT_TYPE;
 import static de.klinikum.domain.NameSpaces.PATIENT_HAS_TEXTBLOCK;
 import static de.klinikum.domain.NameSpaces.TEXTBLOCK_HAS_DATE;
 import static de.klinikum.domain.NameSpaces.TEXTBLOCK_HAS_TEXT;
@@ -8,6 +9,7 @@ import static de.klinikum.domain.NameSpaces.TEXTBLOCK_TYPE;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +33,9 @@ public class TextBlockServiceImpl implements TextBlockService {
 
     @Inject
     SesameTripleStore tripleStore;
+    
+    @Inject
+    ConceptServiceImpl conceptService;
 
     @Override
     public TextBlock createTextBlock(TextBlock textBlock) throws IOException {
@@ -42,7 +47,9 @@ public class TextBlockServiceImpl implements TextBlockService {
 
         this.tripleStore.addTriple(textBlockUri, RDF.TYPE, textBlockTypeUri);
         this.tripleStore.addTriple(textBlock.getPatientUri(), PATIENT_HAS_TEXTBLOCK.toString(), textBlock.getUri());
-
+        
+        Date date = new Date(System.currentTimeMillis());
+        textBlock.setCreated(DateUtil.getBirthDateFromString(date.toString()));
         Literal createdLiteral = this.tripleStore.getValueFactory().createLiteral(textBlock.getCreated());
         Literal textLiteral = this.tripleStore.getValueFactory().createLiteral(textBlock.getText());
 
@@ -54,6 +61,9 @@ public class TextBlockServiceImpl implements TextBlockService {
 
         if (textBlock.getConcepts() != null) {
             for (Concept c : textBlock.getConcepts()) {
+                if (!conceptExists(c)) {
+                    this.conceptService.addConceptToPatient(c);
+                }
                 this.tripleStore.addTriple(textBlock.getUri(), TEXTBLOCK_POINTS_TO_CONCEPT.toString(), c.getUri());
             }
         }
@@ -122,6 +132,14 @@ public class TextBlockServiceImpl implements TextBlockService {
             textBlock.setPatientUri(item.get("patientUri").toString());
         }
         return textBlock;
+    }
+    
+    public boolean conceptExists(Concept concept) throws IOException {
+        if (concept.getUri() == null) {
+            return false;
+        } else {
+            return this.tripleStore.repositoryHasStatement(concept.getUri(), RDF.TYPE.toString(), ONTOLOGIE_CONCEPT_TYPE.toString());
+        }
     }
 
 }
