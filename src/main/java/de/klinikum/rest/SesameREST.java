@@ -19,6 +19,16 @@ import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.helper.AppStartup;
 import de.klinikum.service.SesameServiceImpl;
 
+/**
+ * 
+ * ConceptREST.java
+ * Purpose: REST- Connection- Points for UI
+ * Supports direct SPARQL Queries
+ * 
+ * @author  Spironto Team 1
+ * @version 1.0 08/06/13
+ */
+
 @Path("/sparql")
 @Produces({ MediaType.APPLICATION_XML, MediaType.TEXT_XML,
 		MediaType.APPLICATION_JSON })

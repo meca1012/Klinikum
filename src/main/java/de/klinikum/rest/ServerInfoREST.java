@@ -15,6 +15,15 @@ import org.slf4j.LoggerFactory;
 
 import de.klinikum.lucene.LuceneServiceImpl;
 
+/**
+ * 
+ * ServerInfoREST.java
+ * Purpose: REST- Connection- Points for ServerInfos
+ * Return Info if Webservice is running
+ * 
+ * @author  Spironto Team 1
+ * @version 1.0 08/06/13
+ */
 
 @Path("/server")
 @Produces({ MediaType.APPLICATION_XML, MediaType.TEXT_XML,

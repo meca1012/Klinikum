@@ -24,6 +24,13 @@ import de.klinikum.service.Interfaces.TextBlockService;
 
 /**
  * 
+ * ConceptREST.java
+ * Purpose: REST- Connection- Points for UI 
+ * For Sesame Ontologie textBlocks
+ * Stores CareTeams documentation
+ * 
+ * @author  Spironto Team 1
+ * @version 1.0 08/06/13
  */
 @Path("/textBlock")
 @Produces({ MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_JSON })

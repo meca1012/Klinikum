@@ -27,7 +27,13 @@ import de.klinikum.exceptions.TripleStoreException;
 import de.klinikum.service.Implementation.PatientServiceImpl;
 
 /**
- *
+ * 
+ * PatientRest.java
+ * Purpose: REST- Connection- Points for UI
+ * Main Task is to deliver Patientdata from SesameStore
+ * 
+ * @author  Spironto Team 1
+ * @version 1.0 08/06/13
  */
 @Path("/patient")
 @Produces({ MediaType.APPLICATION_XML, MediaType.TEXT_XML, MediaType.APPLICATION_JSON })
