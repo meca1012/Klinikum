@@ -14,6 +14,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.openrdf.repository.RepositoryException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.klinikum.domain.Concept;
 import de.klinikum.domain.Patient;
@@ -25,6 +27,9 @@ import de.klinikum.service.Interfaces.ConceptService;
 @Consumes
 @Stateless
 public class ConceptREST {
+	
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(ConceptREST.class);
 
     @Inject
     ConceptService conceptService;
@@ -104,7 +109,7 @@ public class ConceptREST {
         return concept;
     }
 
-    @Path("/getConceptByUriFetchDirektConnected")
+    @Path("/getConceptByUriFetchDirectConnected")
     @POST
     @Produces(MediaType.APPLICATION_XML)
     public Concept addConceptToPatient(Concept concept) throws IOException, RepositoryException, SpirontoException {

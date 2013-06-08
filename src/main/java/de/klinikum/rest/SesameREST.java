@@ -23,10 +23,10 @@ import de.klinikum.service.SesameServiceImpl;
 		MediaType.APPLICATION_JSON })
 @Consumes
 @RequestScoped
-public class SesameRest {
+public class SesameREST {
 
 	@Inject
-	private SesameServiceImpl SesameService;
+	SesameServiceImpl SesameService;
 	
 	@Inject
 	AppStartup startup;
