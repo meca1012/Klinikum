@@ -10,6 +10,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.klinikum.lucene.LuceneServiceImpl;
 
 
@@ -20,6 +23,9 @@ import de.klinikum.lucene.LuceneServiceImpl;
 @RequestScoped
 public class ServerInfoREST {
 	
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(ServerInfoREST.class);
+	
     @Inject
     LuceneServiceImpl luceneService;
     
@@ -27,7 +33,9 @@ public class ServerInfoREST {
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String test() {
-		return "REST- Service Running";
+    	String status = "REST- Service Running";
+    	LOGGER.info(status);
+		return status;
 	}
     
 	@Path("/luceneTest")
