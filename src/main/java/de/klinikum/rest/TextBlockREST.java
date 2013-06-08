@@ -37,7 +37,7 @@ public class TextBlockREST {
     @Path("/getTextBlockXML")
     @GET
     @Produces(MediaType.APPLICATION_XML)
-    public TextBlock getTextBlockXML() throws ParseException {       
+    public TextBlock getTextBlockXML() throws ParseException {
 
         TextBlock textBlock = new TextBlock();
         textBlock.setUri("http://spironto.de/spironto#textBlock-gen3");
