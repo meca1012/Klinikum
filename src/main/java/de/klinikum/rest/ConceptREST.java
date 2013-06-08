@@ -104,7 +104,7 @@ public class ConceptREST {
         return concept;
     }
 
-    @Path("/getConceptByUriFetchDirektConnected")
+    @Path("/getConceptByUriFetchDirectConnected")
     @POST
     @Produces(MediaType.APPLICATION_XML)
     public Concept addConceptToPatient(Concept concept) throws IOException, RepositoryException, SpirontoException {
