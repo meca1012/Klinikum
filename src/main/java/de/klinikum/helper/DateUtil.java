@@ -6,6 +6,16 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+/**
+ * 
+ * DateUtil.java
+ * Purpose: Reading and Formatting Dateobject 
+ * For Sesamestorage and UI delivery
+ *          
+ * @author  Spironto Team 1
+ * @version 1.0 08/06/13
+ */
+
 public class DateUtil {
 
     public static Date getBirthDateFromString(String sDate) {

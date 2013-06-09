@@ -18,6 +18,15 @@ import de.klinikum.service.Implementation.ConceptServiceImpl;
 import de.klinikum.service.Implementation.PatientServiceImpl;
 import de.klinikum.service.Implementation.TextBlockServiceImpl;
 
+/**
+ * 
+ * AppStartup.java
+ * Purpose: Creates TestData for Prototype- Test
+ *          
+ * @author  Spironto Team 1
+ * @version 1.0 08/06/13
+ */
+
 @Named
 public class AppStartup {
 

@@ -3,6 +3,15 @@ package de.klinikum.helper;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * 
+ * PropertyLoader.java
+ * Purpose: Reads Configuration -File for getting
+ * Sesamestorage Configuration
+ *          
+ * @author  Spironto Team 1
+ * @version 1.0 08/06/13
+ */
  
 public class PropertyLoader {
 	

@@ -9,8 +9,14 @@ import java.util.Locale;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
- * Datum als String (z.B. 2000-01-31) uebertragen
+ * 
+ * XmlDateAdapter.java
+ * Purpose: Converting Dateformat to XML parsable Format via annotation
+ *          
+ * @author  Spironto Team 1
+ * @version 1.0 08/06/13
  */
+
 public class XmlDateAdapter extends XmlAdapter<String, Date> {
 	private final DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()); 
 	
