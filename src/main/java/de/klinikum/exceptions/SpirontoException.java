@@ -1,5 +1,15 @@
 package de.klinikum.exceptions;
 
+
+/**
+ * 
+ * SpirontoException.java
+ * Purpose: Specialized Exception - Handling 
+ *          For Spironto Exceptions
+ * @author  Spironto Team 1
+ * @version 1.0 08/06/13
+ */
+
 public class SpirontoException extends Exception {
 
 	/**
