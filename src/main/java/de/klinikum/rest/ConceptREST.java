@@ -46,7 +46,7 @@ public class ConceptREST {
 
     /**
      * 
-     * @return Returns a standard XML- Parse of an ConceptObject 
+     * @return Returns a standard XML- Parse of an Concept.class 
      * @throws ParseException
      */
     @Path("/getConceptXML")
@@ -93,7 +93,8 @@ public class ConceptREST {
     /**
      * 
      * @param patient -> Consumes an PatienObject from GUI- side
-     * @return -> Returns a List of concepts connected to the Patient. This is a collection of 
+     * @return -> Returns a List of concepts connected to the Patient.
+     * This is a collection of 
      * normal OntologieConcepts 
      * @throws IOException
      * @throws SpirontoException
