@@ -1,4 +1,4 @@
-package de.klinikum.rest;
+package de.klinikum.service.Interfaces;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -20,7 +20,6 @@ import de.klinikum.domain.Patient;
 import de.klinikum.domain.TextBlock;
 import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.helper.DateUtil;
-import de.klinikum.service.Interfaces.TextBlockService;
 
 /**
  * 

@@ -17,7 +17,7 @@ import org.openrdf.model.Value;
 
 import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.helper.AppStartup;
-import de.klinikum.service.SesameServiceImpl;
+import de.klinikum.service.Implementation.SesameServiceImpl;
 
 /**
  * 

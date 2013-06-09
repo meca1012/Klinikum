@@ -45,6 +45,19 @@ import org.openrdf.sail.nativerdf.config.NativeStoreConfig;
 import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.helper.PropertyLoader;
 
+/**
+ * 
+ * SesameTripleStore.java
+ * Purpose: Supports all needed TripleStore Methods to use Sesame as a RDF Storage Framework
+ * Implementation of Reading and Creating Data as Triples, as well execute SPARQL Querys 
+ * Store Configuration comes with the configuration file in properties package 
+ * Implementation for Sesame 2.7.0       
+ *   
+ * @author  Spironto Team 1
+ * @version 1.0 08/06/13
+ */
+
+
 @Named
 public class SesameTripleStore {
 

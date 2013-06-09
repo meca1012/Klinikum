@@ -1,4 +1,4 @@
-package de.klinikum.service;
+package de.klinikum.service.Implementation;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -9,6 +9,7 @@ import org.openrdf.model.Value;
 
 import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.persistence.SesameTripleStore;
+import de.klinikum.service.Interfaces.SesameService;
 
 public class SesameServiceImpl implements SesameService {
 
