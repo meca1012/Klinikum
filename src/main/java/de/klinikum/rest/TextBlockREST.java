@@ -38,9 +38,16 @@ import de.klinikum.service.Interfaces.TextBlockService;
 @Stateless
 public class TextBlockREST {
 
+    // CDI for TextBlockService.class
     @Inject
     TextBlockService textBlockService;
 
+    /**
+     * 
+     * @return Returns a standard XML- Parse of an TextBlock.class 
+     * @throws ParseException
+     */
+    
     @Path("/getTextBlockXML")
     @GET
     @Produces(MediaType.APPLICATION_XML)
@@ -56,6 +63,15 @@ public class TextBlockREST {
         return textBlock;
     }
 
+    /**
+     * 
+     * @param textBlock -> Consumes an TextBlockObject from GUI- side
+     * @return textBlock
+     * Purpose: Returns a TextBlockObject searched by URI
+     * Mostly used for fetching data
+     * @throws IOException
+     * @throws SpirontoException
+     */
     @Path("/getTextBlockByUri")
     @POST
     @Produces(MediaType.APPLICATION_XML)
@@ -63,6 +79,13 @@ public class TextBlockREST {
         return this.textBlockService.findTextBlock(textBlock.getUri());
     }
 
+    /**
+     * 
+     * @param textBlock -> Consumes an TextBlockObject from GUI- side
+     * @return textBlock
+     * Purpose: Creates a TextBlock. Returns created textBlock with new URI in it
+     * @throws IOException
+     */
     @Path("/createTextBlock")
     @POST
     @Produces(MediaType.APPLICATION_XML)
@@ -70,6 +93,14 @@ public class TextBlockREST {
         return this.textBlockService.createTextBlock(textBlock);
     }
 
+    /**
+     * 
+     * @param patient --> Consumes an PatienObject from GUI- side
+     * @return Collection of textBlocks
+     * Purpose: Gets all linked TextBlock to given Patient
+     * @throws IOException
+     * @throws SpirontoException
+     */
     @Path("/getTextBlocks")
     @POST
     @Produces(MediaType.APPLICATION_XML)
@@ -77,6 +108,15 @@ public class TextBlockREST {
         return this.textBlockService.findTextBlocks(patient);
     }
     
+    /**
+     * 
+     * @param textBlock -> Consumes an TextBlockObject from GUI- side
+     * @param concept -> Consumes an ConceptObject from GUI- side
+     * @return
+     * Purpose: Connects given Concept with given textBlock
+     * @throws IOException
+     * @throws SpirontoException
+     */
     @Path("/addConceptToTextBlock")
     @POST
     @Produces(MediaType.APPLICATION_XML)

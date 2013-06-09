@@ -76,7 +76,7 @@ public class PatientREST {
 
     /**
      * TODO: ReWrite
-     * @param patientNumber
+     * @param patientNumber -> Consumes an StringnObject from GUI- side
      * @return Returns Patient search by PatientNumber
      * Purpose: Main Searched used by Careteam. Patientnumber is set from #
      * CareTeam and should

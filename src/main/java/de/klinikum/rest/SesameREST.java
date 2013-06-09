@@ -36,12 +36,21 @@ import de.klinikum.service.SesameServiceImpl;
 @RequestScoped
 public class SesameREST {
 
+    //CDI for SesameServiceIml 
+    //Todo: Change to Interface
 	@Inject
 	SesameServiceImpl SesameService;
 	
+	//CDI for Appstartup  initialization bootstrap to load Data 
 	@Inject
 	AppStartup startup;
 
+	/**
+	 * 
+	 * @param String -> Consumes an StringObject from GUI- side
+	 * Purpose: Execute given String directly in Sesamestore
+	 * @return Depence on Result, Return of Hashmap not yet possible
+	 */
 	@POST
 	@Path("/executequery")
 	@Consumes(MediaType.TEXT_PLAIN)
@@ -54,6 +63,9 @@ public class SesameREST {
 		}
 	}
 	
+	/**
+	 * Creates Testdata on call. 
+	 */
 	@GET
 	@Path("/createTestData")
 	@Produces(MediaType.TEXT_PLAIN)

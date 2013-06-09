@@ -35,9 +35,14 @@ public class ServerInfoREST {
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ServerInfoREST.class);
 	
+	//CDI for LuceneService
     @Inject
     LuceneServiceImpl luceneService;
     
+    /**
+     * 
+     * @return Returns serverstate
+     */
     @Path("/restInfo")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
@@ -47,6 +52,11 @@ public class ServerInfoREST {
 		return status;
 	}
     
+    /**
+     * Purpose: Return PlanText. Used for Lucene implementation
+     * @return
+     * @throws IOException
+     */
 	@Path("/luceneTest")
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
