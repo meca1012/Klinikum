@@ -11,6 +11,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 
+/**
+ * 
+ * Concept.java
+ * Purpose: DomainObject to Store Sesame- Data and Exchange 
+ *          Concepts represents Ontology- Data 
+ * @author  Spironto Team 1
+ * @version 1.0 08/06/13
+ */
+
 @XmlRootElement(name = "concept")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Concept implements Serializable {

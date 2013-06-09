@@ -1,5 +1,14 @@
 package de.klinikum.domain;
 
+/**
+ * 
+ * NameSpace.java
+ * Purpose: Sesame URI Namespaces for identifying relationships betwween concepts 
+ * 
+ * @author  Spironto Team 1
+ * @version 1.0 08/06/13
+ */
+
 public enum NameSpaces {
 	
 	

@@ -12,6 +12,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 
+/**
+ * 
+ * TextBlock.java
+ * Purpose: DomainObject to Store Sesame- Data and Exchange 
+ *          Stores Patient- Documentation and can be linked to concepts 
+ * @author  Spironto Team 1
+ * @version 1.0 08/06/13
+ */
+
 @XmlRootElement(name = "textBlock")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class TextBlock implements Serializable {

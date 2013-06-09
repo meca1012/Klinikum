@@ -3,6 +3,15 @@ package de.klinikum.domain;
 import java.io.Serializable;
 import javax.xml.bind.annotation.XmlRootElement;
 
+/**
+ * 
+ * Address.java
+ * Purpose: DomainObject to Store Sesame- Data and Exchange 
+ * 
+ * @author  Spironto Team 1
+ * @version 1.0 08/06/13
+ */
+
 @XmlRootElement
 public class Address implements Serializable {
 

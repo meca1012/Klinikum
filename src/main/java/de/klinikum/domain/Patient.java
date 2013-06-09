@@ -12,6 +12,16 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import de.klinikum.helper.XmlDateAdapter;
 
+/**
+ * 
+ * Concept.java
+ * Purpose: DomainObject to Store Sesame- Data and Exchange 
+ * Represents a Patient with his basic personal Data         
+ * 
+ * @author  Spironto Team 1
+ * @version 1.0 08/06/13
+ */
+
 @XmlRootElement(name = "patient")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Patient implements Serializable {
