@@ -14,7 +14,7 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import java.io.File;
 
-import de.klinikum.domain.TextBlock;
+import de.klinikum.domain.Note;
 
 public class LuceneServiceImpl implements LuceneService{
 
@@ -48,7 +48,7 @@ public class LuceneServiceImpl implements LuceneService{
     }
     
     @Override
-    public boolean storeTextBlock(TextBlock textBlock) {
+    public boolean storeTextBlock(Note textBlock) {
         // TODO Auto-generated method stub
         return false;
     }

@@ -1,9 +1,9 @@
 package de.klinikum.lucene;
 
-import de.klinikum.domain.TextBlock;
+import de.klinikum.domain.Note;
 
 
 public interface LuceneService {
  
-    boolean storeTextBlock(TextBlock textBlock);
+    boolean storeTextBlock(Note textBlock);
     }
