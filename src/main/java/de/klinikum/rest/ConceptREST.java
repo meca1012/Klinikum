@@ -93,13 +93,13 @@ public class ConceptREST {
     @Produces(MediaType.APPLICATION_XML)
     public List<Concept> getTabConcepts(Patient patient) throws IOException, SpirontoException {
         
-        return this.conceptService.findTabConceptsOfPatient(patient);
+        return this.conceptService.getTabConcepts();
     }
 
     /**
      * 
-     * @param patient -> Consumes an PatienObject from GUI- side
-     * @return -> Returns a List of concepts connected to the Patient.
+     * @param patient -> Consumes an PatienObject from GUI- side, only uri has to be set
+     * @return -> Returns a List of concepts connected to the Patient (all Concepts of that patient)
      * This is a collection of 
      * normal OntologieConcepts 
      * @throws IOException
@@ -115,8 +115,9 @@ public class ConceptREST {
     
     /**
      * 
-     * @param concept -> Consumes an ConceptObject from GUI- side
+     * @param concept -> Consumes a List of ConceptObject from GUI- side inside a <collection> tag
      * Purpose: Stores given Concept to SesameStore
+     * connected concepts without a uri are also created
      * @return
      * @throws IOException
      * @throws SpirontoException 
@@ -129,11 +130,11 @@ public class ConceptREST {
     public List<Concept> createConcept(List<Concept> concepts) throws IOException, RepositoryException, ModelException, SpirontoException {
         
         for (Concept c : concepts) {
-            c = this.conceptService.addConceptToPatient(c);
+            c = this.conceptService.createConcept(c);
             if (c.getConnectedConcepts() != null) {
                 for (Concept con : c.getConnectedConcepts()) {
                     if (con.getUri() == null) {
-                        con = this.conceptService.addConceptToPatient(con);
+                        con = this.conceptService.createConcept(con);
                     }
                     this.conceptService.connectSingleConcept(c, con);
                 }
@@ -196,19 +197,10 @@ public class ConceptREST {
     @Path("/getConceptByUriFetchDirectConnected")
     @POST
     @Produces(MediaType.APPLICATION_XML)
-    public Concept addConceptToPatient(Concept concept) throws IOException, RepositoryException, SpirontoException {
+    public Concept getConceptByUriFetchDirectConnected(Concept concept) throws IOException, RepositoryException, SpirontoException {
 
         concept = this.conceptService.getConceptByUri(concept.getUri());
         concept.setConnectedConcepts(this.conceptService.getDirectConnected(concept, false));
         return concept;
     }
-
-    // @Path("/addConceptToPatient")
-    // @POST
-    // @Produces(MediaType.APPLICATION_XML)
-    // public Concept addConceptToPatient(PatientDTO pDto) throws IOException {
-    //
-    // return this.conceptService.addConceptToPatient(pDto.getConcept(), pDto.isTabConcept());
-    // }
-
 }
