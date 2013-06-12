@@ -1,7 +1,9 @@
 package de.klinikum.service.Implementation;
 
 import static de.klinikum.domain.NameSpaces.NOTE_HAS_DATE;
+import static de.klinikum.domain.NameSpaces.NOTE_HAS_PRIORITY;
 import static de.klinikum.domain.NameSpaces.NOTE_HAS_TEXT;
+import static de.klinikum.domain.NameSpaces.NOTE_HAS_TITLE;
 import static de.klinikum.domain.NameSpaces.NOTE_POINTS_TO_CONCEPT;
 import static de.klinikum.domain.NameSpaces.NOTE_TYPE;
 import static de.klinikum.domain.NameSpaces.PATIENT_HAS_NOTE;
@@ -16,9 +18,12 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.openrdf.model.Literal;
+import org.openrdf.model.Model;
+import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.repository.RepositoryException;
 
 import de.klinikum.domain.Concept;
 import de.klinikum.domain.Note;
@@ -40,32 +45,28 @@ public class NoteServiceImpl implements NoteService {
     public Note createNote(Note note) throws IOException {
 
         URI noteUri = this.tripleStore.getUniqueURI(NOTE_TYPE.toString());
-        URI noteTypeUri = this.tripleStore.getValueFactory().createURI(NOTE_TYPE.toString());
 
         note.setUri(noteUri.toString());
 
-        this.tripleStore.addTriple(noteUri, RDF.TYPE, noteTypeUri);
+        this.tripleStore.addTriple(noteUri.toString(), RDF.TYPE.toString(), NOTE_TYPE.toString());
         this.tripleStore.addTriple(note.getPatientUri(), PATIENT_HAS_NOTE.toString(), note.getUri());
 
         Date date = new Date(System.currentTimeMillis());
         note.setCreated(DateUtil.getBirthDateFromString(date.toString()));
         Literal createdLiteral = this.tripleStore.getValueFactory().createLiteral(note.getCreated());
-        Literal textLiteral = this.tripleStore.getValueFactory().createLiteral(note.getText());
+        Literal textLiteral = this.tripleStore.getValueFactory().createLiteral(note.getText());        
+        Literal titleLiteral = this.tripleStore.getValueFactory().createLiteral(note.getTitle());
 
         URI hasDateUri = this.tripleStore.getValueFactory().createURI(NOTE_HAS_DATE.toString());
         URI hasTextUri = this.tripleStore.getValueFactory().createURI(NOTE_HAS_TEXT.toString());
+        URI hasTitleUri = this.tripleStore.getValueFactory().createURI(NOTE_HAS_TITLE.toString());
+        URI hasPriority = this.tripleStore.getValueFactory().createURI(NOTE_HAS_PRIORITY.toString());
 
         this.tripleStore.addTriple(noteUri, hasDateUri, createdLiteral);
         this.tripleStore.addTriple(noteUri, hasTextUri, textLiteral);
-
-        if (note.getConcepts() != null) {
-            for (Concept c : note.getConcepts()) {
-                if (!this.conceptService.conceptExists(c)) {
-                    this.conceptService.addConceptToPatient(c);
-                }
-                this.tripleStore.addTriple(note.getUri(), NOTE_POINTS_TO_CONCEPT.toString(), c.getUri());
-            }
-        }
+        this.tripleStore.addTriple(noteUri, hasTitleUri, titleLiteral);
+        this.tripleStore.setValue(noteUri.toString(), hasPriority.toString(), note.getPriority());
+        
         return note;
     }
 
@@ -73,11 +74,7 @@ public class NoteServiceImpl implements NoteService {
     public Note addConceptToNote(Note note, Concept concept) throws IOException {
         if (this.tripleStore.repositoryHasStatement(note.getUri(), NOTE_POINTS_TO_CONCEPT.toString(), concept.getUri())) {
             return null;
-        }
-        if (note.getConcepts() == null) {
-            note.setConcepts(new ArrayList<Concept>());
-        }
-        note.addConcept(concept);
+        }        
         this.tripleStore.addTriple(note.getUri(), NOTE_POINTS_TO_CONCEPT.toString(), concept.getUri());
         return note;
     }
@@ -86,33 +83,31 @@ public class NoteServiceImpl implements NoteService {
     public List<Note> findNotes(Patient patient) throws SpirontoException {
 
         List<Note> notes = new ArrayList<Note>();
-
-        String sparqlQuery = "SELECT ?Uri ?text ?created WHERE {";
-
-        sparqlQuery += "<" + patient.getUri().toString() + "> <" + PATIENT_HAS_NOTE + "> ?Uri . ";
-
-        sparqlQuery += "?Uri <" + RDF.TYPE + "> <" + NOTE_TYPE + "> . ";
-
-        sparqlQuery += "?Uri <" + NOTE_HAS_TEXT + "> ?text . ";
-
-        sparqlQuery += "?Uri <" + NOTE_HAS_DATE + "> ?created }";
-
-        Set<HashMap<String, Value>> queryResult = this.tripleStore.executeSelectSPARQLQuery(sparqlQuery);
-
-        for (HashMap<String, Value> item : queryResult) {
-            Note note = new Note();
-            note.setUri(item.get("Uri").toString());
-            note.setPatientUri(patient.getUri());
-            note.setCreated(DateUtil.getBirthDateFromString(item.get("created").stringValue()));
-            note.setText(item.get("text").stringValue());
-            notes.add(note);
+        Model statementList;
+        
+        try {
+            statementList = this.tripleStore.getStatementList(patient.getUri(), PATIENT_HAS_NOTE.toString(), null);
+            for (Statement noteStatement : statementList) {
+                notes.add(getNoteByUri(noteStatement.getObject().toString()));
+            }
         }
-
+        catch (RepositoryException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (SpirontoException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return notes;
     }
 
     @Override
-    public Note findNote(String noteUri) throws SpirontoException {
+    public Note getNoteByUri(String noteUri) throws SpirontoException {
 
         Note note = new Note();
         note.setUri(noteUri);
@@ -128,6 +123,32 @@ public class NoteServiceImpl implements NoteService {
             note.setText(item.get("text").stringValue());
             note.setCreated(DateUtil.getBirthDateFromString(item.get("created").stringValue()));
             note.setPatientUri(item.get("patientUri").toString());
+        }
+        note = getConceptsToNote(note);
+        return note;
+    }
+    
+    public Note getConceptsToNote(Note note) {
+        
+        Model statementList;        
+       
+        try {
+            statementList = this.tripleStore.getStatementList(note.getUri(), NOTE_POINTS_TO_CONCEPT.toString(), null);
+            for (Statement conceptStatement : statementList) {
+                note.addConcept(this.conceptService.getConceptByUri(conceptStatement.getObject().toString()));
+            }
+        }
+        catch (RepositoryException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (SpirontoException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
         return note;
     }

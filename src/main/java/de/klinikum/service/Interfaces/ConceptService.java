@@ -12,22 +12,22 @@ import de.klinikum.exceptions.SpirontoException;
 
 public interface ConceptService {
 
-    List<Concept> findTabConceptsOfPatient(Patient patient) throws IOException, SpirontoException;
+    List<Concept> getTabConcepts() throws IOException, SpirontoException;
 
-    Concept addConceptToPatient(Concept concept) throws IOException;
+    Concept createConcept(Concept concept) throws IOException;
 
     void connectSingleConcept(Concept from, Concept to) throws IOException;
 
     Concept addTabConcept(Concept concept) throws IOException;
 
-    List<Concept> getDirectConnected(Concept concept) throws IOException, SpirontoException;
+    List<Concept> getDirectConnected(Concept concept, boolean onlyUris) throws IOException, SpirontoException;
 
     List<Concept> findAllConceptsOfPatient(Patient patient) throws IOException, SpirontoException;
 
     List<Concept> findConceptsOfTabConcept(Concept tabConcept) throws RepositoryException, IOException, ModelException,
             SpirontoException;
 
-    List<Concept> getConnected(String conceptUri, List<Concept> connected) throws RepositoryException, IOException,
+    List<Concept> getConnected(String conceptUri, List<Concept> connected, boolean onlyUris) throws RepositoryException, IOException,
             ModelException, SpirontoException;
 
     Concept getConceptByUri(String conceptUri) throws RepositoryException, SpirontoException;
@@ -35,4 +35,7 @@ public interface ConceptService {
     void connectMultipleConcepts(Concept from, List<Concept> to) throws IOException;
 
     boolean isTabConcept(Concept concept) throws RepositoryException, IOException;
+
+    List<Concept> getConnectedConceptUris(Concept concept) throws RepositoryException, ModelException, IOException,
+            SpirontoException;
 }

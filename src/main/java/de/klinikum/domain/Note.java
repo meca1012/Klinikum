@@ -32,9 +32,15 @@ public class Note implements Serializable {
 
     @XmlElement(name = "created")
     private Date created;
+    
+    @XmlElement(name = "title")
+    private String title;
 
     @XmlElement(name = "text")
     private String text;
+    
+    @XmlElement(name = "priority")
+    private int priority;
 
     @XmlElement(name = "patientUri")
     private String patientUri;
@@ -67,12 +73,28 @@ public class Note implements Serializable {
         this.created = created;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getText() {
         return this.text;
     }
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
     public String getPatientUri() {
