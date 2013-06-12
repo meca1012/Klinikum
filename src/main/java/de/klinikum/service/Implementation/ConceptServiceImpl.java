@@ -120,12 +120,18 @@ public class ConceptServiceImpl implements ConceptService {
             }
             statementList = this.tripleStore.getStatementList(null, ONTOLOGIE_CONCEPT_LINKED_TO.toString(), concept.getUri());
             for (Statement conceptStatement : statementList) {
-                if (onlyUris) {
-                    Concept conceptToAdd = new Concept();
+                Concept conceptToAdd = new Concept();
+                if (onlyUris) {                    
                     conceptToAdd.setUri(conceptStatement.getSubject().stringValue());
-                    connectedConcepts.add(conceptToAdd);
+                    if (!connectedConcepts.contains(conceptToAdd)) {
+                        connectedConcepts.add(conceptToAdd);
+                    }
+                } else {
+                    conceptToAdd = getConceptByUri(conceptStatement.getSubject().stringValue());
+                    if (!connectedConcepts.contains(conceptToAdd)) {
+                        connectedConcepts.add(conceptToAdd);
+                    }                    
                 }
-                connectedConcepts.add(getConceptByUri(conceptStatement.getSubject().stringValue()));
             }
         }
         catch (RepositoryException e) {
