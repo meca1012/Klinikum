@@ -2,6 +2,7 @@ package de.klinikum.rest;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -13,6 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.openrdf.model.util.ModelException;
 import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +54,9 @@ public class ConceptREST {
     @Path("/getConceptXML")
     @GET
     @Produces(MediaType.APPLICATION_XML)
-    public Concept getConceptXML() throws ParseException {
+    public List<Concept> getConceptXML() throws ParseException {
+        
+        List<Concept> conceptsToReturn = new ArrayList<Concept>();
 
         Concept conceptToConnect1 = new Concept();
         conceptToConnect1.setLabel("connectedTestConcept1");
@@ -70,7 +74,9 @@ public class ConceptREST {
         concept.addConnectedConcepts(conceptToConnect2);
         concept.setUri("http://spironto.de/spironto#concept-gen16");
         concept.setPatientUri("http://spironto.de/spironto#patient-gen11");
-        return concept;
+        
+        conceptsToReturn.add(concept);
+        return conceptsToReturn;
     }
     
     /**
@@ -113,13 +119,29 @@ public class ConceptREST {
      * Purpose: Stores given Concept to SesameStore
      * @return
      * @throws IOException
+     * @throws SpirontoException 
+     * @throws ModelException 
+     * @throws RepositoryException 
      */
     @Path("/createConcept")
     @POST
     @Produces(MediaType.APPLICATION_XML)
-    public Concept createConcept(Concept concept) throws IOException {
+    public List<Concept> createConcept(List<Concept> concepts) throws IOException, RepositoryException, ModelException, SpirontoException {
+        
+        for (Concept c : concepts) {
+            c = this.conceptService.addConceptToPatient(c);
+            if (c.getConnectedConcepts() != null) {
+                for (Concept con : c.getConnectedConcepts()) {
+                    if (con.getUri() == null) {
+                        con = this.conceptService.addConceptToPatient(con);
+                    }
+                    this.conceptService.connectSingleConcept(c, con);
+                }
+            }            
+            c.setConnectedConcepts(this.conceptService.getConnectedConceptUris(c));
+        }
 
-        return this.conceptService.addConceptToPatient(concept);
+        return concepts;
     }
 
     /**
@@ -177,7 +199,7 @@ public class ConceptREST {
     public Concept addConceptToPatient(Concept concept) throws IOException, RepositoryException, SpirontoException {
 
         concept = this.conceptService.getConceptByUri(concept.getUri());
-        concept.setConnectedConcepts(this.conceptService.getDirectConnected(concept));
+        concept.setConnectedConcepts(this.conceptService.getDirectConnected(concept, false));
         return concept;
     }
 

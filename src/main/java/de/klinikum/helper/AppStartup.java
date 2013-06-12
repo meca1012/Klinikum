@@ -124,10 +124,14 @@ public class AppStartup {
             concept4 = this.conceptService.addTabConcept(concept4);
 
             concept1.addConnectedConcepts(concept2);
+            this.conceptService.connectSingleConcept(concept1, concept2);
             concept1.addConnectedConcepts(concept3);
+            this.conceptService.connectSingleConcept(concept1, concept3);
 
             concept4.addConnectedConcepts(concept5);
+            this.conceptService.connectSingleConcept(concept4, concept5);
             concept4.addConnectedConcepts(concept6);
+            this.conceptService.connectSingleConcept(concept4, concept6);
         }
         catch (IOException e) {
             // TODO Auto-generated catch block
@@ -159,12 +163,16 @@ public class AppStartup {
         // TextBlock
         Note note1 = new Note();
         note1.setText("This is a so important text, that you can't imagine how endless its context is.");
+        note1.setTitle("endless context");
+        note1.setPriority(2);
         note1.setPatientUri(patient1.getUri());
         note1.setCreated(new Date(3, 3, 3013));
         note1.setConcepts(concept1.getConnectedConcepts());
 
         Note note2 = new Note();
         note2.setText("This is a really endless text. Go and get a coffee before reading it.");
+        note2.setTitle("endless coffee");
+        note2.setPriority(1);
         note2.setPatientUri(patient2.getUri());
         note2.setCreated(new Date(4, 4, 4014));
         note2.setConcepts(concept4.getConnectedConcepts());

@@ -9,8 +9,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import edu.emory.mathcs.backport.java.util.Collections;
-
 /**
  * 
  * Concept.java
@@ -78,7 +76,7 @@ public class Concept implements Serializable {
 		if (this.connectedConcepts == null) {
 			return null;
 		}
-		return Collections.unmodifiableList(this.connectedConcepts);
+		return this.connectedConcepts;
 	}
 
 	public void setConnectedConcepts(List<Concept> connectedConcepts) {

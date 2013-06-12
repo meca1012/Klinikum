@@ -1,7 +1,9 @@
 package de.klinikum.service.Implementation;
 
 import static de.klinikum.domain.NameSpaces.NOTE_HAS_DATE;
+import static de.klinikum.domain.NameSpaces.NOTE_HAS_PRIORITY;
 import static de.klinikum.domain.NameSpaces.NOTE_HAS_TEXT;
+import static de.klinikum.domain.NameSpaces.NOTE_HAS_TITLE;
 import static de.klinikum.domain.NameSpaces.NOTE_POINTS_TO_CONCEPT;
 import static de.klinikum.domain.NameSpaces.NOTE_TYPE;
 import static de.klinikum.domain.NameSpaces.PATIENT_HAS_NOTE;
@@ -40,23 +42,27 @@ public class NoteServiceImpl implements NoteService {
     public Note createNote(Note note) throws IOException {
 
         URI noteUri = this.tripleStore.getUniqueURI(NOTE_TYPE.toString());
-        URI noteTypeUri = this.tripleStore.getValueFactory().createURI(NOTE_TYPE.toString());
 
         note.setUri(noteUri.toString());
 
-        this.tripleStore.addTriple(noteUri, RDF.TYPE, noteTypeUri);
+        this.tripleStore.addTriple(noteUri.toString(), RDF.TYPE.toString(), NOTE_TYPE.toString());
         this.tripleStore.addTriple(note.getPatientUri(), PATIENT_HAS_NOTE.toString(), note.getUri());
 
         Date date = new Date(System.currentTimeMillis());
         note.setCreated(DateUtil.getBirthDateFromString(date.toString()));
         Literal createdLiteral = this.tripleStore.getValueFactory().createLiteral(note.getCreated());
-        Literal textLiteral = this.tripleStore.getValueFactory().createLiteral(note.getText());
+        Literal textLiteral = this.tripleStore.getValueFactory().createLiteral(note.getText());        
+        Literal titleLiteral = this.tripleStore.getValueFactory().createLiteral(note.getTitle());
 
         URI hasDateUri = this.tripleStore.getValueFactory().createURI(NOTE_HAS_DATE.toString());
         URI hasTextUri = this.tripleStore.getValueFactory().createURI(NOTE_HAS_TEXT.toString());
+        URI hasTitleUri = this.tripleStore.getValueFactory().createURI(NOTE_HAS_TITLE.toString());
+        URI hasPriority = this.tripleStore.getValueFactory().createURI(NOTE_HAS_PRIORITY.toString());
 
         this.tripleStore.addTriple(noteUri, hasDateUri, createdLiteral);
         this.tripleStore.addTriple(noteUri, hasTextUri, textLiteral);
+        this.tripleStore.addTriple(noteUri, hasTitleUri, titleLiteral);
+        this.tripleStore.setValue(noteUri.toString(), hasPriority.toString(), note.getPriority());
 
         if (note.getConcepts() != null) {
             for (Concept c : note.getConcepts()) {

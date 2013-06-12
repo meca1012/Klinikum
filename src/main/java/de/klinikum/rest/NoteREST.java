@@ -16,8 +16,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import de.klinikum.domain.Concept;
-import de.klinikum.domain.Patient;
 import de.klinikum.domain.Note;
+import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.helper.DateUtil;
 import de.klinikum.service.Interfaces.NoteService;
@@ -59,6 +59,8 @@ public class NoteREST {
         Timestamp tstamp = new Timestamp(new Date().getTime());
         note.setCreated(DateUtil.getBirthDateFromString(tstamp.toString()));
         note.setText("This is a wonderfull endless text about the most important patient N°11");
+        note.setTitle("endless important");
+        note.setPriority(1);
         note.setConcepts(null);
         return note;
     }
