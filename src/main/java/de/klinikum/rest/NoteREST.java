@@ -15,11 +15,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.openrdf.model.util.ModelException;
+import org.openrdf.repository.RepositoryException;
+
 import de.klinikum.domain.Concept;
 import de.klinikum.domain.Note;
 import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.helper.DateUtil;
+import de.klinikum.service.Interfaces.ConceptService;
 import de.klinikum.service.Interfaces.NoteService;
 
 /**
@@ -41,6 +45,9 @@ public class NoteREST {
     // CDI for NoteService.class
     @Inject
     NoteService noteService;
+    
+    @Inject
+    ConceptService conceptService;
 
     /**
      * 
@@ -78,7 +85,7 @@ public class NoteREST {
     @POST
     @Produces(MediaType.APPLICATION_XML)
     public Note getNote(Note note) throws IOException, SpirontoException {
-        return this.noteService.findNote(note.getUri());
+        return this.noteService.getNoteByUri(note.getUri());
     }
 
     /**
@@ -87,12 +94,36 @@ public class NoteREST {
      * @return note
      * Purpose: Creates a Note. Returns created note with new URI in it
      * @throws IOException
+     * @throws SpirontoException 
+     * @throws ModelException 
+     * @throws RepositoryException 
      */
     @Path("/createNote")
     @POST
     @Produces(MediaType.APPLICATION_XML)
-    public Note createNote(Note note) throws IOException {
-        return this.noteService.createNote(note);
+    public Note createNote(Note note) throws IOException, RepositoryException, ModelException, SpirontoException {
+        note = this.noteService.createNote(note);
+        
+        if (note.getConcepts() != null) {
+            for (Concept c : note.getConcepts()) {
+                if (c.getUri() == null) {
+                    c = this.conceptService.createConcept(c);
+                }
+                note = this.noteService.addConceptToNote(note, c);
+                if (c.getConnectedConcepts() != null) {
+                    for (Concept con : c.getConnectedConcepts()) {
+                        if (con.getUri() == null) {
+                            con = this.conceptService.createConcept(con);
+                        } else {
+                            con = this.conceptService.getConceptByUri(con.getUri());
+                        }
+                        this.conceptService.connectSingleConcept(c, con);
+                    }
+                }
+                c.setConnectedConcepts(this.conceptService.getConnectedConceptUris(c));
+            }
+        }
+        return note;
     }
 
     /**

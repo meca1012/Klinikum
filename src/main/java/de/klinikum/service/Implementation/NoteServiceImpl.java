@@ -18,9 +18,12 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.openrdf.model.Literal;
+import org.openrdf.model.Model;
+import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.repository.RepositoryException;
 
 import de.klinikum.domain.Concept;
 import de.klinikum.domain.Note;
@@ -63,15 +66,7 @@ public class NoteServiceImpl implements NoteService {
         this.tripleStore.addTriple(noteUri, hasTextUri, textLiteral);
         this.tripleStore.addTriple(noteUri, hasTitleUri, titleLiteral);
         this.tripleStore.setValue(noteUri.toString(), hasPriority.toString(), note.getPriority());
-
-        if (note.getConcepts() != null) {
-            for (Concept c : note.getConcepts()) {
-                if (!this.conceptService.conceptExists(c)) {
-                    this.conceptService.createConcept(c);
-                }
-                this.tripleStore.addTriple(note.getUri(), NOTE_POINTS_TO_CONCEPT.toString(), c.getUri());
-            }
-        }
+        
         return note;
     }
 
@@ -92,33 +87,31 @@ public class NoteServiceImpl implements NoteService {
     public List<Note> findNotes(Patient patient) throws SpirontoException {
 
         List<Note> notes = new ArrayList<Note>();
-
-        String sparqlQuery = "SELECT ?Uri ?text ?created WHERE {";
-
-        sparqlQuery += "<" + patient.getUri().toString() + "> <" + PATIENT_HAS_NOTE + "> ?Uri . ";
-
-        sparqlQuery += "?Uri <" + RDF.TYPE + "> <" + NOTE_TYPE + "> . ";
-
-        sparqlQuery += "?Uri <" + NOTE_HAS_TEXT + "> ?text . ";
-
-        sparqlQuery += "?Uri <" + NOTE_HAS_DATE + "> ?created }";
-
-        Set<HashMap<String, Value>> queryResult = this.tripleStore.executeSelectSPARQLQuery(sparqlQuery);
-
-        for (HashMap<String, Value> item : queryResult) {
-            Note note = new Note();
-            note.setUri(item.get("Uri").toString());
-            note.setPatientUri(patient.getUri());
-            note.setCreated(DateUtil.getBirthDateFromString(item.get("created").stringValue()));
-            note.setText(item.get("text").stringValue());
-            notes.add(note);
+        Model statementList;
+        
+        try {
+            statementList = this.tripleStore.getStatementList(patient.getUri(), PATIENT_HAS_NOTE.toString(), null);
+            for (Statement noteStatement : statementList) {
+                notes.add(getNoteByUri(noteStatement.getObject().toString()));
+            }
         }
-
+        catch (RepositoryException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (SpirontoException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return notes;
     }
 
     @Override
-    public Note findNote(String noteUri) throws SpirontoException {
+    public Note getNoteByUri(String noteUri) throws SpirontoException {
 
         Note note = new Note();
         note.setUri(noteUri);
@@ -134,6 +127,32 @@ public class NoteServiceImpl implements NoteService {
             note.setText(item.get("text").stringValue());
             note.setCreated(DateUtil.getBirthDateFromString(item.get("created").stringValue()));
             note.setPatientUri(item.get("patientUri").toString());
+        }
+        note = getConceptsToNote(note);
+        return note;
+    }
+    
+    public Note getConceptsToNote(Note note) {
+        
+        Model statementList;        
+       
+        try {
+            statementList = this.tripleStore.getStatementList(note.getUri(), NOTE_POINTS_TO_CONCEPT.toString(), null);
+            for (Statement conceptStatement : statementList) {
+                note.addConcept(this.conceptService.getConceptByUri(conceptStatement.getObject().toString()));
+            }
+        }
+        catch (RepositoryException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch (SpirontoException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
         return note;
     }
