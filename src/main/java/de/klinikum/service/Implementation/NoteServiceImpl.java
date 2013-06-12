@@ -74,11 +74,7 @@ public class NoteServiceImpl implements NoteService {
     public Note addConceptToNote(Note note, Concept concept) throws IOException {
         if (this.tripleStore.repositoryHasStatement(note.getUri(), NOTE_POINTS_TO_CONCEPT.toString(), concept.getUri())) {
             return null;
-        }
-        if (note.getConcepts() == null) {
-            note.setConcepts(new ArrayList<Concept>());
-        }
-        note.addConcept(concept);
+        }        
         this.tripleStore.addTriple(note.getUri(), NOTE_POINTS_TO_CONCEPT.toString(), concept.getUri());
         return note;
     }
