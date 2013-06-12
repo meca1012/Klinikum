@@ -67,7 +67,7 @@ public class NoteServiceImpl implements NoteService {
         if (note.getConcepts() != null) {
             for (Concept c : note.getConcepts()) {
                 if (!this.conceptService.conceptExists(c)) {
-                    this.conceptService.addConceptToPatient(c);
+                    this.conceptService.createConcept(c);
                 }
                 this.tripleStore.addTriple(note.getUri(), NOTE_POINTS_TO_CONCEPT.toString(), c.getUri());
             }
