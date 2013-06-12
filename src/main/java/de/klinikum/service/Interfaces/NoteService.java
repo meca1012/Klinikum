@@ -14,7 +14,7 @@ public interface NoteService {
 
     List<Note> findNotes(Patient patient) throws SpirontoException;
 
-    Note findNote(String uri) throws SpirontoException;
+    Note getNoteByUri(String uri) throws SpirontoException;
 
     Note addConceptToNote(Note note, Concept concept) throws IOException;
 

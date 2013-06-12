@@ -12,9 +12,9 @@ import de.klinikum.exceptions.SpirontoException;
 
 public interface ConceptService {
 
-    List<Concept> findTabConceptsOfPatient(Patient patient) throws IOException, SpirontoException;
+    List<Concept> getTabConcepts() throws IOException, SpirontoException;
 
-    Concept addConceptToPatient(Concept concept) throws IOException;
+    Concept createConcept(Concept concept) throws IOException;
 
     void connectSingleConcept(Concept from, Concept to) throws IOException;
 

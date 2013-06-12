@@ -115,10 +115,10 @@ public class AppStartup {
         concept6.setPatientUri(patient2.getUri());
 
         try {
-            concept2 = this.conceptService.addConceptToPatient(concept2);
-            concept3 = this.conceptService.addConceptToPatient(concept3);
-            concept5 = this.conceptService.addConceptToPatient(concept5);
-            concept6 = this.conceptService.addConceptToPatient(concept6);
+            concept2 = this.conceptService.createConcept(concept2);
+            concept3 = this.conceptService.createConcept(concept3);
+            concept5 = this.conceptService.createConcept(concept5);
+            concept6 = this.conceptService.createConcept(concept6);
 
             concept1 = this.conceptService.addTabConcept(concept1);
             concept4 = this.conceptService.addTabConcept(concept4);
@@ -160,7 +160,7 @@ public class AppStartup {
             e.printStackTrace();
         }
 
-        // TextBlock
+        // Note
         Note note1 = new Note();
         note1.setText("This is a so important text, that you can't imagine how endless its context is.");
         note1.setTitle("endless context");
