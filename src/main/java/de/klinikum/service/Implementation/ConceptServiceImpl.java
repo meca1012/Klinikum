@@ -1,11 +1,11 @@
 package de.klinikum.service.Implementation;
 
+import static de.klinikum.domain.NameSpaces.CONCEPT_IS_EDITABLE;
 import static de.klinikum.domain.NameSpaces.GUI_TAB_TYPE;
 import static de.klinikum.domain.NameSpaces.ONTOLOGIE_CONCEPT_HAS_LABEL;
 import static de.klinikum.domain.NameSpaces.ONTOLOGIE_CONCEPT_LINKED_TO;
 import static de.klinikum.domain.NameSpaces.ONTOLOGIE_CONCEPT_TYPE;
 import static de.klinikum.domain.NameSpaces.PATIENT_HAS_CONCEPT;
-import static de.klinikum.domain.NameSpaces.CONCEPT_IS_EDITABLE;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -82,24 +82,12 @@ public class ConceptServiceImpl implements ConceptService {
         Literal conceptLabelLiteral = this.tripleStore.getValueFactory().createLiteral(concept.getLabel());
 
         this.tripleStore.addTriple(conceptUri, conceptHasLabelUri, conceptLabelLiteral);
-
-<<<<<<< HEAD
-//        if (concept.getConnectedConcepts() != null) {
-//            for (Concept c : concept.getConnectedConcepts()) {
-//                if (!conceptExists(c)) {
-//                    addConceptToPatient(c);
-//                }
-//                this.connectSingleConcept(concept, c);
-//            }
-//        }
         
         // adds isEditable as Literal to every concept
         URI conceptIsEditableLiteralUri = this.tripleStore.getValueFactory().createURI(CONCEPT_IS_EDITABLE.toString());
         Literal conceptIsEditableLiteral = this.tripleStore.getValueFactory().createLiteral(concept.isEditable());
-        this.tripleStore.addTriple(conceptUri, conceptIsEditableLiteralUri, conceptIsEditableLiteral);
-        
-=======
->>>>>>> branch 'master' of https://github.com/meca1012/Klinikum.git
+        this.tripleStore.addTriple(conceptUri, conceptIsEditableLiteralUri, conceptIsEditableLiteral);        
+
         return concept;
     }
 

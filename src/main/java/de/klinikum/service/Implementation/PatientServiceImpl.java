@@ -527,7 +527,7 @@ public class PatientServiceImpl implements PatientService {
 						Concept concept = new Concept();
 						concept.setPatientUri(patient.getUri());
 						concept.setLabel(fc.toString());
-						this.conceptService.addTabConcept(concept);
+						this.conceptService.createConcept(concept);
 						this.conceptService.connectSingleConcept(tabConcept,
 								concept);
 					}
@@ -539,7 +539,7 @@ public class PatientServiceImpl implements PatientService {
 						Concept concept = new Concept();
 						concept.setPatientUri(patient.getUri());
 						concept.setLabel(dc.toString());
-						this.conceptService.addConceptToPatient(concept);
+						this.conceptService.createConcept(concept);
 						this.conceptService.connectSingleConcept(tabConcept,
 								concept);
 					}
@@ -551,7 +551,7 @@ public class PatientServiceImpl implements PatientService {
 						Concept concept = new Concept();
 						concept.setPatientUri(patient.getUri());
 						concept.setLabel(sc.toString());
-						this.conceptService.addTabConcept(concept);
+						this.conceptService.createConcept(concept);
 						this.conceptService.connectSingleConcept(tabConcept,
 								concept);
 					}
@@ -563,7 +563,7 @@ public class PatientServiceImpl implements PatientService {
 						Concept concept = new Concept();
 						concept.setPatientUri(patient.getUri());
 						concept.setLabel(bc.toString());
-						this.conceptService.addTabConcept(concept);
+						this.conceptService.createConcept(concept);
 						this.conceptService.connectSingleConcept(tabConcept,
 								concept);
 					}
@@ -576,7 +576,7 @@ public class PatientServiceImpl implements PatientService {
 						Concept concept = new Concept();
 						concept.setPatientUri(patient.getUri());
 						concept.setLabel(sci.toString());
-						this.conceptService.addTabConcept(concept);
+						this.conceptService.createConcept(concept);
 						this.conceptService.connectSingleConcept(tabConcept,
 								concept);
 					}
