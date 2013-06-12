@@ -34,11 +34,19 @@ import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.repository.RepositoryException;
 
 import de.klinikum.domain.Address;
+import de.klinikum.domain.Concept;
 import de.klinikum.domain.Patient;
+import de.klinikum.domain.enums.BackgroundConcepts;
+import de.klinikum.domain.enums.DiseaseConcepts;
+import de.klinikum.domain.enums.FamilyConcepts;
+import de.klinikum.domain.enums.SpiritualCareInterventionConcepts;
+import de.klinikum.domain.enums.SpiritualityConcepts;
+import de.klinikum.domain.enums.TabConcepts;
 import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.exceptions.TripleStoreException;
 import de.klinikum.helper.DateUtil;
 import de.klinikum.persistence.SesameTripleStore;
+import de.klinikum.service.Interfaces.ConceptService;
 import de.klinikum.service.Interfaces.PatientService;
 
 @Named
@@ -46,6 +54,9 @@ public class PatientServiceImpl implements PatientService {
 
 	private String className = "PatientServiceImpl";
 
+	@Inject
+	ConceptService conceptService;
+	
 	@Inject
 	SesameTripleStore tripleStore;
 
@@ -209,6 +220,10 @@ public class PatientServiceImpl implements PatientService {
 				// Create Address Element Triple
 				this.tripleStore.addTriple(patientUri, hasAddress, addressURI);
 			}
+			
+//			TODO: add createStandardConcepts here
+			this.createStandardConcepts(patient);
+			
 			return patient;
 
 		} catch (IOException e) {
@@ -490,7 +505,86 @@ public class PatientServiceImpl implements PatientService {
 
 		return returnPatientList;
 	}
+	
+	/**
+	 * adds standard tabConcepts and concepts to patient
+	 * @throws IOException 
+	 */
+	public void createStandardConcepts(Patient patient) throws IOException {
 
+		// creates standard tabConcepts
+		for (TabConcepts tc : TabConcepts.values()) {
+			Concept tabConcept = new Concept();
+			tabConcept.setPatientUri(patient.getUri());
+			tabConcept.setLabel(tc.toString());
+			this.conceptService.addTabConcept(tabConcept);
+
+			switch (tc) {
+			
+				case FAMILIE:
+					// adds family concepts
+					for (FamilyConcepts fc : FamilyConcepts.values()) {
+						Concept concept = new Concept();
+						concept.setPatientUri(patient.getUri());
+						concept.setLabel(fc.toString());
+						this.conceptService.addTabConcept(concept);
+						this.conceptService.connectSingleConcept(tabConcept,
+								concept);
+					}
+					break;
+					
+				case KRANKHEITSVERLAUF:
+					// adds disease running concepts
+					for (DiseaseConcepts dc : DiseaseConcepts.values()) {
+						Concept concept = new Concept();
+						concept.setPatientUri(patient.getUri());
+						concept.setLabel(dc.toString());
+						this.conceptService.addConceptToPatient(concept);
+						this.conceptService.connectSingleConcept(tabConcept,
+								concept);
+					}
+					break;
+					
+				case SPIRITUALITAET_RELIGION:					
+					// adds spirituality concepts
+					for (SpiritualityConcepts sc : SpiritualityConcepts.values()) {
+						Concept concept = new Concept();
+						concept.setPatientUri(patient.getUri());
+						concept.setLabel(sc.toString());
+						this.conceptService.addTabConcept(concept);
+						this.conceptService.connectSingleConcept(tabConcept,
+								concept);
+					}
+					break;
+					
+				case HERKUNFT:				
+					// adds background concepts
+					for (BackgroundConcepts bc : BackgroundConcepts.values()) {
+						Concept concept = new Concept();
+						concept.setPatientUri(patient.getUri());
+						concept.setLabel(bc.toString());
+						this.conceptService.addTabConcept(concept);
+						this.conceptService.connectSingleConcept(tabConcept,
+								concept);
+					}
+					break;
+					
+				case SPIRITUAL_CARE_INTERVENTION:
+					// adds spiritualy care interventions concepts
+					for (SpiritualCareInterventionConcepts sci : SpiritualCareInterventionConcepts
+							.values()) {
+						Concept concept = new Concept();
+						concept.setPatientUri(patient.getUri());
+						concept.setLabel(sci.toString());
+						this.conceptService.addTabConcept(concept);
+						this.conceptService.connectSingleConcept(tabConcept,
+								concept);
+					}
+					break;
+				}
+		}		
+	}
+	
 	public String getClassName() {
 		return this.className;
 	}

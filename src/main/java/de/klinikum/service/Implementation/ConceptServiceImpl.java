@@ -5,6 +5,7 @@ import static de.klinikum.domain.NameSpaces.ONTOLOGIE_CONCEPT_HAS_LABEL;
 import static de.klinikum.domain.NameSpaces.ONTOLOGIE_CONCEPT_LINKED_TO;
 import static de.klinikum.domain.NameSpaces.ONTOLOGIE_CONCEPT_TYPE;
 import static de.klinikum.domain.NameSpaces.PATIENT_HAS_CONCEPT;
+import static de.klinikum.domain.NameSpaces.CONCEPT_IS_EDITABLE;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ import de.klinikum.service.Interfaces.ConceptService;
 public class ConceptServiceImpl implements ConceptService {
 
     @Inject
-    private SesameTripleStore tripleStore;
+    SesameTripleStore tripleStore;
 
     @Override
     public List<Concept> findTabConceptsOfPatient(Patient patient) throws SpirontoException {
@@ -70,7 +71,7 @@ public class ConceptServiceImpl implements ConceptService {
         URI conceptUri = this.tripleStore.getUniqueURI(ONTOLOGIE_CONCEPT_TYPE.toString());
 
         concept.setUri(conceptUri.toString());
-
+        
         URI conceptTypeUri = this.tripleStore.getValueFactory().createURI(ONTOLOGIE_CONCEPT_TYPE.toString());
 
         this.tripleStore.addTriple(conceptUri, RDF.TYPE, conceptTypeUri);
@@ -94,6 +95,12 @@ public class ConceptServiceImpl implements ConceptService {
 //                this.connectSingleConcept(concept, c);
 //            }
 //        }
+        
+        // adds isEditable as Literal to every concept
+        URI conceptIsEditableLiteralUri = this.tripleStore.getValueFactory().createURI(CONCEPT_IS_EDITABLE.toString());
+        Literal conceptIsEditableLiteral = this.tripleStore.getValueFactory().createLiteral(concept.isEditable());
+        this.tripleStore.addTriple(conceptUri, conceptIsEditableLiteralUri, conceptIsEditableLiteral);
+        
         return concept;
     }
 
@@ -107,7 +114,8 @@ public class ConceptServiceImpl implements ConceptService {
 
     @Override
     public Concept addTabConcept(Concept concept) throws IOException {
-
+    	
+    	concept.setEditable(false);
         concept = this.addConceptToPatient(concept);
         this.tripleStore.addTriple(concept.getUri(), RDF.TYPE.toString(), GUI_TAB_TYPE.toString());
         return concept;

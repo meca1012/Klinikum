@@ -52,6 +52,7 @@ public enum NameSpaces {
     ONTOLOGIE_CONCEPT_HAS_LABEL("http://spironto.de/spironto#concept-has-label"),
     ONTOLOGIE_CONCEPT_LINKED_TO("http://spironto.de/spironto#concept-linked-to"),
     LINK_HAS_LABEL("http://spironto.de/spironto#link-has-label"),
+    CONCEPT_IS_EDITABLE("http://spironto.de/spironto#concept-is-editable"),
 
     // RDF Type for Ontology
     PATIENT_HAS_CONCEPT("http://spironto.de/spironto#patient-has-concept"),

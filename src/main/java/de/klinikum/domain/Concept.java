@@ -38,6 +38,9 @@ public class Concept implements Serializable {
     
     @XmlElement(name = "connectedConcepts")
     private List<Concept> connectedConcepts;
+    
+    @XmlElement(name = "isEditable")
+    private boolean isEditable = true;
 
     public Concept() {
     }
@@ -96,5 +99,13 @@ public class Concept implements Serializable {
 		}
 		this.connectedConcepts.add(concept);
 		return this;
+	}
+
+	public boolean isEditable() {
+		return isEditable;
+	}
+
+	public void setEditable(boolean isEditable) {
+		this.isEditable = isEditable;
 	}	
 }
