@@ -18,4 +18,6 @@ public interface NoteService {
 
     Note addConceptToNote(Note note, Concept concept) throws IOException;
 
+    Note getConceptsToNote(Note note);
+
 }
