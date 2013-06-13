@@ -10,7 +10,6 @@ import static de.klinikum.domain.NameSpaces.PATIENT_HAS_NOTE;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -51,10 +50,9 @@ public class NoteServiceImpl implements NoteService {
         this.tripleStore.addTriple(noteUri.toString(), RDF.TYPE.toString(), NOTE_TYPE.toString());
         this.tripleStore.addTriple(note.getPatientUri(), PATIENT_HAS_NOTE.toString(), note.getUri());
 
-        Date date = new Date(System.currentTimeMillis());
-        note.setCreated(DateUtil.getBirthDateFromString(date.toString()));
+        note.setCreated(DateUtil.getCurrentSysTime());
         Literal createdLiteral = this.tripleStore.getValueFactory().createLiteral(note.getCreated());
-        Literal textLiteral = this.tripleStore.getValueFactory().createLiteral(note.getText());        
+        Literal textLiteral = this.tripleStore.getValueFactory().createLiteral(note.getText());
         Literal titleLiteral = this.tripleStore.getValueFactory().createLiteral(note.getTitle());
 
         URI hasDateUri = this.tripleStore.getValueFactory().createURI(NOTE_HAS_DATE.toString());
@@ -112,22 +110,27 @@ public class NoteServiceImpl implements NoteService {
         Note note = new Note();
         note.setUri(noteUri);
 
-        String sparqlQuery = "SELECT ?text ?patientUri ?created WHERE {";
+        String sparqlQuery = "SELECT ?text ?patientUri ?created ?title ?priority WHERE {";
 
         sparqlQuery += "<" + noteUri + "> <" + NOTE_HAS_TEXT + "> ?text . ";
         sparqlQuery += "<" + noteUri + "> <" + NOTE_HAS_DATE + "> ?created . ";
+        sparqlQuery += "<" + noteUri + "> <" + NOTE_HAS_TITLE + "> ?title . ";
+        sparqlQuery += "<" + noteUri + "> <" + NOTE_HAS_PRIORITY + "> ?priority . ";
         sparqlQuery += "?patientUri <" + PATIENT_HAS_NOTE + "> <" + noteUri + ">}";
 
         Set<HashMap<String, Value>> queryResult = this.tripleStore.executeSelectSPARQLQuery(sparqlQuery);
         for (HashMap<String, Value> item : queryResult) {
             note.setText(item.get("text").stringValue());
             note.setCreated(DateUtil.getBirthDateFromString(item.get("created").stringValue()));
-            note.setPatientUri(item.get("patientUri").toString());
-        }
+            note.setPatientUri(item.get("patientUri").stringValue());
+            note.setTitle(item.get("title").stringValue());
+            note.setPriority(Integer.parseInt(item.get("priority").stringValue()));
+        }        
         note = getConceptsToNote(note);
         return note;
     }
     
+    @Override
     public Note getConceptsToNote(Note note) {
         
         Model statementList;        

@@ -153,8 +153,19 @@ public class NoteREST {
     @Path("/addConceptToNote")
     @POST
     @Produces(MediaType.APPLICATION_XML)
-    public Note addConceptToNote(Note note, Concept concept) throws IOException, SpirontoException {
-        return this.noteService.addConceptToNote(note, concept);
+    public Note addConceptToNote(Note note) throws IOException, SpirontoException {
+        
+        if (note.getConcepts() != null) {
+            for (Concept c : note.getConcepts()) {
+                if (c.getUri() != null) {
+                    note = this.noteService.addConceptToNote(note, c);
+                }
+            }
+            note = this.noteService.getConceptsToNote(note);
+        } else {
+            return null;
+        }
+        return note;
     }
     
 }

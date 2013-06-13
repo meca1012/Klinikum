@@ -144,7 +144,7 @@ public class AppStartup {
         note1.setTitle("endless context");
         note1.setPriority(2);
         note1.setPatientUri(patient1.getUri());
-        note1.setCreated(new Date(3, 3, 3013));
+        note1.setCreated(DateUtil.getCurrentSysTime());
         note1.setConcepts(concept1.getConnectedConcepts());
 
         Note note2 = new Note();
@@ -152,7 +152,7 @@ public class AppStartup {
         note2.setTitle("endless coffee");
         note2.setPriority(1);
         note2.setPatientUri(patient2.getUri());
-        note2.setCreated(new Date(4, 4, 4014));
+        note2.setCreated(DateUtil.getCurrentSysTime());
         note2.setConcepts(concept4.getConnectedConcepts());
 
         note1 = this.noteService.createNote(note1);
