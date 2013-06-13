@@ -16,8 +16,11 @@ import javax.ws.rs.core.MediaType;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.queryparser.classic.ParseException;
 
+import de.klinikum.domain.LuceneSearchRequest;
 import de.klinikum.domain.Note;
+import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.lucene.LuceneServiceImpl;
+import de.klinikum.service.Implementation.NoteServiceImpl;
 import de.klinikum.service.Interfaces.ConceptService;
 
 /**
@@ -39,6 +42,24 @@ public class LuceneREST {
   //CDI of ConceptService.class
     @Inject
     LuceneServiceImpl luceneService;
+    
+    
+    /**
+     * Purpose: Create LuceneSearchRequestElement for Testing
+     * @return
+     * @throws IOException
+     * @throws URISyntaxException 
+     */
+    @Path("/getRequestXML")
+    @GET
+    @Produces(MediaType.APPLICATION_XML)
+    public LuceneSearchRequest returnRequest()
+    {
+        LuceneSearchRequest request = new LuceneSearchRequest();
+        request.setPatientUri("LuceneSearchRequest");
+        request.setSearchString("wonderfull");
+        return request;
+   }
     
     /**
      * Purpose: Create Lucene Index Files for Test purpose
@@ -71,14 +92,24 @@ public class LuceneREST {
         return "Done";
     }
     
+    /**
+     * 
+     * @param String -> Consumes an LuceneSearchRequestObejct from GUI- side
+     * @return List of Notes search in LuceneIndex Folder -> Datafetch in RDF with URIs returned
+     * from Index
+     * @throws ParseException
+     * @throws IOException
+     * @throws SpirontoException
+     */
     @Path("/searchNote")
     @POST
-    @Consumes(MediaType.TEXT_PLAIN)
-    @Produces(MediaType.TEXT_PLAIN)
-    public String storeNote(String searchString) throws ParseException, IOException
+    @Consumes(MediaType.APPLICATION_XML)
+    @Produces(MediaType.APPLICATION_XML)
+    public List<Note> storeNote(LuceneSearchRequest request) throws ParseException, IOException, SpirontoException
     {
-                List<String> returnList = luceneService.search(searchString);
-                return returnList.toString();
+                List<Note> returnList = luceneService.searchNotes(request);
+                return returnList;
     }
     
 }
+ 
