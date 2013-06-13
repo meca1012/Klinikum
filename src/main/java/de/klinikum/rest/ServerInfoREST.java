@@ -1,6 +1,7 @@
 package de.klinikum.rest;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -52,17 +53,4 @@ public class ServerInfoREST {
 		return status;
 	}
     
-    /**
-     * Purpose: Return PlanText. Used for Lucene implementation
-     * @return
-     * @throws IOException
-     */
-	@Path("/luceneTest")
-	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	public String test2() throws IOException
-	{
-	    luceneService.createIndex();
-	    return "Done";
-	}
 }
