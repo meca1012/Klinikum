@@ -1,6 +1,7 @@
 package de.klinikum.rest;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -65,11 +66,12 @@ public class SesameREST {
 	
 	/**
 	 * Creates Testdata on call. 
+	 * @throws URISyntaxException 
 	 */
 	@GET
 	@Path("/createTestData")
 	@Produces(MediaType.TEXT_PLAIN)
-	public void createTestData() {
+	public void createTestData() throws URISyntaxException {
 	    try {
             this.startup.createTestData();
         }

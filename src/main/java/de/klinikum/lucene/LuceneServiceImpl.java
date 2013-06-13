@@ -37,6 +37,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -62,10 +64,6 @@ public class LuceneServiceImpl implements LuceneService {
     private IndexWriter writer;
     private static Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_43);
 
-    // CDI for NoteServiceClass
-    @Inject
-    NoteServiceImpl noteService;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(LuceneServiceImpl.class);
 
     /**
@@ -74,7 +72,7 @@ public class LuceneServiceImpl implements LuceneService {
      *            Success(True) if a new index been created.
      * @throws IOException
      */
-    public LuceneServiceImpl() throws IOException {
+    public LuceneServiceImpl () throws IOException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         URL url = classLoader.getResource(CLASSFOLDER);
         String path = url.getPath();
@@ -177,13 +175,13 @@ public class LuceneServiceImpl implements LuceneService {
      * @throws IOException
      * @throws SpirontoException
      */
-    public List<Note> searchNotes(LuceneSearchRequest request) throws ParseException, IOException, SpirontoException {
+    public List<String> searchNotes(LuceneSearchRequest request) throws ParseException, IOException, SpirontoException {
 
         this.reader = DirectoryReader.open(FSDirectory.open(new File(getIndexPath().getPath()))); // only searching, so
                                                                                                   // read-only=true
         this.searcher = new IndexSearcher(reader);
 
-        List<Note> returnUriList = new ArrayList();
+        List<String> returnUriList = new ArrayList();
         String queryString = URIPATIENT + ": \"" + request.getPatientUri() + "\" AND text: " + request.getSearchString();
   
         Query query = new QueryParser(Version.LUCENE_43, NOTETEXT, analyzer).parse(queryString);
@@ -198,10 +196,10 @@ public class LuceneServiceImpl implements LuceneService {
         for (ScoreDoc hit : hits) {
             int docId = hit.doc;
             Document d = searcher.doc(docId);
-            Note sesameNote = noteService.getNoteByUri(d.get(URINOTE));
+            String URI = d.get(URINOTE);
 
-            if (sesameNote != null) {
-                returnUriList.add(sesameNote);
+            if (URI != null) {
+                returnUriList.add(URI);
             }
         }
         return returnUriList;

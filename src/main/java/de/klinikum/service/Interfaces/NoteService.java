@@ -1,6 +1,7 @@
 package de.klinikum.service.Interfaces;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import de.klinikum.domain.Concept;
@@ -10,7 +11,7 @@ import de.klinikum.exceptions.SpirontoException;
 
 public interface NoteService {
 
-    Note createNote(Note note) throws IOException;
+    Note createNote(Note note) throws IOException, URISyntaxException;
 
     List<Note> findNotes(Patient patient) throws SpirontoException;
 

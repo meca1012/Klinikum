@@ -1,6 +1,7 @@
 package de.klinikum.rest;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.Date;
@@ -97,11 +98,12 @@ public class NoteREST {
      * @throws SpirontoException 
      * @throws ModelException 
      * @throws RepositoryException 
+     * @throws URISyntaxException 
      */
     @Path("/createNote")
     @POST
     @Produces(MediaType.APPLICATION_XML)
-    public Note createNote(Note note) throws IOException, RepositoryException, ModelException, SpirontoException {
+    public Note createNote(Note note) throws IOException, RepositoryException, ModelException, SpirontoException, URISyntaxException {
         note = this.noteService.createNote(note);
         
         if (note.getConcepts() != null) {

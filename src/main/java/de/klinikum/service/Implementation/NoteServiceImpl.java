@@ -9,6 +9,7 @@ import static de.klinikum.domain.NameSpaces.NOTE_TYPE;
 import static de.klinikum.domain.NameSpaces.PATIENT_HAS_NOTE;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,8 @@ import de.klinikum.domain.Note;
 import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.helper.DateUtil;
+import de.klinikum.lucene.LuceneService;
+import de.klinikum.lucene.LuceneServiceImpl;
 import de.klinikum.persistence.SesameTripleStore;
 import de.klinikum.service.Interfaces.NoteService;
 
@@ -40,8 +43,11 @@ public class NoteServiceImpl implements NoteService {
     @Inject
     ConceptServiceImpl conceptService;
 
+    @Inject
+    LuceneServiceImpl luceneService;
+    
     @Override
-    public Note createNote(Note note) throws IOException {
+    public Note createNote(Note note) throws IOException, URISyntaxException {
 
         URI noteUri = this.tripleStore.getUniqueURI(NOTE_TYPE.toString());
 
@@ -64,6 +70,8 @@ public class NoteServiceImpl implements NoteService {
         this.tripleStore.addTriple(noteUri, hasTextUri, textLiteral);
         this.tripleStore.addTriple(noteUri, hasTitleUri, titleLiteral);
         this.tripleStore.setValue(noteUri.toString(), hasPriority.toString(), note.getPriority());
+        
+        luceneService.storeNote(note);
         
         return note;
     }

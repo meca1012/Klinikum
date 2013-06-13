@@ -2,6 +2,7 @@ package de.klinikum.rest;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -20,6 +21,7 @@ import de.klinikum.domain.LuceneSearchRequest;
 import de.klinikum.domain.Note;
 import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.lucene.LuceneServiceImpl;
+import de.klinikum.service.Implementation.ConceptServiceImpl;
 import de.klinikum.service.Implementation.NoteServiceImpl;
 import de.klinikum.service.Interfaces.ConceptService;
 
@@ -39,11 +41,12 @@ import de.klinikum.service.Interfaces.ConceptService;
 public class LuceneREST {
     
     
-  //CDI of ConceptService.class
+    //CDI of ConceptService.class
     @Inject
     LuceneServiceImpl luceneService;
     
-    
+    @Inject
+    NoteServiceImpl noteService;
     /**
      * Purpose: Create LuceneSearchRequestElement for Testing
      * @return
@@ -107,8 +110,14 @@ public class LuceneREST {
     @Produces(MediaType.APPLICATION_XML)
     public List<Note> storeNote(LuceneSearchRequest request) throws ParseException, IOException, SpirontoException
     {
-                List<Note> returnList = luceneService.searchNotes(request);
-                return returnList;
+                List<String> uriList = luceneService.searchNotes(request);
+                List<Note> noteResult = new ArrayList<Note>();
+                for(String uri : uriList)
+                {
+                    noteResult.add(noteService.getNoteByUri(uri));
+                }
+                
+                return noteResult;
     }
     
 }
