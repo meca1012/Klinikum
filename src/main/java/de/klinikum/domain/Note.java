@@ -10,8 +10,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import edu.emory.mathcs.backport.java.util.Collections;
-
 /**
  * 
  * Note.java Purpose: DomainObject to Store Sesame- Data and Exchange Stores Patient- Documentation and can be linked to
@@ -109,7 +107,7 @@ public class Note implements Serializable {
         if (this.concepts == null) {
             return null;
         }
-        return Collections.unmodifiableList(this.concepts);
+        return this.concepts;
     }
 
     public void setConcepts(List<Concept> concepts) {
