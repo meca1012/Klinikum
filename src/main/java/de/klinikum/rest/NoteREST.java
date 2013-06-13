@@ -2,9 +2,7 @@ package de.klinikum.rest;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.sql.Timestamp;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -63,9 +61,8 @@ public class NoteREST {
 
         Note note = new Note();
         note.setUri("http://spironto.de/spironto#note-gen3");
-        note.setPatientUri("http://spironto.de/spironto#patient-gen11");
-        Timestamp tstamp = new Timestamp(new Date().getTime());
-        note.setCreated(DateUtil.getBirthDateFromString(tstamp.toString()));
+        note.setPatientUri("http://spironto.de/spironto#patient-gen11");        
+        note.setCreated(DateUtil.getCurrentSysTime());
         note.setText("This is a wonderfull endless text about the most important patient N°11");
         note.setTitle("endless important");
         note.setPriority(1);
