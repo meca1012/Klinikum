@@ -13,11 +13,13 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -185,6 +187,42 @@ public class LuceneServiceImpl implements LuceneService {
         return true;
     }
 
+    /**
+     * 
+     * @param note -> Consumes Note.class
+     * Purpose: Delete Notes from Index 
+     * @return true or false depending on delete- state
+     * @throws IOException
+     */
+    public boolean deleteNote(Note note) throws IOException
+    {
+        if(note == null || note .getUri() == null || note.getUri().isEmpty() )   
+                return false;
+        
+            LOGGER.info("Deleting Notes with URI '" + note.getPatientUri());
+
+            TermQuery deleteTerm = new TermQuery(new Term(URINOTE, note.getUri()));
+                 
+            try
+            {
+                this.initalizeWriter(OpenMode.CREATE_OR_APPEND);
+                this.writer.deleteDocuments(deleteTerm);      
+                this.writer.commit();
+                LOGGER.info("Deleting for '" + note.getUri() + "done");
+            }
+            catch(Exception e)
+            {
+                this.writer.rollback();
+                LOGGER.info("Rollback for '" + note.getPatientUri() + "done \n");
+                LOGGER.info("Check Consitenzy");
+            }
+            finally
+            {
+               this.closeWriter();
+            }
+            return true;
+    }
+    
     /**
      * 
      * @param searchString

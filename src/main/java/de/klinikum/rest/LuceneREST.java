@@ -120,8 +120,18 @@ public class LuceneREST {
                 {
                     noteResult.add(noteService.getNoteByUri(uri));
                 }
-                
                 return noteResult;
+    }
+    
+    @Path("/deleteNote")
+    @POST
+    @Consumes(MediaType.APPLICATION_XML)
+    @Produces(MediaType.APPLICATION_XML)
+    public boolean deleteNote(Note note) throws Exception
+    {
+                boolean returnValue = luceneService.deleteNote(note);
+                
+                return returnValue;
     }
     
 }
