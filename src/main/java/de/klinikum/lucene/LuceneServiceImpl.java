@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import de.klinikum.domain.LuceneSearchRequest;
 import de.klinikum.domain.Note;
 import de.klinikum.exceptions.SpirontoException;
+import de.klinikum.helper.PropertyLoader;
 
 import de.klinikum.service.Implementation.NoteServiceImpl;
 
@@ -36,6 +37,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
@@ -59,10 +61,16 @@ public class LuceneServiceImpl implements LuceneService {
     private final static String URINOTE = "uriNote";
     private final static String NOTETITLE = "noteTitle";
     private final static String NOTETEXT = "text";
+    private static final String luceneIndexPath = "lucene.indexPath";
+
     private IndexSearcher searcher;
     private IndexReader reader;
     private IndexWriter writer;
+    private String lucenePath;
+    
+    private static final String configName = "lucene.properties";
     private static Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_43);
+    private PropertyLoader propertyLoader;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LuceneServiceImpl.class);
 
@@ -70,26 +78,37 @@ public class LuceneServiceImpl implements LuceneService {
      * @param indexDir
      * @param createNewIndex
      *            Success(True) if a new index been created.
-     * @throws IOException
+     *            Path to Index is configurable through lucene.propterties
+     * @throws Exception 
      */
-    public LuceneServiceImpl () throws IOException {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        URL url = classLoader.getResource(CLASSFOLDER);
-        String path = url.getPath();
-        boolean success = new File(path + "/index").mkdirs();
+    public LuceneServiceImpl () throws Exception {
+        
+        propertyLoader = new PropertyLoader();
+        Properties propFile = propertyLoader.load(configName);
+        this.lucenePath = propFile.getProperty(luceneIndexPath);
+        boolean success = new File(this.lucenePath).mkdirs();
         if (success) {
-            LOGGER.info("Created IndexFolder  '" + path + "/index '...");
+            LOGGER.info("Created IndexFolder  '" + this.lucenePath + "....");
         }
     }
 
     /**
      * Purpose: Returns current folder Path for index location
-     * 
+     * Reloading of Path just if class was rebuild by the Container
+     * Should never happen
      * @return
+     * @throws Exception 
      */
-    private URL getIndexPath() {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        return classLoader.getResource(FILEPATH);
+    private String getIndexPath() throws Exception {
+       
+        if(this.lucenePath == null || this.lucenePath.isEmpty()) {
+            Properties propFile = propertyLoader.load(configName);
+            return propFile.getProperty(luceneIndexPath);
+        }
+        else
+        {
+            return this.lucenePath;
+        }
     }
 
     /**
@@ -97,12 +116,11 @@ public class LuceneServiceImpl implements LuceneService {
      * 
      * @param mode
      *            /Create/CreateOrRead/Read
-     * @throws IOException
-     * @throws URISyntaxException
+     * @throws Exception 
      */
-    public void initalizeWriter(OpenMode mode) throws IOException, URISyntaxException {
+    public void initalizeWriter(OpenMode mode) throws Exception {
         // System.out.println("Indexing to directory '" + FILEPATH + "'...");
-        Directory dir = FSDirectory.open(new File(getIndexPath().getPath()));
+        Directory dir = FSDirectory.open(new File(getIndexPath()));
         Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_43);
         IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_43, analyzer);
         iwc.setOpenMode(mode);
@@ -125,10 +143,11 @@ public class LuceneServiceImpl implements LuceneService {
 
     /**
      * Purpose -> Mapping from Note to Doc and Storing to Index
+     * @throws Exception 
      * 
      */
     @Override
-    public boolean storeNote(Note note) throws IOException, URISyntaxException {
+    public boolean storeNote(Note note) throws Exception {
 
         Document doc = new Document();
 
@@ -160,6 +179,7 @@ public class LuceneServiceImpl implements LuceneService {
         }
         finally
         {
+            // Ensure that index is closed. Open indexFiles are locked!
             this.closeWriter();
         }
         return true;
@@ -170,22 +190,24 @@ public class LuceneServiceImpl implements LuceneService {
      * @param searchString
      *            Text that will be searched in index
      * @return List of URI which texts includes searchString
-     * @throws ParseException
-     *             -> If Query is not parseable
-     * @throws IOException
-     * @throws SpirontoException
+     * @throws Exception 
      */
-    public List<String> searchNotes(LuceneSearchRequest request) throws ParseException, IOException, SpirontoException {
+    public List<String> searchNotes(LuceneSearchRequest request) throws Exception {
 
-        this.reader = DirectoryReader.open(FSDirectory.open(new File(getIndexPath().getPath()))); // only searching, so
+        this.reader = DirectoryReader.open(FSDirectory.open(new File(getIndexPath()))); // only searching, so
                                                                                                   // read-only=true
         this.searcher = new IndexSearcher(reader);
-
+        //TODO: CHECK OR PART OF QUERY 
         List<String> returnUriList = new ArrayList();
-        String queryString = URIPATIENT + ": \"" + request.getPatientUri() + "\" AND text: " + request.getSearchString();
-  
+        String queryString = URIPATIENT + ": \"" + request.getPatientUri() 
+                                        + "\" AND ( text: " 
+                                        + request.getSearchString()
+                                        + " OR title: " 
+                                        + request.getSearchString() + ")";
+        
         Query query = new QueryParser(Version.LUCENE_43, NOTETEXT, analyzer).parse(queryString);
 
+        //Sets maximum of returnHits
         int hitsPerPage = 10;
 
         this.searcher = new IndexSearcher(this.reader);

@@ -47,6 +47,7 @@ public class LuceneREST {
     
     @Inject
     NoteServiceImpl noteService;
+    
     /**
      * Purpose: Create LuceneSearchRequestElement for Testing
      * @return
@@ -59,21 +60,20 @@ public class LuceneREST {
     public LuceneSearchRequest returnRequest()
     {
         LuceneSearchRequest request = new LuceneSearchRequest();
-        request.setPatientUri("LuceneSearchRequest");
-        request.setSearchString("wonderfull");
+        request.setPatientUri("http://spironto.de/spironto#patient-gen1");
+        request.setSearchString("endless");
         return request;
    }
     
     /**
      * Purpose: Create Lucene Index Files for Test purpose
      * @return
-     * @throws IOException
-     * @throws URISyntaxException 
+     * @throws Exception 
      */
     @Path("/luceneCreateIndex")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public String test2() throws IOException, URISyntaxException
+    public String test2() throws Exception
     {
         luceneService.initalizeWriter(OpenMode.CREATE);
         return "Done";
@@ -91,7 +91,13 @@ public class LuceneREST {
     @Produces(MediaType.TEXT_PLAIN)
     public String storeNote(Note note) throws IOException, URISyntaxException
     {
-        luceneService.storeNote(note);
+        try {
+            luceneService.storeNote(note);
+        }
+        catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return "Done";
     }
     
@@ -100,15 +106,13 @@ public class LuceneREST {
      * @param String -> Consumes an LuceneSearchRequestObejct from GUI- side
      * @return List of Notes search in LuceneIndex Folder -> Datafetch in RDF with URIs returned
      * from Index
-     * @throws ParseException
-     * @throws IOException
-     * @throws SpirontoException
+     * @throws Exception 
      */
     @Path("/searchNote")
     @POST
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
-    public List<Note> storeNote(LuceneSearchRequest request) throws ParseException, IOException, SpirontoException
+    public List<Note> storeNote(LuceneSearchRequest request) throws Exception
     {
                 List<String> uriList = luceneService.searchNotes(request);
                 List<Note> noteResult = new ArrayList<Note>();

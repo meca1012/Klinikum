@@ -24,6 +24,8 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.repository.RepositoryException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.klinikum.domain.Concept;
 import de.klinikum.domain.Note;
@@ -45,6 +47,8 @@ public class NoteServiceImpl implements NoteService {
 
     @Inject
     LuceneServiceImpl luceneService;
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(LuceneServiceImpl.class);
     
     @Override
     public Note createNote(Note note) throws IOException, URISyntaxException {
@@ -71,7 +75,13 @@ public class NoteServiceImpl implements NoteService {
         this.tripleStore.addTriple(noteUri, hasTitleUri, titleLiteral);
         this.tripleStore.setValue(noteUri.toString(), hasPriority.toString(), note.getPriority());
         
-        luceneService.storeNote(note);
+        try {
+            luceneService.storeNote(note);
+        }
+        catch (Exception e) {
+            LOGGER.warn("Note could not been stored to LuceneIndex");
+            LOGGER.warn(e.toString());
+        }
         
         return note;
     }

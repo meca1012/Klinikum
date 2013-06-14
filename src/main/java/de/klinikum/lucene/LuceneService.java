@@ -8,5 +8,5 @@ import de.klinikum.domain.Note;
 
 public interface LuceneService {
  
-    boolean storeNote(Note note) throws IOException, URISyntaxException;
+    boolean storeNote(Note note) throws IOException, URISyntaxException, Exception;
     }
