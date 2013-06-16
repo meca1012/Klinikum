@@ -14,6 +14,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.joda.time.DateTime;
 import org.openrdf.model.util.ModelException;
 import org.openrdf.repository.RepositoryException;
 
@@ -21,7 +22,6 @@ import de.klinikum.domain.Concept;
 import de.klinikum.domain.Note;
 import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
-import de.klinikum.helper.DateUtil;
 import de.klinikum.service.Interfaces.ConceptService;
 import de.klinikum.service.Interfaces.NoteService;
 
@@ -62,7 +62,7 @@ public class NoteREST {
         Note note = new Note();
         note.setUri("http://spironto.de/spironto#note-gen3");
         note.setPatientUri("http://spironto.de/spironto#patient-gen11");        
-        note.setCreated(DateUtil.getCurrentSysTime());
+        note.setCreated(new DateTime());
         note.setText("This is a wonderfull endless text about the most important patient N°11");
         note.setTitle("endless important");
         note.setPriority(1);

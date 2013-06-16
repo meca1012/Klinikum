@@ -17,6 +17,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.joda.time.DateTime;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Model;
 import org.openrdf.model.Statement;
@@ -32,7 +33,6 @@ import de.klinikum.domain.Note;
 import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.helper.DateUtil;
-import de.klinikum.lucene.LuceneService;
 import de.klinikum.lucene.LuceneServiceImpl;
 import de.klinikum.persistence.SesameTripleStore;
 import de.klinikum.service.Interfaces.NoteService;
@@ -60,8 +60,8 @@ public class NoteServiceImpl implements NoteService {
         this.tripleStore.addTriple(noteUri.toString(), RDF.TYPE.toString(), NOTE_TYPE.toString());
         this.tripleStore.addTriple(note.getPatientUri(), PATIENT_HAS_NOTE.toString(), note.getUri());
 
-        note.setCreated(DateUtil.getCurrentSysTime());
-        Literal createdLiteral = this.tripleStore.getValueFactory().createLiteral(note.getCreated());
+        note.setCreated(new DateTime(System.currentTimeMillis()));
+        Literal createdLiteral = this.tripleStore.getValueFactory().createLiteral(note.getCreated().toString());
         Literal textLiteral = this.tripleStore.getValueFactory().createLiteral(note.getText());
         Literal titleLiteral = this.tripleStore.getValueFactory().createLiteral(note.getTitle());
 
@@ -139,7 +139,7 @@ public class NoteServiceImpl implements NoteService {
         Set<HashMap<String, Value>> queryResult = this.tripleStore.executeSelectSPARQLQuery(sparqlQuery);
         for (HashMap<String, Value> item : queryResult) {
             note.setText(item.get("text").stringValue());
-            note.setCreated(DateUtil.getBirthDateFromString(item.get("created").stringValue()));
+            note.setCreated(DateUtil.getDateTimeFromString(item.get("created").stringValue()));
             note.setPatientUri(item.get("patientUri").stringValue());
             note.setTitle(item.get("title").stringValue());
             note.setPriority(Integer.parseInt(item.get("priority").stringValue()));

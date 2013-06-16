@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -14,6 +13,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class PatientServiceTest {
         this.patient = new Patient();
         this.patient.setFirstName("Alice");
         this.patient.setLastName("Smith");
-        this.patient.setDateOfBirth(new Date());
+        this.patient.setDateOfBirth(new DateTime());
         this.patient.setUri("http://spironto.de/spironto#patient-gen1");
         this.patient.setPatientNumber("112233");
         Address address = new Address(null, "Musterstr.", "1", "Musterstadt", "76123", "D", "110");
@@ -66,7 +66,7 @@ public class PatientServiceTest {
         patient.setLastName("smith");
 
         patient.setPatientNumber("1111");
-        patient.setDateOfBirth(new Date());
+        patient.setDateOfBirth(new DateTime());
 
         Address address = new Address(null, "Moltkestraﬂe", "30", "Karlsruhe", "76133", "D", "00");
 

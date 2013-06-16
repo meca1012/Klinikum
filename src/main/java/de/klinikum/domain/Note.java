@@ -2,13 +2,17 @@ package de.klinikum.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.joda.time.DateTime;
+
+import de.klinikum.helper.XmlDateTimeAdapter;
 
 /**
  * 
@@ -29,7 +33,8 @@ public class Note implements Serializable {
     private String uri;
 
     @XmlElement(name = "created")
-    private Date created;
+    @XmlJavaTypeAdapter(XmlDateTimeAdapter.class)
+    private DateTime created;
     
     @XmlElement(name = "title")
     private String title;
@@ -49,7 +54,7 @@ public class Note implements Serializable {
     public Note() {
     }
 
-    public Note(String uri, Date created, String text) {
+    public Note(String uri, DateTime created, String text) {
         this.uri = uri;
         this.created = created;
         this.text = text;
@@ -63,11 +68,11 @@ public class Note implements Serializable {
         this.uri = uri;
     }
 
-    public Date getCreated() {
+    public DateTime getCreated() {
         return this.created;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(DateTime created) {
         this.created = created;
     }
 

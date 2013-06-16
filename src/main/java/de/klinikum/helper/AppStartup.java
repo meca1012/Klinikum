@@ -2,11 +2,11 @@ package de.klinikum.helper;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Date;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.joda.time.DateTime;
 import org.openrdf.model.vocabulary.RDF;
 
 import de.klinikum.domain.Address;
@@ -71,14 +71,14 @@ public class AppStartup {
         patient1.setFirstName("Max");
         patient1.setLastName("Mustermann");
         patient1.setPatientNumber("1");
-        patient1.setDateOfBirth(new Date(1, 1, 2011));
+        patient1.setDateOfBirth(new DateTime());
         patient1.setAddress(address1);
 
         Patient patient2 = new Patient();
         patient2.setFirstName("Maria");
         patient2.setLastName("Musterfrau");
         patient2.setPatientNumber("2");
-        patient2.setDateOfBirth(new Date(2, 2, 2012));
+        patient2.setDateOfBirth(new DateTime());
         patient2.setAddress(address1);
 
         try {
@@ -145,7 +145,7 @@ public class AppStartup {
         note1.setTitle("endless context");
         note1.setPriority(2);
         note1.setPatientUri(patient1.getUri());
-        note1.setCreated(DateUtil.getCurrentSysTime());
+        note1.setCreated(new DateTime());
         note1.setConcepts(concept1.getConnectedConcepts());
 
         Note note2 = new Note();
@@ -153,7 +153,7 @@ public class AppStartup {
         note2.setTitle("endless coffee");
         note2.setPriority(1);
         note2.setPatientUri(patient2.getUri());
-        note2.setCreated(DateUtil.getCurrentSysTime());
+        note2.setCreated(new DateTime());
         note2.setConcepts(concept4.getConnectedConcepts());
 
         note1 = this.noteService.createNote(note1);

@@ -24,6 +24,7 @@ import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.exceptions.TripleStoreException;
+import de.klinikum.helper.DateUtil;
 import de.klinikum.service.Implementation.PatientServiceImpl;
 
 /**
@@ -70,7 +71,7 @@ public class PatientREST {
         p1.setUri("http://spironto.de/spironto#patient-gen1");
         p1.setLastName("Power");
         p1.setFirstName("Max");
-        p1.setDateOfBirth(formatter.parse(dateString));
+        p1.setDateOfBirth(DateUtil.getDateTimeFromString(dateString));
         return p1;
     }
 

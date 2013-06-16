@@ -2,15 +2,15 @@ package de.klinikum.domain;
 
 import java.io.Serializable;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import de.klinikum.helper.XmlDateAdapter;
+import org.joda.time.DateTime;
+
+import de.klinikum.helper.XmlDateTimeAdapter;
 
 /**
  * 
@@ -40,8 +40,8 @@ public class Patient implements Serializable {
 	private String lastName;
 	
 	@XmlElement(name = "dateOfBirth")
-	@XmlJavaTypeAdapter(XmlDateAdapter.class)  
-	private Date dateOfBirth;
+	@XmlJavaTypeAdapter(XmlDateTimeAdapter.class)  
+	private DateTime dateOfBirth;
 	
 	@XmlElement(name = "address")
 	private Address address;
@@ -99,10 +99,10 @@ public class Patient implements Serializable {
 		this.address = address;
 	}
 	
-	public Date getDateOfBirth() {
+	public DateTime getDateOfBirth() {
 		return dateOfBirth;
 	}
-	public void setDateOfBirth(Date dayOfBirth) {
+	public void setDateOfBirth(DateTime dayOfBirth) {
 		this.dateOfBirth = dayOfBirth;
 	}
 	

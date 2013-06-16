@@ -16,7 +16,6 @@ import static de.klinikum.domain.NameSpaces.PATIENT_TYPE;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -25,6 +24,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.joda.time.DateTime;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Model;
 import org.openrdf.model.Resource;
@@ -75,7 +75,7 @@ public class PatientServiceImpl implements PatientService {
 			String patientNumber = this.tripleStore.getObjectString(patientURI.toString(),
 					PATIENT_HAS_PATIENT_NUMBER.toString());
 
-			Date dateOfBirth = DateUtil.getBirthDateFromString(this.tripleStore.getObjectString(patientURI.toString(),
+			DateTime dateOfBirth = DateUtil.getDateTimeFromString(this.tripleStore.getObjectString(patientURI.toString(),
 					PATIENT_HAS_DATE_OF_BIRTH.toString()));
 
 			// Date patientDate = Date.parse(dateOfBirth);
