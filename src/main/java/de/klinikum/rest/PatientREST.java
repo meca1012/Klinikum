@@ -2,7 +2,6 @@ package de.klinikum.rest;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -16,6 +15,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +26,6 @@ import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.exceptions.TripleStoreException;
-import de.klinikum.helper.DateUtil;
 import de.klinikum.service.Implementation.PatientServiceImpl;
 
 /**
@@ -58,8 +59,8 @@ public class PatientREST {
     @Produces(MediaType.APPLICATION_XML)
     public Patient getPatientXML() throws ParseException {
 
-        String dateString = "01/08/1985";
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy");  
+        DateTime date = dtf.parseDateTime("01/08/1985");
 
         Address a1 = new Address("http://spironto.de/spironto#address-gen4", "Hauptstrasse", "12", "Karlsruhe",
                 "432433", "Deutschland", "081511833");
@@ -71,7 +72,7 @@ public class PatientREST {
         p1.setUri("http://spironto.de/spironto#patient-gen1");
         p1.setLastName("Power");
         p1.setFirstName("Max");
-        p1.setDateOfBirth(DateUtil.getDateTimeFromString(dateString));
+        p1.setDateOfBirth(date);
         return p1;
     }
 
