@@ -112,7 +112,7 @@ public class LuceneREST {
     @POST
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
-    public List<Note> storeNote(LuceneSearchRequest request) throws Exception
+    public List<Note> searchNote(LuceneSearchRequest request) throws Exception
     {
                 List<String> uriList = luceneService.searchNotes(request);
                 List<Note> noteResult = new ArrayList<Note>();

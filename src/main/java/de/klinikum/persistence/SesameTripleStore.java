@@ -418,7 +418,7 @@ public class SesameTripleStore {
     }
 
     /**
-     * Retuns true / fals -> if Triple exists
+     * Return -> true / fals -> if Triple exists
      * @param subject -> Subject as Resource
      * @param predicate -> Predicate as Uri
      * @param object -> Object as Values
