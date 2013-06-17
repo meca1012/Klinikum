@@ -178,7 +178,13 @@ public class SesameTripleStore {
         return this.valueFactory;
     }
 
-    // Triple als Resource hinzufügen
+    /**
+     * Adds Triple as ResourceElement
+     * @param subject -> Subject as Resource
+     * @param predicate -> Predicate URI of Predicate- Element for triple
+     * @param object -> Object as Value for triple
+     * @throws IOException
+     */
     public void addTriple(Resource subject, URI predicate, Value object) throws IOException {
         try {
             this.con.add(subject, predicate, object);
@@ -188,6 +194,14 @@ public class SesameTripleStore {
         }
     }
 
+    /**
+     * 
+     * @param subjectURI -> Subject URI of Subject- Element for triple
+     * @param predicateURI -> Predicate URI of Predicate- Element for triple
+     * @param objectURI -> -> Object URI of Object- Element for triple
+     * @throws IOException
+     * Adds Triple to Sesame- Store
+     */
     public void addTriple(String subjectURI, String predicateURI, String objectURI) throws IOException {
         URI subject = this.valueFactory.createURI(subjectURI);
         URI predicate = this.valueFactory.createURI(predicateURI);
@@ -195,6 +209,13 @@ public class SesameTripleStore {
         this.addTriple(subject, predicate, object);
     }
 
+    /**
+     * Creates triple with Literals for string data
+     * @param subjectURI  -> Subject URI of Subject- Element for triple
+     * @param predicateURI -> Predicate URI of Predicate- Element for triple
+     * @param objectValue -> Value for Literal
+     * @throws IOException
+     */
     public void addTriple(String subjectURI, String predicateURI, int objectValue) throws IOException {
         URI subject = this.valueFactory.createURI(subjectURI);
         URI predicate = this.valueFactory.createURI(predicateURI);
@@ -202,6 +223,13 @@ public class SesameTripleStore {
         this.addTriple(subject, predicate, object);
     }
 
+    /**
+     * Removes triple from SesameStore
+     * @param subject Predicate URI of Predicate- Element for triple
+     * @param predicate Predicate URI of Predicate- Element for triple
+     * @param object -> object- Value of object- Element for triple
+     * @throws IOException
+     */
     public void removeTriples(Resource subject, URI predicate, Value object) throws IOException {
         try {
             this.con.remove(subject, predicate, object);
@@ -211,6 +239,13 @@ public class SesameTripleStore {
         }
     }
 
+    /**
+     * Remove Triples with null as wildcard
+     * @param subjectURI -> Subject- URI of Subject- Element for triple
+     * @param predicateURI -> Predicate- URI of Predicate- Element for triple
+     * @param objectURI -> Object- URI of Object- Element for triple
+     * @throws IOException
+     */
     public void removeTriples(String subjectURI, String predicateURI, String objectURI) throws IOException {
         URI subject = null;
         if (subjectURI != null)
@@ -224,6 +259,13 @@ public class SesameTripleStore {
         this.removeTriples(subject, predicate, object);
     }
 
+    /**
+     * 
+     * @param subjectURI -> Subject- URI of Subject- Element for triple
+     * @param predicateURI -> Predicate- URI of Predicate- Element for triple
+     * @return Returns literal value converted back to integer
+     * @throws IOException
+     */
     public int getValue(String subjectURI, String predicateURI) throws IOException {
         try {
             URI subject = this.valueFactory.createURI(subjectURI);
@@ -239,10 +281,23 @@ public class SesameTripleStore {
         }
     }
 
+    /**
+     * Stores integer values to Triple- Store
+     * @param subjectURI -> Subject- URI of Subject- Element for triple
+     * @param predicateURI -> Predicate- URI of Predicate- Element for triple
+     * @param value -> Integer value to be stored in triple
+     * @throws IOException
+     */
     public void setValue(String subjectURI, String predicateURI, int value) throws IOException {
         this.addTriple(subjectURI, predicateURI, value);
     }
 
+    /**
+     * Creates a unique URR for Triple- Identification
+     * @param objectURI -> Object uri for identification of the uniqueID Element in Sesame- Store
+     * @return returns -> Unique URI for Sesame
+     * @throws IOException
+     */
     public URI getUniqueURI(String objectURI) throws IOException {
         int value = this.getValue(this.datastoreURI.toString(), LAST_ID.toString());
         this.removeTriples(this.datastoreURI.toString(), LAST_ID.toString(), null);
@@ -256,7 +311,12 @@ public class SesameTripleStore {
         return this.datastoreURI;
     }
 
-    // Execute a SELECT SPARQL query
+    /**
+     * Executes string query SPARQL
+     * @param queryString -> SPARQL Query
+     * @return Hashmap with results
+     * @throws SpirontoException
+     */
     public Set<HashMap<String, Value>> executeSelectSPARQLQuery(String queryString) throws SpirontoException {
         try {
             TupleQuery query = this.con.prepareTupleQuery(org.openrdf.query.QueryLanguage.SPARQL, queryString);
@@ -286,6 +346,15 @@ public class SesameTripleStore {
         }
     }
 
+    /**
+     * Returns multiple results to triple- Query
+     * @param subject -> Subject- URI of Subject- Element for triple
+     * @param predicate -> Predicate- URI of Predicate- Element for triple
+     * @param object -> Object- URI of Predicate- Element for triple
+     * @return returns Statement- List
+     * @throws IOException
+     * @throws RepositoryException
+     */
     public Model getStatementList(Resource subject, URI predicate, Value object) throws IOException,
             RepositoryException {
         RepositoryResult<Statement> statements = this.con.getStatements(subject, predicate, object, false);
@@ -300,7 +369,15 @@ public class SesameTripleStore {
             statements.close();
         }
     }
-
+    /**
+     * Returns multiple results to triple- Query
+     * @param subject -> Subject- URI of Subject- Element for triple
+     * @param predicate -> Predicate- URI of Predicate- Element for triple
+     * @param object -> Object- String of Predicate- Element for triple
+     * @return returns Statement- List
+     * @throws IOException
+     * @throws RepositoryException
+     */  
     public Model getStatementList(String subject, String predicate, String object) throws IOException,
             RepositoryException {
         URI subjectURI = null;
@@ -315,6 +392,14 @@ public class SesameTripleStore {
         return this.getStatementList(subjectURI, predicateURI, objectURI);
     }
 
+    /**
+     * Returns Object- Strings 
+     * @param subjectUri -> Subject- URI of Subject- Element for triple
+     * @param predicateUri -> Predicate -URI of Predicate- Element for triple
+     * @return returns ObjectValue of Subject-> Object -> NULL
+     * @throws RepositoryException
+     * @throws IOException
+     */
     public String getObjectString(String subjectUri, String predicateUri) throws RepositoryException, IOException {
         URI subjectURI = null;
         if (subjectUri != null)
@@ -331,7 +416,15 @@ public class SesameTripleStore {
             return null;
         }
     }
-    
+
+    /**
+     * Retuns true / fals -> if Triple exists
+     * @param subject -> Subject as Resource
+     * @param predicate -> Predicate as Uri
+     * @param object -> Object as Values
+     * @return true / false 
+     * @throws IOException
+     */
     public boolean repositoryHasStatement(Resource subject, URI predicate, Value object) throws IOException {
     	boolean toReturn = false;
     	try {
@@ -343,6 +436,15 @@ public class SesameTripleStore {
         }    	
     }
     
+    /**
+     * Retuns true / fals -> if Triple exists
+     * Checks for existing Statement
+     * @param subjectUri -> Subject as Uri
+     * @param predicateUri -> Predicate as Uri
+     * @param objectUri -> Object as Uri
+     * @return true / false 
+     * @throws IOException
+     */
     public boolean repositoryHasStatement(String subjectUri, String predicateUri, String objectUri) throws IOException {
     	URI subjectURI = null;
         if (subjectUri != null)
