@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.joda.time.DateTime;
 
-import de.klinikum.helper.XmlDateTimeAdapter;
+import de.klinikum.helper.XmlBirthDateAdapter;
 
 /**
  * 
@@ -40,7 +40,7 @@ public class Patient implements Serializable {
 	private String lastName;
 	
 	@XmlElement(name = "dateOfBirth")
-	@XmlJavaTypeAdapter(XmlDateTimeAdapter.class)  
+	@XmlJavaTypeAdapter(XmlBirthDateAdapter.class)  
 	private DateTime dateOfBirth;
 	
 	@XmlElement(name = "address")
