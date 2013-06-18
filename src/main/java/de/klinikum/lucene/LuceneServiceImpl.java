@@ -6,7 +6,6 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -14,7 +13,6 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
@@ -26,24 +24,13 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import de.klinikum.domain.LuceneSearchRequest;
 import de.klinikum.domain.Note;
-import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.helper.PropertyLoader;
-
-import de.klinikum.service.Implementation.NoteServiceImpl;
-
 import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
-import javax.annotation.PostConstruct;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.inject.Named;
 
 /**
@@ -57,12 +44,10 @@ import javax.inject.Named;
 @Named
 public class LuceneServiceImpl implements LuceneService {
 
-    private final static String FILEPATH = "de/klinikum/lucene/index";
-    private final static String CLASSFOLDER = "de/klinikum/lucene";
     private final static String URIPATIENT = "uriPatient";
     private final static String URINOTE = "uriNote";
     private final static String NOTETITLE = "noteTitle";
-    private final static String NOTETEXT = "text";
+    private final static String NOTETEXT = "noteText";
     private static final String luceneIndexPath = "lucene.indexPath";
 
     private IndexSearcher searcher;
@@ -202,10 +187,21 @@ public class LuceneServiceImpl implements LuceneService {
             LOGGER.info("Deleting Notes with URI '" + note.getPatientUri());
 
             TermQuery deleteTerm = new TermQuery(new Term(URINOTE, note.getUri()));
-                 
+            
+
+            
             try
             {
                 this.initalizeWriter(OpenMode.CREATE_OR_APPEND);
+                
+                //FOR TESTING
+                this.searcher = new IndexSearcher(this.reader);
+                TopScoreDocCollector collector = TopScoreDocCollector.create(10, true);
+                searcher.search(deleteTerm, collector);
+                ScoreDoc[] hits = collector.topDocs().scoreDocs;
+                
+                
+                
                 this.writer.deleteDocuments(deleteTerm);      
                 this.writer.commit();
                 LOGGER.info("Deleting for '" + note.getUri() + "done");
@@ -237,10 +233,10 @@ public class LuceneServiceImpl implements LuceneService {
         this.searcher = new IndexSearcher(reader);
         //TODO: CHECK OR PART OF QUERY 
         List<String> returnUriList = new ArrayList();
-        String queryString = URIPATIENT + ": \"" + request.getPatientUri() 
-                                        + "\" AND ( text: " 
+        String queryString = URIPATIENT + ":\"" + request.getPatientUri() 
+                                        + "\" AND (" + NOTETEXT + ":" 
                                         + request.getSearchString()
-                                        + " OR title: " 
+                                        + " OR " + NOTETITLE + ":" 
                                         + request.getSearchString() + ")";
         
         Query query = new QueryParser(Version.LUCENE_43, NOTETEXT, analyzer).parse(queryString);
