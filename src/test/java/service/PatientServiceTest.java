@@ -15,7 +15,6 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.joda.time.DateTime;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openrdf.repository.RepositoryException;
@@ -103,12 +102,27 @@ public class PatientServiceTest {
         assertNotNull(patient.getAddress());
     }
 
-    @Ignore
     @Test
     public void searchPatientTest() throws TripleStoreException {
 
-        List<Patient> patients = this.patientService.searchPatient(this.patient);
-        // TODO: implement me
+        // Create
+        Patient patient = new Patient();
+        patient.setFirstName("John");
+        patient.setLastName("Smith");
+        patient.setPatientNumber("1234");
+        Address address = new Address(null, "Moltkestraﬂe", "30", "Karlsruhe", "76133", "D", "00");
+        patient.setAddress(address);
+        patient = this.patientService.createPatientRDF(patient);
+
+        // Search
+        List<Patient> patients = this.patientService.searchPatient(patient);
+
+        for (Patient p : patients) {
+
+            assertEquals(p.getPatientNumber(), patient.getPatientNumber());
+            assertEquals(p.getLastName(), patient.getLastName());
+        }
+
     }
 
     @Test

@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.openrdf.model.Literal;
 import org.openrdf.model.Model;
@@ -30,6 +31,7 @@ import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.persistence.SesameTripleStore;
 import de.klinikum.service.Interfaces.ConceptService;
 
+@Named
 public class ConceptServiceImpl implements ConceptService {
 
     @Inject
@@ -37,14 +39,14 @@ public class ConceptServiceImpl implements ConceptService {
 
     @Override
     public List<Concept> getTabConcepts() throws SpirontoException {
-        
-        List <Concept> tabConcepts = new ArrayList<Concept>();
+
+        List<Concept> tabConcepts = new ArrayList<Concept>();
         Model statementList;
-        
+
         try {
             statementList = this.tripleStore.getStatementList(null, RDF.TYPE.toString(), GUI_TAB_TYPE.toString());
-            for (Statement conceptStatement : statementList) {               
-                    tabConcepts.add(getConceptByUri(conceptStatement.getSubject().toString()));
+            for (Statement conceptStatement : statementList) {
+                tabConcepts.add(this.getConceptByUri(conceptStatement.getSubject().toString()));
             }
         }
         catch (RepositoryException e) {
@@ -55,7 +57,7 @@ public class ConceptServiceImpl implements ConceptService {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-       return tabConcepts;
+        return tabConcepts;
     }
 
     @Override
@@ -67,7 +69,7 @@ public class ConceptServiceImpl implements ConceptService {
         URI conceptUri = this.tripleStore.getUniqueURI(ONTOLOGIE_CONCEPT_TYPE.toString());
 
         concept.setUri(conceptUri.toString());
-        
+
         URI conceptTypeUri = this.tripleStore.getValueFactory().createURI(ONTOLOGIE_CONCEPT_TYPE.toString());
 
         this.tripleStore.addTriple(conceptUri, RDF.TYPE, conceptTypeUri);
@@ -82,11 +84,11 @@ public class ConceptServiceImpl implements ConceptService {
         Literal conceptLabelLiteral = this.tripleStore.getValueFactory().createLiteral(concept.getLabel());
 
         this.tripleStore.addTriple(conceptUri, conceptHasLabelUri, conceptLabelLiteral);
-        
+
         // adds isEditable as Literal to every concept
         URI conceptIsEditableLiteralUri = this.tripleStore.getValueFactory().createURI(CONCEPT_IS_EDITABLE.toString());
         Literal conceptIsEditableLiteral = this.tripleStore.getValueFactory().createLiteral(concept.isEditable());
-        this.tripleStore.addTriple(conceptUri, conceptIsEditableLiteralUri, conceptIsEditableLiteral);        
+        this.tripleStore.addTriple(conceptUri, conceptIsEditableLiteralUri, conceptIsEditableLiteral);
 
         return concept;
     }
@@ -101,8 +103,8 @@ public class ConceptServiceImpl implements ConceptService {
 
     @Override
     public Concept addTabConcept(Concept concept) throws IOException {
-    	
-    	concept.setEditable(false);
+
+        concept.setEditable(false);
         concept = this.createConcept(concept);
         this.tripleStore.addTriple(concept.getUri(), RDF.TYPE.toString(), GUI_TAB_TYPE.toString());
         return concept;
@@ -110,34 +112,38 @@ public class ConceptServiceImpl implements ConceptService {
 
     @Override
     public List<Concept> getDirectConnected(Concept concept, boolean onlyUris) throws SpirontoException {
-        
-        List <Concept> connectedConcepts = new ArrayList<Concept>();
+
+        List<Concept> connectedConcepts = new ArrayList<Concept>();
         Model statementList;
-        
+
         try {
-            statementList = this.tripleStore.getStatementList(concept.getUri(), ONTOLOGIE_CONCEPT_LINKED_TO.toString(), null);           
+            statementList = this.tripleStore.getStatementList(concept.getUri(), ONTOLOGIE_CONCEPT_LINKED_TO.toString(),
+                    null);
             for (Statement conceptStatement : statementList) {
                 if (onlyUris) {
                     Concept conceptToAdd = new Concept();
                     conceptToAdd.setUri(conceptStatement.getObject().stringValue());
                     connectedConcepts.add(conceptToAdd);
-                } else {
-                    connectedConcepts.add(getConceptByUri(conceptStatement.getObject().toString()));
-                }                
+                }
+                else {
+                    connectedConcepts.add(this.getConceptByUri(conceptStatement.getObject().toString()));
+                }
             }
-            statementList = this.tripleStore.getStatementList(null, ONTOLOGIE_CONCEPT_LINKED_TO.toString(), concept.getUri());
+            statementList = this.tripleStore.getStatementList(null, ONTOLOGIE_CONCEPT_LINKED_TO.toString(),
+                    concept.getUri());
             for (Statement conceptStatement : statementList) {
                 Concept conceptToAdd = new Concept();
-                if (onlyUris) {                    
+                if (onlyUris) {
                     conceptToAdd.setUri(conceptStatement.getSubject().stringValue());
                     if (!connectedConcepts.contains(conceptToAdd)) {
                         connectedConcepts.add(conceptToAdd);
                     }
-                } else {
-                    conceptToAdd = getConceptByUri(conceptStatement.getSubject().stringValue());
+                }
+                else {
+                    conceptToAdd = this.getConceptByUri(conceptStatement.getSubject().stringValue());
                     if (!connectedConcepts.contains(conceptToAdd)) {
                         connectedConcepts.add(conceptToAdd);
-                    }                    
+                    }
                 }
             }
         }
@@ -155,12 +161,12 @@ public class ConceptServiceImpl implements ConceptService {
     @Override
     public List<Concept> findAllConceptsOfPatient(Patient patient) throws SpirontoException {
         List<Concept> concepts = new ArrayList<Concept>();
-        Model statementList;        
-      
+        Model statementList;
+
         try {
             statementList = this.tripleStore.getStatementList(patient.getUri(), PATIENT_HAS_CONCEPT.toString(), null);
-            for (Statement conceptStatement : statementList) {                           
-                concepts.add(getConceptByUri(conceptStatement.getObject().toString()));
+            for (Statement conceptStatement : statementList) {
+                concepts.add(this.getConceptByUri(conceptStatement.getObject().toString()));
             }
         }
         catch (RepositoryException e) {
@@ -170,7 +176,7 @@ public class ConceptServiceImpl implements ConceptService {
         catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        }       
+        }
         return concepts;
     }
 
@@ -186,8 +192,8 @@ public class ConceptServiceImpl implements ConceptService {
 
     }
 
-    /** Recursive method to return all concepts that are connected to a concept.
-     *  Gets directly and indirectly connected.
+    /**
+     * Recursive method to return all concepts that are connected to a concept. Gets directly and indirectly connected.
      * 
      * @param conceptUri
      * @param connected
@@ -199,8 +205,8 @@ public class ConceptServiceImpl implements ConceptService {
      * @throws SpirontoException
      */
     @Override
-    public List<Concept> getConnected(String conceptUri, List<Concept> connected, boolean onlyUris) throws RepositoryException,
-            IOException, ModelException, SpirontoException {
+    public List<Concept> getConnected(String conceptUri, List<Concept> connected, boolean onlyUris)
+            throws RepositoryException, IOException, ModelException, SpirontoException {
 
         Model statementList;
         try {
@@ -215,9 +221,10 @@ public class ConceptServiceImpl implements ConceptService {
                     Concept conceptToAdd = new Concept();
                     conceptToAdd.setUri(statementList.objectURI().toString());
                     connected.add(conceptToAdd);
-                } else {
+                }
+                else {
                     connected.add(this.getConceptByUri(statementList.objectURI().toString()));
-                }                
+                }
             }
             return connected;
         }
@@ -226,8 +233,8 @@ public class ConceptServiceImpl implements ConceptService {
         }
     }
 
-    /** Returns a concept object to a uri.
-     *  ConnectedConcepts are not getting set.
+    /**
+     * Returns a concept object to a uri. ConnectedConcepts are not getting set.
      * 
      * @param conceptUri
      * @return
@@ -249,11 +256,13 @@ public class ConceptServiceImpl implements ConceptService {
         return conceptToReturn;
     }
 
-    /** Method to connect one concept to a list of other concepts.
-     *  Uses the connectSingle method. 
+    /**
+     * Method to connect one concept to a list of other concepts. Uses the connectSingle method.
      * 
-     * @param from -> concept which gets connected to the to list
-     * @param to -> List of concepts to whose the from concept gets connected 
+     * @param from
+     *            -> concept which gets connected to the to list
+     * @param to
+     *            -> List of concepts to whose the from concept gets connected
      * @throws IOException
      */
     @Override
@@ -263,7 +272,8 @@ public class ConceptServiceImpl implements ConceptService {
         }
     }
 
-    /** Checks wether a concept is a tabConcept or not
+    /**
+     * Checks wether a concept is a tabConcept or not
      * 
      * @param concept
      * @return -> boolean, true if concept is a tabConcept
@@ -274,16 +284,19 @@ public class ConceptServiceImpl implements ConceptService {
     public boolean isTabConcept(Concept concept) throws RepositoryException, IOException {
         return this.tripleStore.repositoryHasStatement(concept.getUri(), RDF.TYPE.toString(), GUI_TAB_TYPE.toString());
     }
-    
+
     public boolean conceptExists(Concept concept) throws IOException {
         if (concept.getUri() == null) {
             return false;
-        } else {
-            return this.tripleStore.repositoryHasStatement(concept.getUri(), RDF.TYPE.toString(), ONTOLOGIE_CONCEPT_TYPE.toString());
+        }
+        else {
+            return this.tripleStore.repositoryHasStatement(concept.getUri(), RDF.TYPE.toString(),
+                    ONTOLOGIE_CONCEPT_TYPE.toString());
         }
     }
-    
-    /** Used to return only the uris of the direct connected concepts to a concept.
+
+    /**
+     * Used to return only the uris of the direct connected concepts to a concept.
      * 
      * @param concept
      * @return -> List of Concepts with only the uri set
@@ -293,10 +306,11 @@ public class ConceptServiceImpl implements ConceptService {
      * @throws SpirontoException
      */
     @Override
-    public List<Concept> getConnectedConceptUris(Concept concept) throws RepositoryException, ModelException, IOException, SpirontoException {
-      
-        List<Concept> conceptsToReturn = getDirectConnected(concept, true);       
-      
+    public List<Concept> getConnectedConceptUris(Concept concept) throws RepositoryException, ModelException,
+            IOException, SpirontoException {
+
+        List<Concept> conceptsToReturn = this.getDirectConnected(concept, true);
+
         return conceptsToReturn;
     }
 }
