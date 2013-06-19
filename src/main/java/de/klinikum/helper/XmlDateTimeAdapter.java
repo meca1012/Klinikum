@@ -10,8 +10,10 @@ import org.joda.time.format.ISODateTimeFormat;
 
 public class XmlDateTimeAdapter extends XmlAdapter<String, DateTime> {   
      
-    public DateTime unmarshal(String v) throws Exception {
-        return new DateTime(v);
+    public DateTime unmarshal(String v) throws Exception {        
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy HH:mm:ss");
+        DateTime dt = formatter.parseDateTime(v);
+        return dt;
     }
  
     public String marshal(DateTime v) throws Exception {        

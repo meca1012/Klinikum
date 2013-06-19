@@ -11,7 +11,9 @@ import org.joda.time.format.ISODateTimeFormat;
 public class XmlBirthDateAdapter extends XmlAdapter<String, DateTime> {
 
     public DateTime unmarshal(String v) throws Exception {
-        return new DateTime(v);
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
+        DateTime dt = formatter.parseDateTime(v);
+        return dt;
     }
  
     public String marshal(DateTime v) throws Exception {
