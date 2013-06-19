@@ -38,4 +38,6 @@ public interface ConceptService {
 
     List<Concept> getConnectedConceptUris(Concept concept) throws RepositoryException, ModelException, IOException,
             SpirontoException;
+    
+    Concept updateConcept(Concept concept) throws SpirontoException, IOException, RepositoryException, ModelException;
 }
