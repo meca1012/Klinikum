@@ -182,6 +182,9 @@ public class NoteREST {
                 }
             }
             note = this.noteService.updateNote(note);
+            if (note == null) {
+                return null;
+            }
         } else {
             return null;
         }

@@ -210,6 +210,9 @@ public class ConceptREST {
     public Concept updateConcept(Concept concept) throws RepositoryException, ModelException, SpirontoException, IOException {
         if (concept != null) {
             concept = this.conceptService.updateConcept(concept);
+            if (concept == null) {
+                return null;
+            }
         } else {
             return null;
         }

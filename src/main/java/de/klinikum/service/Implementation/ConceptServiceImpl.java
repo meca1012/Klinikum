@@ -323,7 +323,11 @@ public class ConceptServiceImpl implements ConceptService {
     @Override
     public Concept updateConcept(Concept concept) throws SpirontoException, IOException, RepositoryException, ModelException {
         
-        Concept existingConcept = getConceptByUri(concept.getUri());
+        if (!this.tripleStore.repositoryHasStatement(concept.getUri(),RDF.TYPE.toString() , ONTOLOGIE_CONCEPT_TYPE.toString())) {
+            return null;
+        }
+        
+        Concept existingConcept = getConceptByUri(concept.getUri());        
         
         if (concept.getLabel() != null) {
             if (!concept.getLabel().equals(existingConcept.getLabel())) {

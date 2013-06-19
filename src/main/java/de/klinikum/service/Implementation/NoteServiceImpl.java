@@ -177,7 +177,11 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public Note updateNote(Note note) throws SpirontoException, IOException {
         
-        Note existingNote = getNoteByUri(note.getUri());
+        if (!this.tripleStore.repositoryHasStatement(note.getUri(),RDF.TYPE.toString() , NOTE_TYPE.toString())) {
+            return null;
+        }
+        
+        Note existingNote = getNoteByUri(note.getUri());       
         
         if (!note.getTitle().equals(existingNote.getTitle())) {
             this.tripleStore.removeTriples(existingNote.getUri(), NOTE_HAS_TITLE.toString(), null);
