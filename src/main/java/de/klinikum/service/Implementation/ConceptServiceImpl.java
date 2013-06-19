@@ -299,4 +299,45 @@ public class ConceptServiceImpl implements ConceptService {
       
         return conceptsToReturn;
     }
+    
+    /**
+     * Updates a concept. If connectedConcepts are set, all existing links to other concpets are being removed
+     * and the new ones are set. The connectedConcepts themselves are ignored.
+     * @throws ModelException 
+     * @throws RepositoryException 
+     */
+    @Override
+    public Concept updateConcept(Concept concept) throws SpirontoException, IOException, RepositoryException, ModelException {
+        
+        Concept existingConcept = getConceptByUri(concept.getUri());
+        
+        if (concept.getLabel() != null) {
+            if (!concept.getLabel().equals(existingConcept.getLabel())) {
+                this.tripleStore.removeTriples(existingConcept.getUri(), ONTOLOGIE_CONCEPT_HAS_LABEL.toString(),null);
+                this.tripleStore.addTripleWithLiteral(concept.getUri(), ONTOLOGIE_CONCEPT_HAS_LABEL.toString(), concept.getLabel());
+            }
+        }
+        
+        if (concept.getConnectedConcepts() != null) {
+            
+            existingConcept.setConnectedConcepts(getConnectedConceptUris(existingConcept));
+            
+            if (existingConcept.getConnectedConcepts() != null) {
+                for (Concept ec : existingConcept.getConnectedConcepts()) {
+                    
+                    if (this.tripleStore.repositoryHasStatement(existingConcept.getUri(), ONTOLOGIE_CONCEPT_LINKED_TO.toString(), ec.getUri())) {
+                        this.tripleStore.removeTriples(existingConcept.getUri(), ONTOLOGIE_CONCEPT_LINKED_TO.toString(), ec.getUri());
+                    } else {
+                        this.tripleStore.removeTriples(ec.getUri(), ONTOLOGIE_CONCEPT_LINKED_TO.toString(), existingConcept.getUri());
+                    }
+                }
+            }
+            
+            for (Concept c : concept.getConnectedConcepts()) {
+                this.tripleStore.addTriple(concept.getUri(), ONTOLOGIE_CONCEPT_LINKED_TO.toString(), c.getUri());
+            }
+        }
+        
+        return concept;
+    }
 }

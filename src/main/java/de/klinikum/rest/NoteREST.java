@@ -167,4 +167,25 @@ public class NoteREST {
         return note;
     }
     
+    @Path("/updateNote")
+    @POST
+    @Produces(MediaType.APPLICATION_XML)
+    public Note updateNote(Note note) throws IOException, RepositoryException, ModelException, SpirontoException {
+        if (note != null) {
+            if (note.getConcepts() != null) {
+                for (Concept c : note.getConcepts()) {
+                    c.setConnectedConcepts(null);
+                    if (c.getUri() == null) {
+                        c = this.conceptService.createConcept(c);
+                    }
+                    c = this.conceptService.updateConcept(c);
+                }
+            }
+            note = this.noteService.updateNote(note);
+        } else {
+            return null;
+        }
+        return note;
+    }
+    
 }

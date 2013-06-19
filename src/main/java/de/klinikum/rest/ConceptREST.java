@@ -203,4 +203,16 @@ public class ConceptREST {
         concept.setConnectedConcepts(this.conceptService.getDirectConnected(concept, false));
         return concept;
     }
+    
+    @Path("/updateConcept")
+    @POST
+    @Produces(MediaType.APPLICATION_XML)
+    public Concept updateConcept(Concept concept) throws RepositoryException, ModelException, SpirontoException, IOException {
+        if (concept != null) {
+            concept = this.conceptService.updateConcept(concept);
+        } else {
+            return null;
+        }
+        return concept;
+    }
 }

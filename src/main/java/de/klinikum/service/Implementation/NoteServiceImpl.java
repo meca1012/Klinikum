@@ -173,4 +173,41 @@ public class NoteServiceImpl implements NoteService {
         }
         return note;
     }
+    
+    @Override
+    public Note updateNote(Note note) throws SpirontoException, IOException {
+        
+        Note existingNote = getNoteByUri(note.getUri());
+        
+        if (!note.getTitle().equals(existingNote.getTitle())) {
+            this.tripleStore.removeTriples(existingNote.getUri(), NOTE_HAS_TITLE.toString(), null);
+            this.tripleStore.addTripleWithLiteral(note.getUri(), NOTE_HAS_TITLE.toString(), note.getTitle());
+        }
+        
+        if (!note.getText().equals(existingNote.getText())) {
+            this.tripleStore.removeTriples(existingNote.getUri(), NOTE_HAS_TEXT.toString(), null);
+            this.tripleStore.addTripleWithLiteral(note.getUri(), NOTE_HAS_TEXT.toString(), note.getText());
+        }
+        
+        if (note.getPriority() != existingNote.getPriority()) {
+            this.tripleStore.removeTriples(existingNote.getUri(), NOTE_HAS_PRIORITY.toString(), null);
+            this.tripleStore.addTriple(note.getUri(), NOTE_HAS_PRIORITY.toString(), note.getPriority());
+        }
+        
+        if (note.getConcepts() != null) {
+            
+            existingNote.setConcepts(getConceptsToNote(existingNote).getConcepts());
+            
+            if (existingNote.getConcepts() != null) {
+                for (Concept ec : existingNote.getConcepts()) {
+                    this.tripleStore.removeTriples(existingNote.getUri(), NOTE_POINTS_TO_CONCEPT.toString(), ec.getUri());               
+                }
+            }
+            
+            for (Concept c : note.getConcepts()) {
+                this.tripleStore.addTriple(note.getUri(), NOTE_POINTS_TO_CONCEPT.toString(), c.getUri());
+            }            
+        }        
+        return note;
+    }
 }

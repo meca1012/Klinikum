@@ -195,7 +195,7 @@ public class SesameTripleStore {
     }
 
     /**
-     * 
+     * Creates a triple out of string uris
      * @param subjectURI -> Subject URI of Subject- Element for triple
      * @param predicateURI -> Predicate URI of Predicate- Element for triple
      * @param objectURI -> -> Object URI of Object- Element for triple
@@ -210,7 +210,7 @@ public class SesameTripleStore {
     }
 
     /**
-     * Creates triple with Literals for string data
+     * Creates a triple out of strings with an integer as literal value instead of object uri
      * @param subjectURI  -> Subject URI of Subject- Element for triple
      * @param predicateURI -> Predicate URI of Predicate- Element for triple
      * @param objectValue -> Value for Literal
@@ -220,6 +220,21 @@ public class SesameTripleStore {
         URI subject = this.valueFactory.createURI(subjectURI);
         URI predicate = this.valueFactory.createURI(predicateURI);
         Value object = this.valueFactory.createLiteral(objectValue);
+        this.addTriple(subject, predicate, object);
+    }
+    
+    
+    /**
+     * Creates a triple out of strings with a string literal instead of object uri
+     * @param subjectUri -> SubjectUri as a string representation
+     * @param predicateUri -> PredicateUri as a string representation
+     * @param literalValue -> String that is stored as an object literal
+     * @throws IOException
+     */
+    public void addTripleWithLiteral(String subjectUri, String predicateUri, String literalValue) throws IOException {
+        URI subject = this.valueFactory.createURI(subjectUri);
+        URI predicate = this.valueFactory.createURI(predicateUri);
+        Literal object = this.valueFactory.createLiteral(literalValue);
         this.addTriple(subject, predicate, object);
     }
 
