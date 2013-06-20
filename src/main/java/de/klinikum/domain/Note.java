@@ -133,4 +133,64 @@ public class Note implements Serializable {
         this.concepts.add(concept);
         return this;
     }
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((concepts == null) ? 0 : concepts.hashCode());
+		result = prime * result + ((created == null) ? 0 : created.hashCode());
+		result = prime * result
+				+ ((patientUri == null) ? 0 : patientUri.hashCode());
+		result = prime * result + priority;
+		result = prime * result + ((text == null) ? 0 : text.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Note other = (Note) obj;
+		if (concepts == null) {
+			if (other.concepts != null)
+				return false;
+		} else if (!concepts.equals(other.concepts))
+			return false;
+		if (created == null) {
+			if (other.created != null)
+				return false;
+		} else if (!created.equals(other.created))
+			return false;
+		if (patientUri == null) {
+			if (other.patientUri != null)
+				return false;
+		} else if (!patientUri.equals(other.patientUri))
+			return false;
+		if (priority != other.priority)
+			return false;
+		if (text == null) {
+			if (other.text != null)
+				return false;
+		} else if (!text.equals(other.text))
+			return false;
+		if (title == null) {
+			if (other.title != null)
+				return false;
+		} else if (!title.equals(other.title))
+			return false;
+		if (uri == null) {
+			if (other.uri != null)
+				return false;
+		} else if (!uri.equals(other.uri))
+			return false;
+		return true;
+	}
 }

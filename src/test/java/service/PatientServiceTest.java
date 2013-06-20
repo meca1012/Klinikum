@@ -134,24 +134,12 @@ public class PatientServiceTest {
 		updatePatient.setUri(patient.getUri());
 		updatePatient.setLastName("Gelb");
 		this.patientService.updatePatientRDF(updatePatient);
-
-		assertEquals(patient.getFirstName(), updatePatient.getFirstName());
-		assertEquals(patient.getLastName(), updatePatient.getLastName());
-		assertEquals(patient.getPatientNumber(), updatePatient.getPatientNumber());
-		assertNotNull(patient.getUri());
-		assertEquals(patient.getAddress().getStreet(), updatePatient.getAddress()
-				.getStreet());
-		assertEquals(patient.getAddress().getStreetNumber(), updatePatient
-				.getAddress().getStreetNumber());
-		assertEquals(patient.getAddress().getCity(), updatePatient.getAddress()
-				.getCity());
-		assertEquals(patient.getAddress().getZip(), updatePatient.getAddress()
-				.getZip());
-		assertEquals(patient.getAddress().getCountry(), updatePatient.getAddress()
-				.getCountry());
-		assertEquals(patient.getAddress().getPhone(), updatePatient.getAddress()
-				.getPhone());
-		assertNotNull(patient.getAddress().getUri());
+		
+		updatePatient = this.patientService.getPatientByUri(patient.getUri());
+		patient.setLastName("Gelb");
+		
+		assertEquals(updatePatient, patient);
+		
 	}
 
 	@Test
