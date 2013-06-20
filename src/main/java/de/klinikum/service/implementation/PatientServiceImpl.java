@@ -520,7 +520,7 @@ public class PatientServiceImpl implements PatientService {
 
 			switch (tc) {
 			
-				case FAMILIE:
+				case FAMILY:
 					// adds family concepts
 					for (FamilyConcepts fc : FamilyConcepts.values()) {
 						Concept concept = new Concept();
@@ -532,7 +532,7 @@ public class PatientServiceImpl implements PatientService {
 					}
 					break;
 					
-				case KRANKHEITSVERLAUF:
+				case COURSEOFDISEASE:
 					// adds disease running concepts
 					for (DiseaseConcepts dc : DiseaseConcepts.values()) {
 						Concept concept = new Concept();
@@ -544,7 +544,7 @@ public class PatientServiceImpl implements PatientService {
 					}
 					break;
 					
-				case SPIRITUALITAET_RELIGION:					
+				case SPIRITUALITY_RELIGION:					
 					// adds spirituality concepts
 					for (SpiritualityConcepts sc : SpiritualityConcepts.values()) {
 						Concept concept = new Concept();
@@ -556,7 +556,7 @@ public class PatientServiceImpl implements PatientService {
 					}
 					break;
 					
-				case HERKUNFT:				
+				case ORIGIN:				
 					// adds background concepts
 					for (BackgroundConcepts bc : BackgroundConcepts.values()) {
 						Concept concept = new Concept();
