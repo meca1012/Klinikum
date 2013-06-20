@@ -7,6 +7,7 @@ import static de.klinikum.domain.NameSpaces.NOTE_HAS_TITLE;
 import static de.klinikum.domain.NameSpaces.NOTE_POINTS_TO_CONCEPT;
 import static de.klinikum.domain.NameSpaces.NOTE_TYPE;
 import static de.klinikum.domain.NameSpaces.PATIENT_HAS_NOTE;
+import static de.klinikum.domain.NameSpaces.PATIENT_TYPE;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -18,7 +19,6 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.joda.time.DateTime;
-import org.openrdf.model.Literal;
 import org.openrdf.model.Model;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
@@ -52,28 +52,27 @@ public class NoteServiceImpl implements NoteService {
        
     @Override
     public Note createNote(Note note) throws IOException, URISyntaxException {
+        
+        if (note.getPatientUri() == null) {
+            return null;
+        }
+        
+        if (!this.tripleStore.repositoryHasStatement(note.getPatientUri(), RDF.TYPE.toString(), PATIENT_TYPE.toString())) {
+            return null;
+        }
 
         URI noteUri = this.tripleStore.getUniqueURI(NOTE_TYPE.toString());
 
         note.setUri(noteUri.toString());
+        note.setCreated(new DateTime(System.currentTimeMillis()));
 
         this.tripleStore.addTriple(noteUri.toString(), RDF.TYPE.toString(), NOTE_TYPE.toString());
         this.tripleStore.addTriple(note.getPatientUri(), PATIENT_HAS_NOTE.toString(), note.getUri());
-
-        note.setCreated(new DateTime(System.currentTimeMillis()));
-        Literal createdLiteral = this.tripleStore.getValueFactory().createLiteral(note.getCreated().toString());
-        Literal textLiteral = this.tripleStore.getValueFactory().createLiteral(note.getText());
-        Literal titleLiteral = this.tripleStore.getValueFactory().createLiteral(note.getTitle());
-
-        URI hasDateUri = this.tripleStore.getValueFactory().createURI(NOTE_HAS_DATE.toString());
-        URI hasTextUri = this.tripleStore.getValueFactory().createURI(NOTE_HAS_TEXT.toString());
-        URI hasTitleUri = this.tripleStore.getValueFactory().createURI(NOTE_HAS_TITLE.toString());
-        URI hasPriority = this.tripleStore.getValueFactory().createURI(NOTE_HAS_PRIORITY.toString());
-
-        this.tripleStore.addTriple(noteUri, hasDateUri, createdLiteral);
-        this.tripleStore.addTriple(noteUri, hasTextUri, textLiteral);
-        this.tripleStore.addTriple(noteUri, hasTitleUri, titleLiteral);
-        this.tripleStore.setValue(noteUri.toString(), hasPriority.toString(), note.getPriority());
+        
+        this.tripleStore.addTripleWithStringLiteral(noteUri.toString(), NOTE_HAS_DATE.toString(), note.getCreated().toString());
+        this.tripleStore.addTripleWithStringLiteral(noteUri.toString(), NOTE_HAS_TEXT.toString(), note.getText());
+        this.tripleStore.addTripleWithStringLiteral(noteUri.toString(), NOTE_HAS_TITLE.toString(), note.getTitle());
+        this.tripleStore.setValue(noteUri.toString(), NOTE_HAS_PRIORITY.toString(), note.getPriority());
         
         try {
             luceneService.storeNote(note);
@@ -108,15 +107,12 @@ public class NoteServiceImpl implements NoteService {
             }
         }
         catch (RepositoryException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         catch (SpirontoException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return notes;
@@ -160,15 +156,12 @@ public class NoteServiceImpl implements NoteService {
             }
         }
         catch (RepositoryException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         catch (SpirontoException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return note;

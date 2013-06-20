@@ -101,7 +101,12 @@ public class NoteREST {
     @POST
     @Produces(MediaType.APPLICATION_XML)
     public Note createNote(Note note) throws IOException, RepositoryException, ModelException, SpirontoException, URISyntaxException {
+        
         note = this.noteService.createNote(note);
+        
+        if (note == null) {
+            return null;
+        }
         
         if (note.getConcepts() != null) {
             for (Concept c : note.getConcepts()) {
@@ -137,6 +142,11 @@ public class NoteREST {
     @POST
     @Produces(MediaType.APPLICATION_XML)
     public List<Note> getNotes(Patient patient) throws IOException, SpirontoException {
+        
+        if (patient.getUri() == null) {
+            return null;
+        }
+        
         return this.noteService.getNotes(patient);
     }
     
@@ -153,6 +163,10 @@ public class NoteREST {
     @POST
     @Produces(MediaType.APPLICATION_XML)
     public Note addConceptToNote(Note note) throws IOException, SpirontoException {
+        
+        if (note.getUri() == null) {
+            return null;
+        }
         
         if (note.getConcepts() != null) {
             for (Concept c : note.getConcepts()) {
