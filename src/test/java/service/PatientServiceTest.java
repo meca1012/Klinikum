@@ -15,6 +15,7 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.joda.time.DateTime;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openrdf.repository.RepositoryException;
@@ -24,152 +25,171 @@ import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.exceptions.TripleStoreException;
 import de.klinikum.persistence.SesameTripleStore;
+import de.klinikum.service.implementation.ConceptServiceImpl;
 import de.klinikum.service.implementation.PatientServiceImpl;
+import de.klinikum.service.interfaces.PatientService;
 
 @RunWith(Arquillian.class)
 public class PatientServiceTest {
 
-    @Inject
-    PatientServiceImpl patientService;
+	@Inject
+	PatientService patientService;
 
-    String patientUri;
+	private static Patient patient;
+	
+	private static String patientUri;
+	
+	@Before
+	public void before() {
+		this.patient = new Patient();
+		this.patient.setFirstName("Alice");
+		this.patient.setLastName("Smith");
+		this.patient.setDateOfBirth(new DateTime());
+//		this.patient.setUri("http://spironto.de/spironto#patient-gen1");
+		this.patient.setPatientNumber("112233");
+		Address address = new Address(null, "Musterstr.", "1", "Musterstadt",
+				"76123", "D", "110");
+		this.patient.setAddress(address);
+//		this.patientService.createPatientRDF(this.patient);
+	}
 
-    Patient patient;
-
-    @Before
-    public void before() throws TripleStoreException {
-        this.patient = new Patient();
-        this.patient.setFirstName("Alice");
-        this.patient.setLastName("Smith");
-        this.patient.setDateOfBirth(new DateTime());
-        this.patient.setUri("http://spironto.de/spironto#patient-gen1");
-        this.patient.setPatientNumber("112233");
-        Address address = new Address(null, "Musterstr.", "1", "Musterstadt", "76123", "D", "110");
-        this.patient.setAddress(address);
-        this.patientService.createPatientRDF(this.patient);
-    }
-
-    /**
+	/**
 	 */
-    @Deployment
-    public static JavaArchive createDeployment() {
-        return ShrinkWrap.create(JavaArchive.class).addClass(PatientServiceImpl.class)
-                .addClass(SesameTripleStore.class).addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-    }
+	@Deployment
+	public static JavaArchive createDeployment() {
+		return ShrinkWrap.create(JavaArchive.class)
+				.addClass(PatientServiceImpl.class)
+				.addClass(ConceptServiceImpl.class)
+				.addClass(SesameTripleStore.class)
+				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+	}
 
-    @Test
-    public void createPatientRDFTest() throws TripleStoreException {
+	@Test
+	public void createPatientRDFTest() throws TripleStoreException {
 
-        Patient patient = new Patient();
-        patient.setFirstName("alice");
-        patient.setLastName("smith");
+		Patient returnPatient = this.patientService.createPatientRDF(this.patient);
 
-        patient.setPatientNumber("1111");
-        patient.setDateOfBirth(new DateTime());
+		assertEquals(patient.getFirstName(), returnPatient.getFirstName());
+		assertEquals(patient.getLastName(), returnPatient.getLastName());
+		assertEquals(patient.getPatientNumber(), returnPatient.getPatientNumber());
+		assertNotNull(patient.getUri());
 
-        Address address = new Address(null, "Moltkestraﬂe", "30", "Karlsruhe", "76133", "D", "00");
+		assertEquals(patient.getAddress().getStreet(), returnPatient.getAddress()
+				.getStreet());
+		assertEquals(patient.getAddress().getStreetNumber(), returnPatient
+				.getAddress().getStreetNumber());
+		assertEquals(patient.getAddress().getCity(), returnPatient.getAddress()
+				.getCity());
+		assertEquals(patient.getAddress().getZip(), returnPatient.getAddress()
+				.getZip());
+		assertEquals(patient.getAddress().getCountry(), returnPatient.getAddress()
+				.getCountry());
+		assertEquals(patient.getAddress().getPhone(), returnPatient.getAddress()
+				.getPhone());
+		assertNotNull(patient.getAddress().getUri());
+	
+		String patientUri = returnPatient.getUri();
+		this.patientUri = patientUri;
+	}
 
-        patient.setAddress(address);
+	@Test
+	public void getPatientByUriTest() throws TripleStoreException {
+		Patient patient = new Patient();
+		patient = this.patientService.getPatientByUri(this.patientUri);
 
-        Patient patient1 = this.patientService.createPatientRDF(patient);
+		assertEquals(this.patientUri, patient.getUri());
+		assertNotNull(patient.getFirstName());
+		assertNotNull(patient.getLastName());
+		assertNotNull(patient.getAddress());
+	}
 
-        assertEquals(patient.getFirstName(), patient1.getFirstName());
-        assertEquals(patient.getLastName(), patient1.getLastName());
-        assertEquals(patient.getPatientNumber(), patient1.getPatientNumber());
-        assertNotNull(patient.getUri());
+	@Test
+	public void searchPatientSPARQLTest() throws RepositoryException,
+			IOException, SpirontoException {
+		Patient patient = new Patient();
+		patient.setUri(this.patientUri);
+		List<Patient> patients = this.patientService
+				.searchPatientSPARQL(patient);
+		
+		assertNotNull(patients);
+	}
 
-        assertEquals(patient.getAddress().getStreet(), patient1.getAddress().getStreet());
-        assertEquals(patient.getAddress().getStreetNumber(), patient1.getAddress().getStreetNumber());
-        assertEquals(patient.getAddress().getCity(), patient1.getAddress().getCity());
-        assertEquals(patient.getAddress().getZip(), patient1.getAddress().getZip());
-        assertEquals(patient.getAddress().getCountry(), patient1.getAddress().getCountry());
-        assertEquals(patient.getAddress().getPhone(), patient1.getAddress().getPhone());
+	@Test
+	public void updatePatientRDFTest() throws IOException, RepositoryException,
+			TripleStoreException {
 
-        assertNotNull(patient.getAddress().getUri());
+		// Create a new patient
+		Patient patient = new Patient();
+		patient.setFirstName("Klaus");
+		patient.setLastName("Blau");
+		patient.setPatientNumber("3456");
+		patient.setDateOfBirth(new DateTime());
+		Address address = new Address(null, "Moltkestraﬂe", "30", "Karlsruhe",
+				"76133", "D", "00");
+		patient.setAddress(address);
+		patient = this.patientService.createPatientRDF(patient);
 
-        this.patientUri = patient1.getUri();
-        this.patient.setUri(this.patientUri);
-    }
+		// Update the lastname
+		Patient updatePatient = new Patient();
+		updatePatient.setUri(patient.getUri());
+		updatePatient.setLastName("Gelb");
+		this.patientService.updatePatientRDF(updatePatient);
 
-    @Test
-    public void getPatientByUriTest() throws TripleStoreException {
-        Patient patient = new Patient();
-        patient = this.patientService.getPatientByUri(this.patient.getUri());
+		assertEquals(patient.getFirstName(), updatePatient.getFirstName());
+		assertEquals(patient.getLastName(), updatePatient.getLastName());
+		assertEquals(patient.getPatientNumber(), updatePatient.getPatientNumber());
+		assertNotNull(patient.getUri());
+		assertEquals(patient.getAddress().getStreet(), updatePatient.getAddress()
+				.getStreet());
+		assertEquals(patient.getAddress().getStreetNumber(), updatePatient
+				.getAddress().getStreetNumber());
+		assertEquals(patient.getAddress().getCity(), updatePatient.getAddress()
+				.getCity());
+		assertEquals(patient.getAddress().getZip(), updatePatient.getAddress()
+				.getZip());
+		assertEquals(patient.getAddress().getCountry(), updatePatient.getAddress()
+				.getCountry());
+		assertEquals(patient.getAddress().getPhone(), updatePatient.getAddress()
+				.getPhone());
+		assertNotNull(patient.getAddress().getUri());
+	}
 
-        assertEquals(this.patient.getUri(), patient.getUri());
-        assertNotNull(patient.getFirstName());
-        assertNotNull(patient.getLastName());
-        assertNotNull(patient.getAddress());
-    }
+	@Test
+	@Ignore
+	public void getAddressByUriTest() {
 
-    @Test
-    public void searchPatientTest() throws TripleStoreException {
+	}
 
-        // Create
-        Patient patient = new Patient();
-        patient.setFirstName("John");
-        patient.setLastName("Smith");
-        patient.setPatientNumber("1234");
-        Address address = new Address(null, "Moltkestraﬂe", "30", "Karlsruhe", "76133", "D", "00");
-        patient.setAddress(address);
-        patient = this.patientService.createPatientRDF(patient);
+	@Test
+	@Ignore
+	public void getPatientByPatientNumberTest() {
 
-        // Search
-        List<Patient> patients = this.patientService.searchPatient(patient);
+	}
 
-        for (Patient p : patients) {
+	@Test
+	@Ignore
+	public void createAddressRDFTest() {
 
-            assertEquals(p.getPatientNumber(), patient.getPatientNumber());
-            assertEquals(p.getLastName(), patient.getLastName());
-        }
+	}
 
-    }
+	@Test
+	@Ignore
+	public void updateAddressRDFTest() {
 
-    @Test
-    public void searchPatientSPARQLTest() throws RepositoryException, IOException, SpirontoException {
-        Patient patient = new Patient();
-        patient.setUri(this.patientUri);
-        List<Patient> patients = this.patientService.searchPatientSPARQL(patient);
-        // TODO: implement me
-    }
+	}
 
-    // Test UpdatePatient
-    @Test
-    public void testUpdatePatient() throws IOException, RepositoryException, TripleStoreException {
+	@Test
+	@Ignore
+	public void createStandardConceptsTest() {
 
-        // Create
-        Patient patient = new Patient();
-        patient.setFirstName("klaus");
-        patient.setLastName("blau");
-        patient.setPatientNumber("3456");
-        Address address = new Address(null, "Moltkestraﬂe", "30", "Karlsruhe", "76133", "D", "00");
-        patient.setAddress(address);
-        patient = this.patientService.createPatientRDF(patient);
+	}
 
-        // Update
-        patient.setFirstName("hans");
-        patient.setLastName("gelb");
-        patient.setPatientNumber("6789");
-        Address address1 = new Address(null, "Kaiserstraﬂe", "40", "Stuttgart", "78999", "D", "09");
-        patient.setAddress(address1);
-        this.patientService.updatePatientRDF(patient);
+	public static String getPatientUri() {
+		return patientUri;
+	}
 
-        Patient patient1 = this.patientService.getPatientByUri(patient.getUri());
-
-        assertEquals(patient.getFirstName(), patient1.getFirstName());
-        assertEquals(patient.getLastName(), patient1.getLastName());
-        assertEquals(patient.getPatientNumber(), patient1.getPatientNumber());
-        assertNotNull(patient.getUri());
-        assertEquals(patient.getAddress().getStreet(), patient1.getAddress().getStreet());
-        assertEquals(patient.getAddress().getStreetNumber(), patient1.getAddress().getStreetNumber());
-        assertEquals(patient.getAddress().getCity(), patient1.getAddress().getCity());
-        assertEquals(patient.getAddress().getZip(), patient1.getAddress().getZip());
-        assertEquals(patient.getAddress().getCountry(), patient1.getAddress().getCountry());
-        assertEquals(patient.getAddress().getPhone(), patient1.getAddress().getPhone());
-        assertNotNull(patient.getAddress().getUri());
-
-        this.patientUri = patient1.getUri();
-
-    }
+	public static void setPatientUri(String patientUri) {
+		PatientServiceTest.patientUri = patientUri;
+	}
 
 }

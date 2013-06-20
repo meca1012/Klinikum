@@ -16,11 +16,9 @@ public interface PatientService {
 
     Patient createPatientRDF(Patient patient) throws TripleStoreException;
 
-    List<Patient> searchPatient(Patient patient) throws TripleStoreException;
-
     List<Patient> searchPatientSPARQL(Patient patient) throws TripleStoreException, SpirontoException;
 
-    boolean updatePatientRDF(Patient patient) throws IOException, RepositoryException;
+    boolean updatePatientRDF(Patient patient) throws IOException, RepositoryException, TripleStoreException;
 
     Address getAddressByUri(Address address) throws TripleStoreException;
 
@@ -28,7 +26,7 @@ public interface PatientService {
 
     Address createAddressRDF(Address address) throws TripleStoreException;
 
-    boolean updateAddressRDF(Address address) throws IOException, RepositoryException;
+    boolean updateAddressRDF(Address address) throws IOException, RepositoryException, TripleStoreException;
 
 	/**
 	 * adds standard tabConcepts and concepts to patient

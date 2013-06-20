@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.joda.time.DateTime;
 import org.openrdf.model.Model;
@@ -35,8 +36,10 @@ import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.helper.DateUtil;
 import de.klinikum.lucene.LuceneServiceImpl;
 import de.klinikum.persistence.SesameTripleStore;
+import de.klinikum.service.interfaces.ConceptService;
 import de.klinikum.service.interfaces.NoteService;
 
+@Named
 public class NoteServiceImpl implements NoteService {
 	
     private static final Logger LOGGER = LoggerFactory.getLogger(NoteServiceImpl.class);
@@ -45,7 +48,7 @@ public class NoteServiceImpl implements NoteService {
     SesameTripleStore tripleStore;
 
     @Inject
-    ConceptServiceImpl conceptService;
+    ConceptService conceptService;
 
     @Inject
     LuceneServiceImpl luceneService;
