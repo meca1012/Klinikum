@@ -2,6 +2,9 @@ package de.klinikum.domain.enums;
 
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.klinikum.helper.PropertyLoader;
 
 public enum FamilyConcepts {
@@ -14,6 +17,7 @@ public enum FamilyConcepts {
 	GRANDMOTHER("Grandmother");
 
 	private final String value;
+	private static final Logger LOGGER = LoggerFactory.getLogger(SpiritualityConcepts.class);
 
 	FamilyConcepts(String value) {
 		this.value = value;
@@ -25,6 +29,7 @@ public enum FamilyConcepts {
             return this.getEnumValue();
         }
         catch (Exception e) {
+            LOGGER.warn("Enum property for: " + this.name() + "not found");
             return this.value;
         }
 
