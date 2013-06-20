@@ -1,4 +1,4 @@
-package de.klinikum.service.Interfaces;
+package de.klinikum.service.interfaces;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

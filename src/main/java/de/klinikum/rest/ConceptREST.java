@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import de.klinikum.domain.Concept;
 import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
-import de.klinikum.service.Interfaces.ConceptService;
+import de.klinikum.service.interfaces.ConceptService;
 
 /**
  * 

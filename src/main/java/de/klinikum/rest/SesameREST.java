@@ -18,7 +18,7 @@ import org.openrdf.model.Value;
 
 import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.helper.AppStartup;
-import de.klinikum.service.Implementation.SesameServiceImpl;
+import de.klinikum.service.interfaces.SesameService;
 
 /**
  * 
@@ -37,10 +37,9 @@ import de.klinikum.service.Implementation.SesameServiceImpl;
 @RequestScoped
 public class SesameREST {
 
-    //CDI for SesameServiceIml 
-    //Todo: Change to Interface
+    //CDI for SesameService
 	@Inject
-	SesameServiceImpl SesameService;
+	SesameService SesameService;
 	
 	//CDI for Appstartup  initialization bootstrap to load Data 
 	@Inject

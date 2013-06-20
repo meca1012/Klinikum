@@ -24,7 +24,7 @@ import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.exceptions.TripleStoreException;
 import de.klinikum.persistence.SesameTripleStore;
-import de.klinikum.service.Implementation.PatientServiceImpl;
+import de.klinikum.service.implementation.PatientServiceImpl;
 
 @RunWith(Arquillian.class)
 public class PatientServiceTest {

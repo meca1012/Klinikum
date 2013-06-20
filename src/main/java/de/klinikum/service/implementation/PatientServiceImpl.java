@@ -1,4 +1,4 @@
-package de.klinikum.service.Implementation;
+package de.klinikum.service.implementation;
 
 import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_ADDRESS_CITY;
 import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_ADDRESS_STREET;
@@ -32,6 +32,8 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.repository.RepositoryException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.klinikum.domain.Address;
 import de.klinikum.domain.Concept;
@@ -46,13 +48,13 @@ import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.exceptions.TripleStoreException;
 import de.klinikum.helper.DateUtil;
 import de.klinikum.persistence.SesameTripleStore;
-import de.klinikum.service.Interfaces.ConceptService;
-import de.klinikum.service.Interfaces.PatientService;
+import de.klinikum.service.interfaces.ConceptService;
+import de.klinikum.service.interfaces.PatientService;
 
 @Named
 public class PatientServiceImpl implements PatientService {
-
-	private String className = "PatientServiceImpl";
+	
+    private static final Logger LOGGER = LoggerFactory.getLogger(PatientServiceImpl.class);
 
 	@Inject
 	ConceptService conceptService;
@@ -506,10 +508,7 @@ public class PatientServiceImpl implements PatientService {
 		return returnPatientList;
 	}
 	
-	/**
-	 * adds standard tabConcepts and concepts to patient
-	 * @throws IOException 
-	 */
+	@Override
 	public void createStandardConcepts(Patient patient) throws IOException {
 
 		// creates standard tabConcepts
@@ -583,14 +582,6 @@ public class PatientServiceImpl implements PatientService {
 					break;
 				}
 		}		
-	}
-	
-	public String getClassName() {
-		return this.className;
-	}
-
-	public void setClassName(String className) {
-		this.className = className;
 	}
 
 }

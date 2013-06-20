@@ -61,7 +61,6 @@ import de.klinikum.helper.PropertyLoader;
 @Named
 public class SesameTripleStore {
 
-
 	private static final String configName = "sesame.properties";
 	private static final String serverLinkKey = "server.link";
 	private static final String repositoryIdKey = "server.repositoryId";

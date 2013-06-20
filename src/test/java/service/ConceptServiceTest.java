@@ -7,7 +7,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import de.klinikum.service.Implementation.ConceptServiceImpl;
+import de.klinikum.service.implementation.ConceptServiceImpl;
 
 @RunWith(Arquillian.class)
 public class ConceptServiceTest {

@@ -1,4 +1,4 @@
-package de.klinikum.service.Interfaces;
+package de.klinikum.service.interfaces;
 
 import java.util.HashMap;
 import java.util.Set;

@@ -22,8 +22,8 @@ import de.klinikum.domain.Concept;
 import de.klinikum.domain.Note;
 import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
-import de.klinikum.service.Interfaces.ConceptService;
-import de.klinikum.service.Interfaces.NoteService;
+import de.klinikum.service.interfaces.ConceptService;
+import de.klinikum.service.interfaces.NoteService;
 
 /**
  * 

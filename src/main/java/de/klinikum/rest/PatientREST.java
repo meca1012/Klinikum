@@ -26,7 +26,8 @@ import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.exceptions.TripleStoreException;
-import de.klinikum.service.Implementation.PatientServiceImpl;
+import de.klinikum.service.implementation.PatientServiceImpl;
+import de.klinikum.service.interfaces.PatientService;
 
 /**
  * 
@@ -47,7 +48,7 @@ public class PatientREST {
 
 	//CDI for PatientServiceClass -> TODO: Change to Interface 
 	@Inject
-	PatientServiceImpl patientService;
+	PatientService patientService;
 
     /**
      * 

@@ -1,4 +1,4 @@
-package de.klinikum.service.Implementation;
+package de.klinikum.service.implementation;
 
 import static de.klinikum.domain.NameSpaces.CONCEPT_IS_EDITABLE;
 import static de.klinikum.domain.NameSpaces.GUI_TAB_TYPE;
@@ -24,16 +24,20 @@ import org.openrdf.model.Value;
 import org.openrdf.model.util.ModelException;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.repository.RepositoryException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.klinikum.domain.Concept;
 import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.persistence.SesameTripleStore;
-import de.klinikum.service.Interfaces.ConceptService;
+import de.klinikum.service.interfaces.ConceptService;
 
 @Named
 public class ConceptServiceImpl implements ConceptService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConceptServiceImpl.class);
+	
     @Inject
     SesameTripleStore tripleStore;
 
@@ -192,18 +196,6 @@ public class ConceptServiceImpl implements ConceptService {
 
     }
 
-    /**
-     * Recursive method to return all concepts that are connected to a concept. Gets directly and indirectly connected.
-     * 
-     * @param conceptUri
-     * @param connected
-     * @param onlyUris
-     * @return
-     * @throws RepositoryException
-     * @throws IOException
-     * @throws ModelException
-     * @throws SpirontoException
-     */
     @Override
     public List<Concept> getConnected(String conceptUri, List<Concept> connected, boolean onlyUris)
             throws RepositoryException, IOException, ModelException, SpirontoException {
@@ -233,13 +225,6 @@ public class ConceptServiceImpl implements ConceptService {
         }
     }
 
-    /**
-     * Returns a concept object to a uri. ConnectedConcepts are not getting set.
-     * 
-     * @param conceptUri
-     * @return
-     * @throws SpirontoException
-     */
     @Override
     public Concept getConceptByUri(String conceptUri) throws SpirontoException {
         Concept conceptToReturn = new Concept();
@@ -256,15 +241,6 @@ public class ConceptServiceImpl implements ConceptService {
         return conceptToReturn;
     }
 
-    /**
-     * Method to connect one concept to a list of other concepts. Uses the connectSingle method.
-     * 
-     * @param from
-     *            -> concept which gets connected to the to list
-     * @param to
-     *            -> List of concepts to whose the from concept gets connected
-     * @throws IOException
-     */
     @Override
     public void connectMultipleConcepts(Concept from, List<Concept> to) throws IOException {
         for (Concept c : to) {
@@ -272,19 +248,12 @@ public class ConceptServiceImpl implements ConceptService {
         }
     }
 
-    /**
-     * Checks wether a concept is a tabConcept or not
-     * 
-     * @param concept
-     * @return -> boolean, true if concept is a tabConcept
-     * @throws RepositoryException
-     * @throws IOException
-     */
     @Override
     public boolean isTabConcept(Concept concept) throws RepositoryException, IOException {
         return this.tripleStore.repositoryHasStatement(concept.getUri(), RDF.TYPE.toString(), GUI_TAB_TYPE.toString());
     }
 
+    @Override
     public boolean conceptExists(Concept concept) throws IOException {
         if (concept.getUri() == null) {
             return false;
@@ -295,16 +264,6 @@ public class ConceptServiceImpl implements ConceptService {
         }
     }
 
-    /**
-     * Used to return only the uris of the direct connected concepts to a concept.
-     * 
-     * @param concept
-     * @return -> List of Concepts with only the uri set
-     * @throws RepositoryException
-     * @throws ModelException
-     * @throws IOException
-     * @throws SpirontoException
-     */
     @Override
     public List<Concept> getConnectedConceptUris(Concept concept) throws RepositoryException, ModelException,
             IOException, SpirontoException {
@@ -314,12 +273,6 @@ public class ConceptServiceImpl implements ConceptService {
         return conceptsToReturn;
     }
     
-    /**
-     * Updates a concept. If connectedConcepts are set, all existing links to other concpets are being removed
-     * and the new ones are set. The connectedConcepts themselves are ignored.
-     * @throws ModelException 
-     * @throws RepositoryException 
-     */
     @Override
     public Concept updateConcept(Concept concept) throws SpirontoException, IOException, RepositoryException, ModelException {
         

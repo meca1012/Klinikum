@@ -20,10 +20,12 @@ import org.apache.lucene.queryparser.classic.ParseException;
 import de.klinikum.domain.LuceneSearchRequest;
 import de.klinikum.domain.Note;
 import de.klinikum.exceptions.SpirontoException;
+import de.klinikum.lucene.LuceneService;
 import de.klinikum.lucene.LuceneServiceImpl;
-import de.klinikum.service.Implementation.ConceptServiceImpl;
-import de.klinikum.service.Implementation.NoteServiceImpl;
-import de.klinikum.service.Interfaces.ConceptService;
+import de.klinikum.service.implementation.ConceptServiceImpl;
+import de.klinikum.service.implementation.NoteServiceImpl;
+import de.klinikum.service.interfaces.ConceptService;
+import de.klinikum.service.interfaces.NoteService;
 
 /**
  * 
@@ -40,13 +42,11 @@ import de.klinikum.service.Interfaces.ConceptService;
 @Stateless
 public class LuceneREST {
     
-    
-    //CDI of ConceptService.class
     @Inject
-    LuceneServiceImpl luceneService;
+    LuceneService luceneService;
     
     @Inject
-    NoteServiceImpl noteService;
+    NoteService noteService;
     
     /**
      * Purpose: Create LuceneSearchRequestElement for Testing

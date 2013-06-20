@@ -1,4 +1,4 @@
-package de.klinikum.service.Implementation;
+package de.klinikum.service.implementation;
 
 import static de.klinikum.domain.NameSpaces.NOTE_HAS_DATE;
 import static de.klinikum.domain.NameSpaces.NOTE_HAS_PRIORITY;
@@ -35,9 +35,11 @@ import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.helper.DateUtil;
 import de.klinikum.lucene.LuceneServiceImpl;
 import de.klinikum.persistence.SesameTripleStore;
-import de.klinikum.service.Interfaces.NoteService;
+import de.klinikum.service.interfaces.NoteService;
 
 public class NoteServiceImpl implements NoteService {
+	
+    private static final Logger LOGGER = LoggerFactory.getLogger(NoteServiceImpl.class);
 
     @Inject
     SesameTripleStore tripleStore;
@@ -47,9 +49,7 @@ public class NoteServiceImpl implements NoteService {
 
     @Inject
     LuceneServiceImpl luceneService;
-    
-    private static final Logger LOGGER = LoggerFactory.getLogger(LuceneServiceImpl.class);
-    
+       
     @Override
     public Note createNote(Note note) throws IOException, URISyntaxException {
 

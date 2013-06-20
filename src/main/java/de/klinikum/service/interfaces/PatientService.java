@@ -1,4 +1,4 @@
-package de.klinikum.service.Interfaces;
+package de.klinikum.service.interfaces;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,4 +29,10 @@ public interface PatientService {
     Address createAddressRDF(Address address) throws TripleStoreException;
 
     boolean updateAddressRDF(Address address) throws IOException, RepositoryException;
+
+	/**
+	 * adds standard tabConcepts and concepts to patient
+	 * @throws IOException 
+	 */
+	void createStandardConcepts(Patient patient) throws IOException;
 }
