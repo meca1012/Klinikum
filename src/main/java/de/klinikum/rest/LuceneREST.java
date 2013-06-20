@@ -26,7 +26,6 @@ import de.klinikum.service.implementation.ConceptServiceImpl;
 import de.klinikum.service.implementation.NoteServiceImpl;
 import de.klinikum.service.interfaces.ConceptService;
 import de.klinikum.service.interfaces.NoteService;
-
 /**
  * 
  * LuceneREST.java
