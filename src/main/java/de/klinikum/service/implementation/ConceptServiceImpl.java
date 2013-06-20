@@ -106,7 +106,7 @@ public class ConceptServiceImpl implements ConceptService {
     }
 
     @Override
-    public Concept addTabConcept(Concept concept) throws IOException {
+    public Concept createTabConcept(Concept concept) throws IOException {
 
         concept.setEditable(false);
         concept = this.createConcept(concept);

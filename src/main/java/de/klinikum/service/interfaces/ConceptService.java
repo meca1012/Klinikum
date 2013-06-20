@@ -45,7 +45,7 @@ public interface ConceptService {
      * @throws IOException
      * @throws SpirontoException
      */
-    Concept addTabConcept(Concept concept) throws IOException;
+    Concept createTabConcept(Concept concept) throws IOException;
 
     /**
      * 
