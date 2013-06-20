@@ -93,7 +93,10 @@ public class ConceptREST {
     @Produces(MediaType.APPLICATION_XML)
     public List<Concept> getTabConcepts(Patient patient) throws IOException, SpirontoException {
         
-        return this.conceptService.getTabConcepts();
+        if (patient.getUri() == null) {
+            return null;
+        }
+        return this.conceptService.getTabConcepts(patient);
     }
 
     /**
