@@ -230,7 +230,21 @@ public class SesameTripleStore {
      * @param literalValue -> String that is stored as an object literal
      * @throws IOException
      */
-    public void addTripleWithLiteral(String subjectUri, String predicateUri, String literalValue) throws IOException {
+    public void addTripleWithStringLiteral(String subjectUri, String predicateUri, String literalValue) throws IOException {
+        URI subject = this.valueFactory.createURI(subjectUri);
+        URI predicate = this.valueFactory.createURI(predicateUri);
+        Literal object = this.valueFactory.createLiteral(literalValue);
+        this.addTriple(subject, predicate, object);
+    }
+    
+    /**
+     * Creates a triple out of strings with a boolean literal instead of object uri
+     * @param subjectUri
+     * @param predicateUri
+     * @param literalValue
+     * @throws IOException
+     */
+    public void addTripleWithBooleanLiteral(String subjectUri, String predicateUri, boolean literalValue) throws IOException {
         URI subject = this.valueFactory.createURI(subjectUri);
         URI predicate = this.valueFactory.createURI(predicateUri);
         Literal object = this.valueFactory.createLiteral(literalValue);

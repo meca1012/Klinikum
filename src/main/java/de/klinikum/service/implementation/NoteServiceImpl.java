@@ -185,12 +185,12 @@ public class NoteServiceImpl implements NoteService {
         
         if (!note.getTitle().equals(existingNote.getTitle())) {
             this.tripleStore.removeTriples(existingNote.getUri(), NOTE_HAS_TITLE.toString(), null);
-            this.tripleStore.addTripleWithLiteral(note.getUri(), NOTE_HAS_TITLE.toString(), note.getTitle());
+            this.tripleStore.addTripleWithStringLiteral(note.getUri(), NOTE_HAS_TITLE.toString(), note.getTitle());
         }
         
         if (!note.getText().equals(existingNote.getText())) {
             this.tripleStore.removeTriples(existingNote.getUri(), NOTE_HAS_TEXT.toString(), null);
-            this.tripleStore.addTripleWithLiteral(note.getUri(), NOTE_HAS_TEXT.toString(), note.getText());
+            this.tripleStore.addTripleWithStringLiteral(note.getUri(), NOTE_HAS_TEXT.toString(), note.getText());
         }
         
         if (note.getPriority() != existingNote.getPriority()) {
