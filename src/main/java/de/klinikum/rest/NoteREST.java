@@ -137,7 +137,7 @@ public class NoteREST {
     @POST
     @Produces(MediaType.APPLICATION_XML)
     public List<Note> getNotes(Patient patient) throws IOException, SpirontoException {
-        return this.noteService.findNotes(patient);
+        return this.noteService.getNotes(patient);
     }
     
     /**

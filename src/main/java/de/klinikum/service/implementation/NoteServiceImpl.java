@@ -96,7 +96,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public List<Note> findNotes(Patient patient) throws SpirontoException {
+    public List<Note> getNotes(Patient patient) throws SpirontoException {
 
         List<Note> notes = new ArrayList<Note>();
         Model statementList;
