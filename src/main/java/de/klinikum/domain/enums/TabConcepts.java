@@ -12,29 +12,27 @@ public enum TabConcepts {
 	ORIGIN ("Origin"),
 	SPIRITUAL_CARE_INTERVENTION ("Spiritual care intervention");
 	
-	private final String value;
+    private final String value;
 
-	TabConcepts(String value) {
-		this.value = value;
-	}
-	
-	@Override
-	public String toString() {
-	    try {
+    TabConcepts(String value) {
+        this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        try {
             return this.getEnumValue();
         }
         catch (Exception e) {
-           return this.value;
+            return this.value;
         }
-	    
-	}
-	    
-	private String getEnumValue() throws Exception
-	{
-	    PropertyLoader propertyLoader = new PropertyLoader();
+
+    }
+
+    private String getEnumValue() throws Exception {
+        PropertyLoader propertyLoader = new PropertyLoader();
         Properties propFile = propertyLoader.load("concept.properties");
-        return propFile.getProperty(this.name().toString());    
-	}
-	
+        return propFile.getProperty(this.name().toString());
+    }
 
 }

@@ -1,13 +1,17 @@
 package de.klinikum.domain.enums;
 
+import java.util.Properties;
+
+import de.klinikum.helper.PropertyLoader;
+
 public enum FamilyConcepts {
 
-	MUTTER("Mutter"), 
-	VATER("Vater"), 
-	TANTE("Tante"), 
-	ONKEL("Onkel"), 
-	GROSSVATER("Groﬂvater"), 
-	GROSSMUTTER("Groﬂmutter");
+	MOTHER("Mother"), 
+	FATHER("Father"), 
+	AUNT("Aunt"), 
+	UNCLE("Uncle"), 
+	GRANDFATHER("Grandfather"), 
+	GRANDMOTHER("Grandmother");
 
 	private final String value;
 
@@ -15,9 +19,21 @@ public enum FamilyConcepts {
 		this.value = value;
 	}
 
-	@Override
-	public String toString() {
-		return this.value;
-	}
+    @Override
+    public String toString() {
+        try {
+            return this.getEnumValue();
+        }
+        catch (Exception e) {
+            return this.value;
+        }
+
+    }
+
+    private String getEnumValue() throws Exception {
+        PropertyLoader propertyLoader = new PropertyLoader();
+        Properties propFile = propertyLoader.load("concept.properties");
+        return propFile.getProperty(this.name().toString());
+    }
 
 }
