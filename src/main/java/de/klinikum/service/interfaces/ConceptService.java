@@ -11,44 +11,48 @@ import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
 
 public interface ConceptService {
-    /**
-     * Return the Label of all TabConcepts to a patient by his uri.
+
+	/**
+     * Returns all TabConcepts to a patientUri. Fetches the connectedConcepts of each.
      * 
      * @return
      * @throws IOException
      * @throws SpirontoException
      */
-    List<Concept> getTabConcepts() throws IOException, SpirontoException;
+    List<Concept> getTabConcepts(Patient patient) throws IOException, SpirontoException;
 
     /**
      * Create a new concept to a patient by his uri. ConnectedConcepts are getting set.
      * 
+     * @param concept
      * @return
      * @throws IOException
-     * @throws SpirontoException
      */
+
     Concept createConcept(Concept concept) throws IOException;
 
     /**
      * Connect a concept to an other concept.
      * 
-     * @return
+     * @param from
+     * @param to
      * @throws IOException
-     * @throws SpirontoException
      */
     void connectSingleConcept(Concept from, Concept to) throws IOException;
 
     /**
      * Create a new tabConcept to a patient. ConnectedConcepts are getting set.
      * 
+     * @param concept
      * @return
      * @throws IOException
-     * @throws SpirontoException
      */
     Concept createTabConcept(Concept concept) throws IOException;
 
     /**
      * 
+     * @param concept
+     * @param onlyUris
      * @return
      * @throws IOException
      * @throws SpirontoException
@@ -58,17 +62,22 @@ public interface ConceptService {
     /**
      * Returns all concepts of a patient.
      * 
+     * @param patient
      * @return
      * @throws IOException
      * @throws SpirontoException
      */
+
     List<Concept> findAllConceptsOfPatient(Patient patient) throws IOException, SpirontoException;
 
     /**
      * Return all concepts that are connected to a tabconcept
      * 
+     * @param tabConcept
      * @return
+     * @throws RepositoryException
      * @throws IOException
+     * @throws ModelException
      * @throws SpirontoException
      */
     List<Concept> findConceptsOfTabConcept(Concept tabConcept) throws RepositoryException, IOException, ModelException,
@@ -142,7 +151,7 @@ public interface ConceptService {
             SpirontoException;
 
     /**
-     * Updates a concept. If connectedConcepts are set, all existing links to other concpets are being removed and the
+     * Updates a concept. If connectedConcepts are set, all existing links to other concepts are being removed and the
      * new ones are set. The connectedConcepts themselves are ignored.
      * 
      * @throws ModelException
