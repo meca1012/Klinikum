@@ -516,7 +516,7 @@ public class PatientServiceImpl implements PatientService {
 			Concept tabConcept = new Concept();
 			tabConcept.setPatientUri(patient.getUri());
 			tabConcept.setLabel(tc.toString());
-			this.conceptService.addTabConcept(tabConcept);
+			this.conceptService.createTabConcept(tabConcept);
 
 			switch (tc) {
 			

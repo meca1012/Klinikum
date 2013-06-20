@@ -1,6 +1,12 @@
 package de.klinikum.lucene;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+import javax.inject.Named;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -12,26 +18,20 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
-import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import de.klinikum.domain.LuceneSearchRequest;
 import de.klinikum.domain.Note;
 import de.klinikum.helper.PropertyLoader;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import javax.inject.Named;
 
 /**
  * 
@@ -54,7 +54,7 @@ public class LuceneServiceImpl implements LuceneService {
     private IndexReader reader;
     private IndexWriter writer;
     private String lucenePath;
-    
+
     private static final String configName = "lucene.properties";
     private static Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_43);
     private PropertyLoader propertyLoader;
@@ -64,12 +64,11 @@ public class LuceneServiceImpl implements LuceneService {
     /**
      * @param indexDir
      * @param createNewIndex
-     *            Success(True) if a new index been created.
-     *            Path to Index is configurable through lucene.propterties
-     * @throws Exception 
+     *            Success(True) if a new index been created. Path to Index is configurable through lucene.propterties
+     * @throws Exception
      */
-    public LuceneServiceImpl () throws Exception {
-        
+    public LuceneServiceImpl() throws Exception {
+
         propertyLoader = new PropertyLoader();
         Properties propFile = propertyLoader.load(configName);
         this.lucenePath = propFile.getProperty(luceneIndexPath);
@@ -80,31 +79,27 @@ public class LuceneServiceImpl implements LuceneService {
     }
 
     /**
-     * Purpose: Returns current folder Path for index location
-     * Reloading of Path just if class was rebuild by the Container
-     * Should never happen
+     * Purpose: Returns current folder Path for index location Reloading of Path just if class was rebuild by the
+     * Container Should never happen
+     * 
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     private String getIndexPath() throws Exception {
-       
-        if(this.lucenePath == null || this.lucenePath.isEmpty()) {
+
+        if (this.lucenePath == null || this.lucenePath.isEmpty()) {
             Properties propFile = propertyLoader.load(configName);
             return propFile.getProperty(luceneIndexPath);
         }
-        else
-        {
+        else {
             return this.lucenePath;
         }
     }
 
-    /**
-     * initialize Writer for Lucene - Document / Indexfile writing;
-     * 
-     * @param mode
-     *            /Create/CreateOrRead/Read
-     * @throws Exception 
+    /* (non-Javadoc)
+     * @see de.klinikum.lucene.LuceneServiceIn#initalizeWriter(org.apache.lucene.index.IndexWriterConfig.OpenMode)
      */
+    @Override
     public void initalizeWriter(OpenMode mode) throws Exception {
         // System.out.println("Indexing to directory '" + FILEPATH + "'...");
         Directory dir = FSDirectory.open(new File(getIndexPath()));
@@ -128,10 +123,8 @@ public class LuceneServiceImpl implements LuceneService {
         this.writer.close();
     }
 
-    /**
-     * Purpose -> Mapping from Note to Doc and Storing to Index
-     * @throws Exception 
-     * 
+    /* (non-Javadoc)
+     * @see de.klinikum.lucene.LuceneServiceIn#storeNote(de.klinikum.domain.Note)
      */
     @Override
     public boolean storeNote(Note note) throws Exception {
@@ -154,99 +147,93 @@ public class LuceneServiceImpl implements LuceneService {
             }
 
         }
-        
-        try 
-        {
-        this.writer.addDocument(doc);
+
+        try {
+            this.writer.addDocument(doc);
         }
-        catch(Exception e)
-        {
+        catch (Exception e) {
             LOGGER.info("DocSave Failed \n" + e.getMessage());
             return false;
         }
-        finally
-        {
+        finally {
             // Ensure that index is closed. Open indexFiles are locked!
             this.closeWriter();
         }
         return true;
     }
 
-    /**
-     * 
-     * @param note -> Consumes Note.class
-     * Purpose: Delete Notes from Index 
-     * @return true or false depending on delete- state
-     * @throws IOException
+    /* (non-Javadoc)
+     * @see de.klinikum.lucene.LuceneServiceIn#deleteNote(de.klinikum.domain.Note)
      */
-    public boolean deleteNote(Note note) throws IOException
-    {
-        if(note == null || note .getUri() == null || note.getUri().isEmpty() )   
-                return false;
-        
-            LOGGER.info("Deleting Notes with URI '" + note.getPatientUri());
+    @Override
+    public boolean deleteNote(Note note) throws Exception {
+        if (note == null || note.getUri() == null || note.getUri().isEmpty())
+            return false;
 
-            TermQuery deleteTerm = new TermQuery(new Term(URINOTE, note.getUri()));
-            
 
-            
-            try
-            {
-                this.initalizeWriter(OpenMode.CREATE_OR_APPEND);
-                
-                //FOR TESTING
-                this.searcher = new IndexSearcher(this.reader);
-                TopScoreDocCollector collector = TopScoreDocCollector.create(10, true);
-                searcher.search(deleteTerm, collector);
-                ScoreDoc[] hits = collector.topDocs().scoreDocs;
-                
-                
-                
-                this.writer.deleteDocuments(deleteTerm);      
-                this.writer.commit();
-                LOGGER.info("Deleting for '" + note.getUri() + "done");
-            }
-            catch(Exception e)
-            {
-                this.writer.rollback();
-                LOGGER.info("Rollback for '" + note.getPatientUri() + "done \n");
-                LOGGER.info("Check Consitenzy");
-            }
-            finally
-            {
-               this.closeWriter();
-            }
-            return true;
+
+        this.reader = DirectoryReader.open(FSDirectory.open(new File(getIndexPath())));
+
+        String queryString = URINOTE + ":\"" + note.getUri() + "\"";
+        Query query = new QueryParser(Version.LUCENE_43, NOTETEXT, analyzer).parse(queryString);
+
+        try {
+            this.initalizeWriter(OpenMode.CREATE_OR_APPEND);
+            this.writer.deleteDocuments(query);
+            this.writer.commit();
+            LOGGER.info("Deleting for '" + note.getUri() + "done");
+        }
+        catch (Exception e) {
+            this.writer.rollback();
+            LOGGER.info("Rollback for '" + note.getPatientUri() + "done \n");
+            LOGGER.info("Check Consitenzy");
+        }
+        finally {
+            this.closeWriter();
+        }
+
+        // Searching for deleted document -> Consistency check
+
+        TopScoreDocCollector collector = TopScoreDocCollector.create(1, true);
+        searcher.search(query, collector);
+
+        ScoreDoc[] hits = collector.topDocs().scoreDocs;
+        int docId = hits[0].doc;
+        Document d = searcher.doc(docId);
+        String URI = d.get(URINOTE);
+
+        if (URI == note.getUri()) {
+
+            return false;
+        }
+        LOGGER.info("Note '" + note.getUri() + " deleted");
+        return true;
+
     }
-    
-    /**
-     * 
-     * @param searchString
-     *            Text that will be searched in index
-     * @return List of URI which texts includes searchString
-     * @throws Exception 
+
+    /* (non-Javadoc)
+     * @see de.klinikum.lucene.LuceneServiceIn#searchNotes(de.klinikum.domain.LuceneSearchRequest)
      */
+    @Override
     public List<String> searchNotes(LuceneSearchRequest request) throws Exception {
 
         this.reader = DirectoryReader.open(FSDirectory.open(new File(getIndexPath()))); // only searching, so
-                                                                                                  // read-only=true
+                                                                                        // read-only=true
         this.searcher = new IndexSearcher(reader);
-        //TODO: CHECK OR PART OF QUERY 
+        // TODO: CHECK OR PART OF QUERY
         List<String> returnUriList = new ArrayList();
-        String queryString = URIPATIENT + ":\"" + request.getPatientUri() 
-                                        + "\" AND (" + NOTETEXT + ":" 
-                                        + request.getSearchString()
-                                        + " OR " + NOTETITLE + ":" 
-                                        + request.getSearchString() + ")";
-        
+        String queryString = URIPATIENT + ":\"" + request.getPatientUri() + "\" AND (" + NOTETEXT + ":"
+                + request.getSearchString() + " OR " + NOTETITLE + ":" + request.getSearchString() + ")";
+
         Query query = new QueryParser(Version.LUCENE_43, NOTETEXT, analyzer).parse(queryString);
 
-        //Sets maximum of returnHits
+        // Sets maximum of returnHits
         int hitsPerPage = 10;
 
         this.searcher = new IndexSearcher(this.reader);
         TopScoreDocCollector collector = TopScoreDocCollector.create(hitsPerPage, true);
         searcher.search(query, collector);
+
         ScoreDoc[] hits = collector.topDocs().scoreDocs;
 
         for (ScoreDoc hit : hits) {

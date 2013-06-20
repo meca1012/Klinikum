@@ -160,7 +160,7 @@ public class ConceptREST {
     @Produces(MediaType.APPLICATION_XML)
     public Concept createTabConcept(Concept concept) throws IOException {
 
-        return this.conceptService.addTabConcept(concept);
+        return this.conceptService.createTabConcept(concept);
     }
 
     /**
