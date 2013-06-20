@@ -15,18 +15,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
-import org.apache.lucene.queryparser.classic.ParseException;
 
 import de.klinikum.domain.LuceneSearchRequest;
 import de.klinikum.domain.Note;
-import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.lucene.LuceneService;
-import de.klinikum.lucene.LuceneServiceImpl;
-import de.klinikum.service.implementation.ConceptServiceImpl;
-import de.klinikum.service.implementation.NoteServiceImpl;
-import de.klinikum.service.interfaces.ConceptService;
 import de.klinikum.service.interfaces.NoteService;
-
 /**
  * 
  * LuceneREST.java
@@ -122,17 +115,6 @@ public class LuceneREST {
                 }
                 return noteResult;
     }
-    
-    @Path("/deleteNote")
-    @POST
-    @Consumes(MediaType.APPLICATION_XML)
-    @Produces(MediaType.APPLICATION_XML)
-    public boolean deleteNote(Note note) throws Exception
-    {
-                boolean returnValue = luceneService.deleteNote(note);
-                
-                return returnValue;
-    }
-    
+        
 }
  

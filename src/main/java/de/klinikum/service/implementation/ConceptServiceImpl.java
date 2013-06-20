@@ -42,24 +42,20 @@ public class ConceptServiceImpl implements ConceptService {
     SesameTripleStore tripleStore;
 
     @Override
-    public List<Concept> getTabConcepts() throws SpirontoException {
-
+    public List<Concept> getTabConcepts(Patient patient) throws SpirontoException {
+        
         List<Concept> tabConcepts = new ArrayList<Concept>();
-        Model statementList;
-
-        try {
-            statementList = this.tripleStore.getStatementList(null, RDF.TYPE.toString(), GUI_TAB_TYPE.toString());
-            for (Statement conceptStatement : statementList) {
-                tabConcepts.add(this.getConceptByUri(conceptStatement.getSubject().toString()));
-            }
-        }
-        catch (RepositoryException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        
+        String sparqlQuery = "SELECT DISTINCT ?uri WHERE {";        
+        sparqlQuery += "?uri <" + RDF.TYPE + "> <" + GUI_TAB_TYPE + "> . ";
+        sparqlQuery += "<" + patient.getUri() + "> <" + PATIENT_HAS_CONCEPT + "> ?uri}";
+        Set<HashMap<String, Value>> queryResult = this.tripleStore.executeSelectSPARQLQuery(sparqlQuery);
+        for (HashMap<String, Value> item : queryResult) {
+            Concept concept = new Concept();
+            concept.setUri(item.get("uri").stringValue());
+            concept = getConceptByUri(concept.getUri());
+            concept.setConnectedConcepts(getDirectConnected(concept, false));
+            tabConcepts.add(concept);
         }
         return tabConcepts;
     }

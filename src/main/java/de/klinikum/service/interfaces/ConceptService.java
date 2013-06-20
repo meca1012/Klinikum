@@ -11,14 +11,15 @@ import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
 
 public interface ConceptService {
-    /**
-     * Return the Label of all TabConcepts to a patient by his uri.
+
+	/**
+     * Returns all TabConcepts to a patientUri. Fetches the connectedConcepts of each.
      * 
      * @return
      * @throws IOException
      * @throws SpirontoException
      */
-    List<Concept> getTabConcepts() throws IOException, SpirontoException;
+    List<Concept> getTabConcepts(Patient patient) throws IOException, SpirontoException;
 
     /**
      * Create a new concept to a patient by his uri. ConnectedConcepts are getting set.
