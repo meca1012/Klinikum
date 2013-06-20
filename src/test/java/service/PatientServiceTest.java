@@ -101,29 +101,29 @@ public class PatientServiceTest {
         assertNotNull(patient.getLastName());
         assertNotNull(patient.getAddress());
     }
-
-    @Test
-    public void searchPatientTest() throws TripleStoreException {
-
-        // Create
-        Patient patient = new Patient();
-        patient.setFirstName("John");
-        patient.setLastName("Smith");
-        patient.setPatientNumber("1234");
-        Address address = new Address(null, "Moltkestraﬂe", "30", "Karlsruhe", "76133", "D", "00");
-        patient.setAddress(address);
-        patient = this.patientService.createPatientRDF(patient);
-
-        // Search
-        List<Patient> patients = this.patientService.searchPatient(patient);
-
-        for (Patient p : patients) {
-
-            assertEquals(p.getPatientNumber(), patient.getPatientNumber());
-            assertEquals(p.getLastName(), patient.getLastName());
-        }
-
-    }
+//
+//    @Test
+//    public void searchPatientTest() throws TripleStoreException {
+//
+//        // Create
+//        Patient patient = new Patient();
+//        patient.setFirstName("John");
+//        patient.setLastName("Smith");
+//        patient.setPatientNumber("1234");
+//        Address address = new Address(null, "Moltkestraﬂe", "30", "Karlsruhe", "76133", "D", "00");
+//        patient.setAddress(address);
+//        patient = this.patientService.createPatientRDF(patient);
+//
+//        // Search
+//        List<Patient> patients = this.patientService.searchPatient(patient);
+//
+//        for (Patient p : patients) {
+//
+//            assertEquals(p.getPatientNumber(), patient.getPatientNumber());
+//            assertEquals(p.getLastName(), patient.getLastName());
+//        }
+//
+//    }
 
     @Test
     public void searchPatientSPARQLTest() throws RepositoryException, IOException, SpirontoException {

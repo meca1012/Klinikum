@@ -25,7 +25,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.joda.time.DateTime;
-import org.openrdf.model.Literal;
 import org.openrdf.model.Model;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
@@ -110,13 +109,9 @@ public class PatientServiceImpl implements PatientService {
 	@Override
 	public Patient getPatientByPatientNumber(String patientNumber) throws TripleStoreException {
 		try {
-			URI patientHasPatientNUmber = this.tripleStore.getValueFactory().createURI(
-					PATIENT_HAS_PATIENT_NUMBER.toString());
-			Literal patientNumer = this.tripleStore.getValueFactory().createLiteral(patientNumber);
-
 			Model statementList;
 
-			statementList = this.tripleStore.getStatementList(null, patientHasPatientNUmber, patientNumer);
+			statementList = this.tripleStore.getStatementList(null, PATIENT_HAS_PATIENT_NUMBER.toString(), patientNumber);
 
 			Set<Resource> patientRessourceList = statementList.subjects();
 
@@ -141,6 +136,8 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	public Address getAddressByUri(Address address) throws TripleStoreException {
+	    
+	    Address addressToReturn = new Address();
 		try {
 			URI addressURI = this.tripleStore.getValueFactory().createURI(address.getUri().toString());
 			String addressStreet = this.tripleStore.getObjectString(addressURI.toString(),
@@ -155,13 +152,14 @@ public class PatientServiceImpl implements PatientService {
 					ADDRESS_IN_COUNTRY.toString());
 			String addressPhone = this.tripleStore.getObjectString(addressURI.toString(),
 					ADDRESS_HAS_PHONENUMBER.toString());
-			address.setStreet(addressStreet);
-			address.setStreetNumber(addressStreetNumber);
-			address.setCity(addressCity);
-			address.setZip(addressZip);
-			address.setCountry(addressCountry);
-			address.setPhone(addressPhone);
-			return address;
+			addressToReturn.setUri(address.getUri());
+			addressToReturn.setStreet(addressStreet);
+			addressToReturn.setStreetNumber(addressStreetNumber);
+			addressToReturn.setCity(addressCity);
+			addressToReturn.setZip(addressZip);
+			addressToReturn.setCountry(addressCountry);
+			addressToReturn.setPhone(addressPhone);
+			return addressToReturn;
 
 		} catch (RepositoryException e) {
 			e.printStackTrace();
@@ -184,43 +182,19 @@ public class PatientServiceImpl implements PatientService {
 			// Adding URI to Patient Element
 			patient.setUri(patientUri.toString());
 
-			// Creating Person_TYP URI -> Patient is RDF:TYPE Person
-			URI personTypeURI = this.tripleStore.getValueFactory().createURI(PATIENT_TYPE.toString());
-
-			this.tripleStore.addTriple(patientUri, RDF.TYPE, personTypeURI);
-
-			// Creates URI pointing to Literals
-			URI hasPatientNumber = this.tripleStore.getValueFactory().createURI(PATIENT_HAS_PATIENT_NUMBER.toString());
-			URI hasLastName = this.tripleStore.getValueFactory().createURI(PATIENT_HAS_LAST_NAME.toString());
-			URI hasFirstName = this.tripleStore.getValueFactory().createURI(PATIENT_HAS_FIRST_NAME.toString());
-			URI hasdateOfBirth = this.tripleStore.getValueFactory().createURI(PATIENT_HAS_DATE_OF_BIRTH.toString());
-
-			// Create Literal and Add to Sesame for PatientNumber
-			Literal vPatientNumerLiteral = this.tripleStore.getValueFactory().createLiteral(patient.getPatientNumber());
-			this.tripleStore.addTriple(patientUri, hasPatientNumber, vPatientNumerLiteral);
-
-			// Create Literal and Add to Sesame for FirstName
-			Literal vNameLiteral = this.tripleStore.getValueFactory().createLiteral(patient.getFirstName());
-			this.tripleStore.addTriple(patientUri, hasFirstName, vNameLiteral);
-
-			// Create Literal and Add to Sesame for LastName
-			Literal nNameLiteral = this.tripleStore.getValueFactory().createLiteral(patient.getLastName());
-			this.tripleStore.addTriple(patientUri, hasLastName, nNameLiteral);
-
-			// Create Literal an Add to Sesame for DateOfBirth
-
-			Literal dateOfBirthLiteral = this.tripleStore.getValueFactory().createLiteral(
-					patient.getDateOfBirth().toString());
-			this.tripleStore.addTriple(patientUri, hasdateOfBirth, dateOfBirthLiteral);
+			this.tripleStore.addTriple(patientUri.toString(), RDF.TYPE.toString(), PATIENT_TYPE.toString());
+			
+			this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_PATIENT_NUMBER.toString(), patient.getPatientNumber());
+			this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_LAST_NAME.toString(), patient.getLastName());
+			this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_FIRST_NAME.toString(), patient.getFirstName());
+			this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_DATE_OF_BIRTH.toString(), patient.getDateOfBirth().toString());
 
 			// check if patient has address, if true call createAddress
 			if (patient.getAddress() != null) {
 				patient.setAddress(this.createAddressRDF(patient.getAddress()));
-				URI hasAddress = this.tripleStore.getValueFactory().createURI(PATIENT_HAS_ADDRESS.toString());
-				URI addressURI = this.tripleStore.getValueFactory().createURI(patient.getAddress().getUri().toString());
 
 				// Create Address Element Triple
-				this.tripleStore.addTriple(patientUri, hasAddress, addressURI);
+				this.tripleStore.addTriple(patient.getUri(), PATIENT_HAS_ADDRESS.toString(), patient.getAddress().getUri());
 			}
 			
 //			TODO: add createStandardConcepts here
@@ -241,37 +215,17 @@ public class PatientServiceImpl implements PatientService {
 	public Address createAddressRDF(Address address) throws TripleStoreException {
 		try {
 			URI addressUri = this.tripleStore.getUniqueURI(ADDRESS_TYPE.toString());
-
-			URI addressTypeURI = this.tripleStore.getValueFactory().createURI(ADDRESS_TYPE.toString());
-
-			this.tripleStore.addTriple(addressUri, RDF.TYPE, addressTypeURI);
-
-			URI hasStreet = this.tripleStore.getValueFactory().createURI(ADDRESS_HAS_ADDRESS_STREET.toString());
-			URI hasStreetNumber = this.tripleStore.getValueFactory().createURI(
-					ADDRESS_HAS_ADDRESS_STREET_NUMBER.toString());
-			URI hasZip = this.tripleStore.getValueFactory().createURI(ADDRESS_HAS_ADDRESS_ZIP.toString());
-			URI hasCity = this.tripleStore.getValueFactory().createURI(ADDRESS_HAS_ADDRESS_CITY.toString());
-			URI hasCountry = this.tripleStore.getValueFactory().createURI(ADDRESS_IN_COUNTRY.toString());
-			URI hasPhone = this.tripleStore.getValueFactory().createURI(ADDRESS_HAS_PHONENUMBER.toString());
-
-			// Creating Address Literals
-			Literal adressStreetLiteral = this.tripleStore.getValueFactory().createLiteral(address.getStreet());
-			Literal adressStreetNumberLiteral = this.tripleStore.getValueFactory().createLiteral(
-					address.getStreetNumber());
-			Literal adressZipLiteral = this.tripleStore.getValueFactory().createLiteral(address.getZip());
-			Literal adressCityLiteral = this.tripleStore.getValueFactory().createLiteral(address.getCity());
-			Literal adressCountryLiteral = this.tripleStore.getValueFactory().createLiteral(address.getCountry());
-			Literal adressPhoneLiteral = this.tripleStore.getValueFactory().createLiteral(address.getPhone());
-
-			// Adding Literals to Triples
-			this.tripleStore.addTriple(addressUri, hasStreet, adressStreetLiteral);
-			this.tripleStore.addTriple(addressUri, hasStreetNumber, adressStreetNumberLiteral);
-			this.tripleStore.addTriple(addressUri, hasZip, adressZipLiteral);
-			this.tripleStore.addTriple(addressUri, hasCity, adressCityLiteral);
-			this.tripleStore.addTriple(addressUri, hasCountry, adressCountryLiteral);
-			this.tripleStore.addTriple(addressUri, hasPhone, adressPhoneLiteral);
-
+			
 			address.setUri(addressUri.toString());
+			
+			this.tripleStore.addTriple(address.getUri(), RDF.TYPE.toString(), ADDRESS_TYPE.toString());
+
+			this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_ADDRESS_STREET.toString(), address.getStreet());
+			this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_ADDRESS_STREET_NUMBER.toString(), address.getStreetNumber());
+			this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_ADDRESS_ZIP.toString(), address.getZip());
+			this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_ADDRESS_CITY.toString(), address.getCity());
+			this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_IN_COUNTRY.toString(), address.getCountry());
+			this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_PHONENUMBER.toString(), address.getPhone());
 
 			return address;
 
@@ -286,46 +240,45 @@ public class PatientServiceImpl implements PatientService {
 
 	// Update Patient
 	@Override
-	public boolean updatePatientRDF(Patient patient) throws IOException, RepositoryException {
-
-		URI patientURI = this.tripleStore.getValueFactory().createURI(patient.getUri());
+	public boolean updatePatientRDF(Patient patient) throws IOException, RepositoryException, TripleStoreException {
+	    
+	    if (patient.getUri() == null) {
+	        return false;
+	    }
+	    
+	    Patient existingPatient = getPatientByUri(patient.getUri());
 
 		// FirstName
 		if (patient.getFirstName() != null && !patient.getFirstName().isEmpty()) {
-
-			URI hasFirstName = this.tripleStore.getValueFactory().createURI(PATIENT_HAS_FIRST_NAME.toString());
-			this.tripleStore.removeTriples(patientURI, hasFirstName, null);
-			Literal vNameLiteral = this.tripleStore.getValueFactory().createLiteral(patient.getFirstName());
-			this.tripleStore.addTriple(patientURI, hasFirstName, vNameLiteral);
+		    if (!patient.getFirstName().equals(existingPatient.getFirstName())) {
+		        this.tripleStore.removeTriples(existingPatient.getUri(), PATIENT_HAS_FIRST_NAME.toString(), null);
+		        this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_FIRST_NAME.toString(), patient.getFirstName());
+		    }			
 		}
-
+		
 		// LastName
-		if (patient.getLastName() != null && !patient.getFirstName().isEmpty()) {
-
-			URI hasLastName = this.tripleStore.getValueFactory().createURI(PATIENT_HAS_LAST_NAME.toString());
-			this.tripleStore.removeTriples(patientURI, hasLastName, null);
-			Literal nNameLiteral = this.tripleStore.getValueFactory().createLiteral(patient.getLastName());
-			this.tripleStore.addTriple(patientURI, hasLastName, nNameLiteral);
-		}
-
+		if (patient.getLastName() != null && !patient.getLastName().isEmpty()) {
+            if (!patient.getLastName().equals(existingPatient.getLastName())) {
+                this.tripleStore.removeTriples(existingPatient.getUri(), PATIENT_HAS_LAST_NAME.toString(), null);
+                this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_LAST_NAME.toString(), patient.getLastName());
+            }
+        }
+		
 		// PatientNumber
-		if (patient.getPatientNumber() != null && !patient.getPatientNumber().isEmpty()) {
-
-			URI hasPatientNumber = this.tripleStore.getValueFactory().createURI(PATIENT_HAS_PATIENT_NUMBER.toString());
-			this.tripleStore.removeTriples(patientURI, hasPatientNumber, null);
-			Literal vPatientNumerLiteral = this.tripleStore.getValueFactory().createLiteral(patient.getPatientNumber());
-			this.tripleStore.addTriple(patientURI, hasPatientNumber, vPatientNumerLiteral);
-		}
-
-		// DateOfBirth
-		if (patient.getDateOfBirth() != null) {
-
-			URI hasdateOfBirth = this.tripleStore.getValueFactory().createURI(PATIENT_HAS_DATE_OF_BIRTH.toString());
-			this.tripleStore.removeTriples(patientURI, hasdateOfBirth, null);
-			Literal dateOfBirthLiteral = this.tripleStore.getValueFactory().createLiteral(
-					patient.getDateOfBirth().toString());
-			this.tripleStore.addTriple(patientURI, hasdateOfBirth, dateOfBirthLiteral);
-		}
+        if (patient.getPatientNumber() != null && !patient.getPatientNumber().isEmpty()) {
+            if (!patient.getPatientNumber().equals(existingPatient.getPatientNumber())) {
+                this.tripleStore.removeTriples(existingPatient.getUri(), PATIENT_HAS_PATIENT_NUMBER.toString(), null);
+                this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_PATIENT_NUMBER.toString(), patient.getPatientNumber());
+            }
+        }
+        
+        // DateOfBirth
+        if (patient.getDateOfBirth() != null) {
+            if (!patient.getDateOfBirth().equals(existingPatient.getDateOfBirth())) {
+                this.tripleStore.removeTriples(existingPatient.getUri(), PATIENT_HAS_DATE_OF_BIRTH.toString(), null);
+                this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_DATE_OF_BIRTH.toString(), patient.getDateOfBirth().toString());
+            }
+        }		
 
 		// Address
 		if (patient.getAddress() != null) {
@@ -337,142 +290,64 @@ public class PatientServiceImpl implements PatientService {
 
 	// Update Address
 	@Override
-	public boolean updateAddressRDF(Address address) throws IOException, RepositoryException {
+	public boolean updateAddressRDF(Address address) throws IOException, RepositoryException, TripleStoreException {
+	    
+	    if (address.getUri() == null) {
+	        return false;
+	    }
+	    
+	    Address existingAddress = getAddressByUri(address);
+	    
+	    // Street
+        if (address.getStreet() != null && !address.getStreet().isEmpty()) {
+            if (!address.getStreet().equals(existingAddress.getStreet())) {
+                this.tripleStore.removeTriples(existingAddress.getUri(), ADDRESS_HAS_ADDRESS_STREET.toString(), null);
+                this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_ADDRESS_STREET.toString(), address.getStreet());
+            }
+        }
+        
+        // StreetNumber
+        if (address.getStreetNumber() != null && !address.getStreetNumber().isEmpty()) {
+            if (!address.getStreetNumber().equals(existingAddress.getStreetNumber())) {
+                this.tripleStore.removeTriples(existingAddress.getUri(), ADDRESS_HAS_ADDRESS_STREET_NUMBER.toString(), null);
+                this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_ADDRESS_STREET_NUMBER.toString(), address.getStreetNumber());
+            }
+        }
+        
+        // ZIP
+        if (address.getZip() != null && !address.getZip().isEmpty()) {
+            if (!address.getZip().equals(existingAddress.getZip())) {
+                this.tripleStore.removeTriples(existingAddress.getUri(), ADDRESS_HAS_ADDRESS_ZIP.toString(), null);
+                this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_ADDRESS_ZIP.toString(), address.getZip());
+            }
+        }		
 
-		URI addressURI = this.tripleStore.getValueFactory().createURI(address.getUri());
+        // City
+        if (address.getCity() != null && !address.getCity().isEmpty()) {
+            if (!address.getCity().equals(existingAddress.getCity())) {
+                this.tripleStore.removeTriples(existingAddress.getUri(), ADDRESS_HAS_ADDRESS_CITY.toString(), null);
+                this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_ADDRESS_CITY.toString(), address.getCity());
+            }
+        }
 
-		// Street
-		if (address.getStreet() != null && !address.getStreet().isEmpty()) {
+        // Country
+        if (address.getCountry() != null && !address.getCountry().isEmpty()) {
+            if (!address.getCountry().equals(existingAddress.getCountry())) {
+                this.tripleStore.removeTriples(existingAddress.getUri(), ADDRESS_IN_COUNTRY.toString(), null);
+                this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_IN_COUNTRY.toString(), address.getCountry());
+            }
+        }
 
-			URI hasStreet = this.tripleStore.getValueFactory().createURI(ADDRESS_HAS_ADDRESS_STREET.toString());
-			this.tripleStore.removeTriples(addressURI, hasStreet, null);
-			Literal adressStreetLiteral = this.tripleStore.getValueFactory().createLiteral(address.getStreet());
-			this.tripleStore.addTriple(addressURI, hasStreet, adressStreetLiteral);
-		}
-
-		// StreetNumber
-		if (address.getStreetNumber() != null && !address.getStreetNumber().isEmpty()) {
-
-			URI hasStreetNumber = this.tripleStore.getValueFactory().createURI(
-					ADDRESS_HAS_ADDRESS_STREET_NUMBER.toString());
-			this.tripleStore.removeTriples(addressURI, hasStreetNumber, null);
-			Literal adressStreetNumberLiteral = this.tripleStore.getValueFactory().createLiteral(
-					address.getStreetNumber());
-			this.tripleStore.addTriple(addressURI, hasStreetNumber, adressStreetNumberLiteral);
-		}
-
-		// ZIP
-		if (address.getZip() != null && !address.getZip().isEmpty()) {
-
-			URI hasZip = this.tripleStore.getValueFactory().createURI(ADDRESS_HAS_ADDRESS_ZIP.toString());
-			this.tripleStore.removeTriples(addressURI, hasZip, null);
-			Literal adressZipLiteral = this.tripleStore.getValueFactory().createLiteral(address.getZip());
-			this.tripleStore.addTriple(addressURI, hasZip, adressZipLiteral);
-
-		}
-
-		// City
-		if (address.getCity() != null && !address.getCity().isEmpty()) {
-
-			URI hasCity = this.tripleStore.getValueFactory().createURI(ADDRESS_HAS_ADDRESS_CITY.toString());
-			this.tripleStore.removeTriples(addressURI, hasCity, null);
-			Literal adressCityLiteral = this.tripleStore.getValueFactory().createLiteral(address.getCity());
-			this.tripleStore.addTriple(addressURI, hasCity, adressCityLiteral);
-		}
-
-		// Country
-		if (address.getCountry() != null && !address.getCountry().isEmpty()) {
-
-			URI hasCountry = this.tripleStore.getValueFactory().createURI(ADDRESS_IN_COUNTRY.toString());
-			this.tripleStore.removeTriples(addressURI, hasCountry, null);
-			Literal adressCountryLiteral = this.tripleStore.getValueFactory().createLiteral(address.getCountry());
-			this.tripleStore.addTriple(addressURI, hasCountry, adressCountryLiteral);
-		}
-
-		// Phone
-		if (address.getPhone() != null && !address.getPhone().isEmpty()) {
-
-			URI hasPhone = this.tripleStore.getValueFactory().createURI(ADDRESS_HAS_PHONENUMBER.toString());
-			this.tripleStore.removeTriples(addressURI, hasPhone, null);
-			Literal adressPhoneLiteral = this.tripleStore.getValueFactory().createLiteral(address.getPhone());
-			this.tripleStore.addTriple(addressURI, hasPhone, adressPhoneLiteral);
-		}
+        // Phone
+        if (address.getPhone() != null && !address.getPhone().isEmpty()) {
+            if (!address.getPhone().equals(existingAddress.getPhone())) {
+                this.tripleStore.removeTriples(existingAddress.getUri(), ADDRESS_HAS_PHONENUMBER.toString(), null);
+                this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_PHONENUMBER.toString(), address.getPhone());
+            }
+        }
 
 		return true;
 
-	}
-
-	// NOT USED.. TODO: Delete if not needed
-	@Override
-	public List<Patient> searchPatient(Patient patient) throws TripleStoreException {
-		// ReturnList for PatientResults
-		List<Patient> returnPatientList = new ArrayList<Patient>();
-
-		// If patientNumber is Set there should be just a single Patient as
-		// Re6turnValue in List
-
-		if (patient.getPatientNumber() != null && !patient.getPatientNumber().isEmpty()) {
-			// URI for Patient having a PationNumber in RDF
-			URI patientHasPatientNumber = this.tripleStore.getValueFactory().createURI(
-					PATIENT_HAS_PATIENT_NUMBER.toString());
-			// Literals as Value for PatientNumber
-			Literal patientNumber = this.tripleStore.getValueFactory().createLiteral(patient.getPatientNumber());
-
-			Model statementList;
-			try {
-				// Gets all URIs for Patient with PatientNumer
-				statementList = this.tripleStore.getStatementList(null, patientHasPatientNumber, patientNumber);
-
-				Set<Resource> patientRessourceList = statementList.subjects();
-				for (Resource patientRessource : patientRessourceList) {
-					returnPatientList.add(this.getPatientByUri(patientRessource.toString()));
-				}
-
-			} catch (RepositoryException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return returnPatientList;
-		}
-
-		if (patient.getLastName() != null && !patient.getLastName().isEmpty()) {
-			// URI for Patient having a PationNumber in RDF
-			URI patientHasLastName = this.tripleStore.getValueFactory().createURI(PATIENT_HAS_LAST_NAME.toString());
-			// Literals as Value for PatientNumber
-			Literal lastname = this.tripleStore.getValueFactory().createLiteral(patient.getLastName());
-
-			Model statementList;
-			try {
-				// Gets all URIs for Patient with PatientNumer
-				statementList = this.tripleStore.getStatementList(null, patientHasLastName, lastname);
-
-				Set<Resource> patientRessourceList = statementList.subjects();
-				for (Resource patientRessource : patientRessourceList) {
-					returnPatientList.add(this.getPatientByUri(patientRessource.toString()));
-				}
-			} catch (RepositoryException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return returnPatientList;
-
-		}
-
-		// TODO Implementate FirstnameSearch
-		if (!patient.getFirstName().isEmpty() || !patient.getFirstName().equals(null)) {
-		}
-
-		// TODO Implementate DateOfBirthSearch
-		if (!patient.getDateOfBirth().equals(null)) {
-		}
-
-		return returnPatientList;
 	}
 
 	// Searches Patients with first name , last name, and PatientNumber
