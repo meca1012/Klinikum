@@ -13,6 +13,7 @@ public enum BackgroundConcepts {
 
     private final String value;
     private static final Logger LOGGER = LoggerFactory.getLogger(SpiritualityConcepts.class);
+    private String conceptFilePath;
 
     BackgroundConcepts(String value) {
         this.value = value;
@@ -32,7 +33,8 @@ public enum BackgroundConcepts {
 
     private String getEnumValue() throws Exception {
         PropertyLoader propertyLoader = new PropertyLoader();
-        Properties propFile = propertyLoader.load("concept.properties");
+        conceptFilePath = propertyLoader.getLanguageFileName();
+        Properties propFile = propertyLoader.load(conceptFilePath);
         return propFile.getProperty(this.name().toString());
     }
 

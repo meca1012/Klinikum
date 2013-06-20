@@ -16,6 +16,7 @@ public enum TabConcepts {
 	SPIRITUAL_CARE_INTERVENTION ("Spiritual care intervention");
 	
     private final String value;
+    private String conceptFilePath;
     private static final Logger LOGGER = LoggerFactory.getLogger(SpiritualityConcepts.class);
 
     TabConcepts(String value) {
@@ -36,8 +37,10 @@ public enum TabConcepts {
 
     private String getEnumValue() throws Exception {
         PropertyLoader propertyLoader = new PropertyLoader();
-        Properties propFile = propertyLoader.load("concept.properties");
+        conceptFilePath = propertyLoader.getLanguageFileName();
+        Properties propFile = propertyLoader.load(conceptFilePath);
         return propFile.getProperty(this.name().toString());
     }
 
 }
+

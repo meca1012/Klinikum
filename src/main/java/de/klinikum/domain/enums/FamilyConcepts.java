@@ -17,6 +17,7 @@ public enum FamilyConcepts {
 	GRANDMOTHER("Grandmother");
 
 	private final String value;
+	private String conceptFilePath;
 	private static final Logger LOGGER = LoggerFactory.getLogger(SpiritualityConcepts.class);
 
 	FamilyConcepts(String value) {
@@ -37,7 +38,8 @@ public enum FamilyConcepts {
 
     private String getEnumValue() throws Exception {
         PropertyLoader propertyLoader = new PropertyLoader();
-        Properties propFile = propertyLoader.load("concept.properties");
+        conceptFilePath = propertyLoader.getLanguageFileName();
+        Properties propFile = propertyLoader.load(conceptFilePath);
         return propFile.getProperty(this.name().toString());
     }
 

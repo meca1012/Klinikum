@@ -12,8 +12,9 @@ public enum DiseaseConcepts {
     DIAGNOSIS("Diagnosis"), MEDICATION("medication"), SYMPTOM("symptom"), OTHER("other");
 
     private final String value;
+    private String conceptFilePath;
     private static final Logger LOGGER = LoggerFactory.getLogger(SpiritualityConcepts.class);
-
+    
     DiseaseConcepts(String value) {
         this.value = value;
     }
@@ -32,8 +33,10 @@ public enum DiseaseConcepts {
 
     private String getEnumValue() throws Exception {
         PropertyLoader propertyLoader = new PropertyLoader();
-        Properties propFile = propertyLoader.load("concept.properties");
+        conceptFilePath = propertyLoader.getLanguageFileName();
+        Properties propFile = propertyLoader.load(conceptFilePath);
         return propFile.getProperty(this.name().toString());
     }
 
 }
+
