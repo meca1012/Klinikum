@@ -26,7 +26,6 @@ import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.exceptions.TripleStoreException;
-import de.klinikum.service.implementation.PatientServiceImpl;
 import de.klinikum.service.interfaces.PatientService;
 
 /**
@@ -114,11 +113,12 @@ public class PatientREST {
 	 * from given Object
 	 * @throws IOException
 	 * @throws RepositoryException
+	 * @throws TripleStoreException 
 	 */
 	@POST
 	@Path("/updatePatient")
 	@Consumes(MediaType.APPLICATION_XML)
-	public Response updatePatientRDF(Patient patient) throws IOException, RepositoryException {
+	public Response updatePatientRDF(Patient patient) throws IOException, RepositoryException, TripleStoreException {
 
 		if (this.patientService.updatePatientRDF(patient)) {
 			return Response.status(Response.Status.OK).entity("ok").build();

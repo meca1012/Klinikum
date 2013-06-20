@@ -93,7 +93,10 @@ public class ConceptREST {
     @Produces(MediaType.APPLICATION_XML)
     public List<Concept> getTabConcepts(Patient patient) throws IOException, SpirontoException {
         
-        return this.conceptService.getTabConcepts();
+        if (patient.getUri() == null) {
+            return null;
+        }
+        return this.conceptService.getTabConcepts(patient);
     }
 
     /**
@@ -110,6 +113,9 @@ public class ConceptREST {
     @Produces(MediaType.APPLICATION_XML)
     public List<Concept> getConcepts(Patient patient) throws IOException, SpirontoException {
 
+        if (patient.getUri() == null) {
+            return null;
+        }
         return this.conceptService.findAllConceptsOfPatient(patient);
     }
     
@@ -130,6 +136,9 @@ public class ConceptREST {
     public List<Concept> createConcept(List<Concept> concepts) throws IOException, RepositoryException, ModelException, SpirontoException {
         
         for (Concept c : concepts) {
+            if (c.getUri() == null) {
+                return null;
+            }
             c = this.conceptService.createConcept(c);
             if (c.getConnectedConcepts() != null) {
                 for (Concept con : c.getConnectedConcepts()) {
@@ -157,7 +166,7 @@ public class ConceptREST {
     @Produces(MediaType.APPLICATION_XML)
     public Concept createTabConcept(Concept concept) throws IOException {
 
-        return this.conceptService.addTabConcept(concept);
+        return this.conceptService.createTabConcept(concept);
     }
 
     /**
@@ -199,7 +208,13 @@ public class ConceptREST {
     @Produces(MediaType.APPLICATION_XML)
     public Concept getConceptByUriFetchDirectConnected(Concept concept) throws IOException, RepositoryException, SpirontoException {
 
+        if (concept.getUri() == null) {
+            return null;
+        }
         concept = this.conceptService.getConceptByUri(concept.getUri());
+        if (concept == null) {
+            return null;
+        }
         concept.setConnectedConcepts(this.conceptService.getDirectConnected(concept, false));
         return concept;
     }

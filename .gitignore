@@ -30,3 +30,4 @@ build/
 
 # PDT-specific
 .buildpath
+.project

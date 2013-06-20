@@ -121,8 +121,8 @@ public class AppStartup {
             concept5 = this.conceptService.createConcept(concept5);
             concept6 = this.conceptService.createConcept(concept6);
 
-            concept1 = this.conceptService.addTabConcept(concept1);
-            concept4 = this.conceptService.addTabConcept(concept4);
+            concept1 = this.conceptService.createTabConcept(concept1);
+            concept4 = this.conceptService.createTabConcept(concept4);
 
             concept1.addConnectedConcepts(concept2);
             this.conceptService.connectSingleConcept(concept1, concept2);
