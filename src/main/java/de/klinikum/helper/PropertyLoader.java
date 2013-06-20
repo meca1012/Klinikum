@@ -45,10 +45,10 @@ public class PropertyLoader {
             languange = "en";
         }
 
-        if (languange == "en") {
+        if (languange.equals(english)) {
             return english + conceptConfigFile;
         }
-        if (languange == "de") {
+        if (languange.equals(german)) {
             return german + conceptConfigFile;
         }
         return english + conceptConfigFile;
