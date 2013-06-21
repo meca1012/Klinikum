@@ -16,7 +16,7 @@ public class LuceneSearchRequest implements Serializable {
      */
     private static final long serialVersionUID = -352944296024350425L;
    
-    @XmlElement(name = "patientURI")
+    @XmlElement(name = "patientUri")
     private String patientUri;
     
     @XmlElement(name = "searchString")
