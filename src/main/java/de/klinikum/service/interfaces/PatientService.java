@@ -11,13 +11,40 @@ import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.exceptions.TripleStoreException;
 
 public interface PatientService {
-
+    /**
+     * Returns a Patient to a patientUri
+     * 
+     * @param patientUri
+     * @return
+     * @throws TripleStoreException
+     */
     Patient getPatientByUri(String patientUri) throws TripleStoreException;
 
+    /**
+     * Creates a new Patient.
+     * 
+     * @param patient
+     * @return
+     * @throws TripleStoreException
+     */
     Patient createPatientRDF(Patient patient) throws TripleStoreException;
 
+    /**
+     * Returns a Patient by various search criteria.
+     * 
+     * @param patient
+     * @return
+     * @throws TripleStoreException
+     */
     List<Patient> searchPatient(Patient patient) throws TripleStoreException;
 
+    /**
+     * 
+     * @param patient
+     * @return
+     * @throws TripleStoreException
+     * @throws SpirontoException
+     */
     List<Patient> searchPatientSPARQL(Patient patient) throws TripleStoreException, SpirontoException;
 
     boolean updatePatientRDF(Patient patient) throws IOException, RepositoryException;
@@ -30,9 +57,10 @@ public interface PatientService {
 
     boolean updateAddressRDF(Address address) throws IOException, RepositoryException;
 
-	/**
-	 * adds standard tabConcepts and concepts to patient
-	 * @throws IOException 
-	 */
-	void createStandardConcepts(Patient patient) throws IOException;
+    /**
+     * adds standard tabConcepts and concepts to patient
+     * 
+     * @throws IOException
+     */
+    void createStandardConcepts(Patient patient) throws IOException;
 }
