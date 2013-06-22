@@ -1,7 +1,6 @@
 package de.klinikum.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -49,7 +48,7 @@ public class Note implements Serializable {
     private String patientUri;
 
     @XmlElement(name = "concepts")
-    private List<Concept> concepts;
+    private ConceptList concepts;
 
     public Note() {
     }
@@ -112,25 +111,18 @@ public class Note implements Serializable {
         if (this.concepts == null) {
             return null;
         }
-        return this.concepts;
+        return this.concepts.getConceptList();
     }
 
     public void setConcepts(List<Concept> concepts) {
-        if (this.concepts == null) {
-            this.concepts = concepts;
-            return;
-        }
-        this.concepts.clear();
-        if (this.concepts != null) {
-            this.concepts.addAll(concepts);
-        }
-    }
-
+        this.concepts = new ConceptList(concepts);
+    }    
+    
     public Note addConcept(Concept concept) {
         if (this.concepts == null) {
-            this.concepts = new ArrayList<Concept>();
+            this.concepts = new ConceptList();
         }
-        this.concepts.add(concept);
+        this.concepts.getConceptList().add(concept);
         return this;
     }
 

@@ -155,7 +155,8 @@ public class NoteServiceImpl implements NoteService {
         try {
             statementList = this.tripleStore.getStatementList(note.getUri(), NOTE_POINTS_TO_CONCEPT.toString(), null);
             for (Statement conceptStatement : statementList) {
-                note.addConcept(this.conceptService.getConceptByUri(conceptStatement.getObject().toString()));
+                Concept concept = this.conceptService.getConceptByUri(conceptStatement.getObject().stringValue());
+                note = note.addConcept(concept);
             }
         }
         catch (RepositoryException e) {

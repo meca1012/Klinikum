@@ -157,7 +157,13 @@ public class AppStartup {
         note2.setConcepts(concept4.getConnectedConcepts());
 
         note1 = this.noteService.createNote(note1);
+        for (Concept c : note1.getConcepts()) {
+            note1 = this.noteService.addConceptToNote(note1, c);
+        }
         note2 = this.noteService.createNote(note2);
+        for (Concept c : note2.getConcepts()) {
+            note2 = this.noteService.addConceptToNote(note2, c);
+        }
 
     }
 

@@ -205,4 +205,19 @@ public class NoteREST {
         return note;
     }
     
+    @Path("/getConceptsToNote")
+    @POST
+    @Produces(MediaType.APPLICATION_XML)
+    public Note getConceptsToNote(Note note) {
+        if (note != null) {
+            if (note.getUri() != null) {
+                note = this.noteService.getConceptsToNote(note);
+                if (note != null) {
+                    return note;
+                }
+            }
+        }
+        return null;
+    }
+    
 }
