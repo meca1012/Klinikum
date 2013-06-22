@@ -107,5 +107,55 @@ public class Concept implements Serializable {
 
 	public void setEditable(boolean isEditable) {
 		this.isEditable = isEditable;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime
+				* result
+				+ ((connectedConcepts == null) ? 0 : connectedConcepts
+						.hashCode());
+		result = prime * result + (isEditable ? 1231 : 1237);
+		result = prime * result + ((label == null) ? 0 : label.hashCode());
+		result = prime * result
+				+ ((patientUri == null) ? 0 : patientUri.hashCode());
+		result = prime * result + ((uri == null) ? 0 : uri.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Concept other = (Concept) obj;
+		if (connectedConcepts == null) {
+			if (other.connectedConcepts != null)
+				return false;
+		} else if (!connectedConcepts.equals(other.connectedConcepts))
+			return false;
+		if (isEditable != other.isEditable)
+			return false;
+		if (label == null) {
+			if (other.label != null)
+				return false;
+		} else if (!label.equals(other.label))
+			return false;
+		if (patientUri == null) {
+			if (other.patientUri != null)
+				return false;
+		} else if (!patientUri.equals(other.patientUri))
+			return false;
+		if (uri == null) {
+			if (other.uri != null)
+				return false;
+		} else if (!uri.equals(other.uri))
+			return false;
+		return true;
 	}	
 }

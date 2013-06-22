@@ -6,6 +6,7 @@ import static de.klinikum.domain.NameSpaces.ONTOLOGIE_CONCEPT_HAS_LABEL;
 import static de.klinikum.domain.NameSpaces.ONTOLOGIE_CONCEPT_LINKED_TO;
 import static de.klinikum.domain.NameSpaces.ONTOLOGIE_CONCEPT_TYPE;
 import static de.klinikum.domain.NameSpaces.PATIENT_HAS_CONCEPT;
+import static de.klinikum.domain.NameSpaces.PATIENT_TYPE;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,7 +17,6 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.openrdf.model.Literal;
 import org.openrdf.model.Model;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
@@ -63,32 +63,26 @@ public class ConceptServiceImpl implements ConceptService {
     @Override
     public Concept createConcept(Concept concept) throws IOException {
 
-        // TODO: prüfen ob Concept bereits vorhanden
+        if (concept.getPatientUri() == null) {
+            return null;
+        }
+        
+        if (!this.tripleStore.repositoryHasStatement(concept.getPatientUri(), RDF.TYPE.toString(), PATIENT_TYPE.toString())) {
+            return null;
+        }
 
         // Concept anlegen
         URI conceptUri = this.tripleStore.getUniqueURI(ONTOLOGIE_CONCEPT_TYPE.toString());
 
-        concept.setUri(conceptUri.toString());
+        concept.setUri(conceptUri.toString());        
 
-        URI conceptTypeUri = this.tripleStore.getValueFactory().createURI(ONTOLOGIE_CONCEPT_TYPE.toString());
+        this.tripleStore.addTriple(conceptUri.toString(), RDF.TYPE.toString(), ONTOLOGIE_CONCEPT_TYPE.toString());
 
-        this.tripleStore.addTriple(conceptUri, RDF.TYPE, conceptTypeUri);
+        this.tripleStore.addTriple(concept.getPatientUri(), PATIENT_HAS_CONCEPT.toString(), conceptUri.toString());
 
-        // TODO: prüfen ob Patient vorhanden, wir gehen einfachm mal davon aus dass einer existiert
-        URI patientUri = this.tripleStore.getValueFactory().createURI(concept.getPatientUri());
-        URI patientHasConceptUri = this.tripleStore.getValueFactory().createURI(PATIENT_HAS_CONCEPT.toString());
-
-        this.tripleStore.addTriple(patientUri, patientHasConceptUri, conceptUri);
-
-        URI conceptHasLabelUri = this.tripleStore.getValueFactory().createURI(ONTOLOGIE_CONCEPT_HAS_LABEL.toString());
-        Literal conceptLabelLiteral = this.tripleStore.getValueFactory().createLiteral(concept.getLabel());
-
-        this.tripleStore.addTriple(conceptUri, conceptHasLabelUri, conceptLabelLiteral);
-
-        // adds isEditable as Literal to every concept
-        URI conceptIsEditableLiteralUri = this.tripleStore.getValueFactory().createURI(CONCEPT_IS_EDITABLE.toString());
-        Literal conceptIsEditableLiteral = this.tripleStore.getValueFactory().createLiteral(concept.isEditable());
-        this.tripleStore.addTriple(conceptUri, conceptIsEditableLiteralUri, conceptIsEditableLiteral);
+        this.tripleStore.addTripleWithStringLiteral(conceptUri.toString(), ONTOLOGIE_CONCEPT_HAS_LABEL.toString(), concept.getLabel());
+        
+        this.tripleStore.addTripleWithBooleanLiteral(conceptUri.toString(), CONCEPT_IS_EDITABLE.toString(), concept.isEditable());
 
         return concept;
     }
@@ -106,6 +100,9 @@ public class ConceptServiceImpl implements ConceptService {
 
         concept.setEditable(false);
         concept = this.createConcept(concept);
+        if (concept == null) {
+            return null;
+        }
         this.tripleStore.addTriple(concept.getUri(), RDF.TYPE.toString(), GUI_TAB_TYPE.toString());
         return concept;
     }
@@ -147,12 +144,10 @@ public class ConceptServiceImpl implements ConceptService {
                 }
             }
         }
-        catch (RepositoryException e) {
-            // TODO Auto-generated catch block
+        catch (RepositoryException e) {            
             e.printStackTrace();
         }
         catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return connectedConcepts;
@@ -170,11 +165,9 @@ public class ConceptServiceImpl implements ConceptService {
             }
         }
         catch (RepositoryException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return concepts;
@@ -281,7 +274,7 @@ public class ConceptServiceImpl implements ConceptService {
         if (concept.getLabel() != null) {
             if (!concept.getLabel().equals(existingConcept.getLabel())) {
                 this.tripleStore.removeTriples(existingConcept.getUri(), ONTOLOGIE_CONCEPT_HAS_LABEL.toString(),null);
-                this.tripleStore.addTripleWithLiteral(concept.getUri(), ONTOLOGIE_CONCEPT_HAS_LABEL.toString(), concept.getLabel());
+                this.tripleStore.addTripleWithStringLiteral(concept.getUri(), ONTOLOGIE_CONCEPT_HAS_LABEL.toString(), concept.getLabel());
             }
         }
         
