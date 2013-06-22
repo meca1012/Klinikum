@@ -208,7 +208,7 @@ public class NoteREST {
     @Path("/getConceptsToNote")
     @POST
     @Produces(MediaType.APPLICATION_XML)
-    public Note getConceptsToNote(Note note) {
+    public Note getConceptsToNote(Note note) throws SpirontoException {
         if (note != null) {
             if (note.getUri() != null) {
                 note = this.noteService.getConceptsToNote(note);

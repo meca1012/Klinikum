@@ -55,9 +55,10 @@ public interface NoteService {
      * 
      * @param note
      * @return
+     * @throws SpirontoException 
      */
 
-    Note getConceptsToNote(Note note);
+    Note getConceptsToNote(Note note) throws SpirontoException;
 
     /**
      * Updates an note. All existing links to other concepts are being removed and the new ones are set. The

@@ -148,7 +148,9 @@ public class NoteServiceImpl implements NoteService {
     }
     
     @Override
-    public Note getConceptsToNote(Note note) {
+    public Note getConceptsToNote(Note note) throws SpirontoException {
+        
+        note = getNoteByUri(note.getUri());
         
         Model statementList;        
        
