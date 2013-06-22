@@ -340,7 +340,7 @@ public class SesameTripleStore {
     }
 
     /**
-     * Executes string query SPARQL
+     * Executes a select SPARQL query
      * @param queryString -> SPARQL Query
      * @return Hashmap with results
      * @throws SpirontoException

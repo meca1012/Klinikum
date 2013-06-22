@@ -18,10 +18,11 @@ import de.klinikum.service.interfaces.SesameService;
 public class SesameServiceImpl implements SesameService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SesameServiceImpl.class);
-	
+
     @Inject
     SesameTripleStore tripleStore;
 
+    @Deprecated
     @Override
     public Set<HashMap<String, Value>> executeSPARQLQuery(String queryString) throws SpirontoException {
 
