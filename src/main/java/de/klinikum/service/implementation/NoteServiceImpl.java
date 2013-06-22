@@ -12,9 +12,7 @@ import static de.klinikum.domain.NameSpaces.PATIENT_TYPE;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -23,7 +21,6 @@ import org.joda.time.DateTime;
 import org.openrdf.model.Model;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
-import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.repository.RepositoryException;
 import org.slf4j.Logger;
@@ -67,7 +64,8 @@ public class NoteServiceImpl implements NoteService {
         URI noteUri = this.tripleStore.getUniqueURI(NOTE_TYPE.toString());
 
         note.setUri(noteUri.toString());
-        note.setCreated(new DateTime(System.currentTimeMillis()));
+//        note.setCreated(new DateTime(System.currentTimeMillis()));
+        note.setCreated(new DateTime());
 
         this.tripleStore.addTriple(noteUri.toString(), RDF.TYPE.toString(), NOTE_TYPE.toString());
         this.tripleStore.addTriple(note.getPatientUri(), PATIENT_HAS_NOTE.toString(), note.getUri());
@@ -106,7 +104,8 @@ public class NoteServiceImpl implements NoteService {
         try {
             statementList = this.tripleStore.getStatementList(patient.getUri(), PATIENT_HAS_NOTE.toString(), null);
             for (Statement noteStatement : statementList) {
-                notes.add(getNoteByUri(noteStatement.getObject().toString()));
+                Note note = getNoteByUri(noteStatement.getObject().stringValue());
+                notes.add(note);
             }
         }
         catch (RepositoryException e) {
@@ -126,31 +125,41 @@ public class NoteServiceImpl implements NoteService {
 
         Note note = new Note();
         note.setUri(noteUri);
-
-        String sparqlQuery = "SELECT ?text ?patientUri ?created ?title ?priority WHERE {";
-
-        sparqlQuery += "<" + noteUri + "> <" + NOTE_HAS_TEXT + "> ?text . ";
-        sparqlQuery += "<" + noteUri + "> <" + NOTE_HAS_DATE + "> ?created . ";
-        sparqlQuery += "<" + noteUri + "> <" + NOTE_HAS_TITLE + "> ?title . ";
-        sparqlQuery += "<" + noteUri + "> <" + NOTE_HAS_PRIORITY + "> ?priority . ";
-        sparqlQuery += "?patientUri <" + PATIENT_HAS_NOTE + "> <" + noteUri + ">}";
-
-        Set<HashMap<String, Value>> queryResult = this.tripleStore.executeSelectSPARQLQuery(sparqlQuery);
-        for (HashMap<String, Value> item : queryResult) {
-            note.setText(item.get("text").stringValue());
-            note.setCreated(DateUtil.getDateTimeFromString(item.get("created").stringValue()));
-            note.setPatientUri(item.get("patientUri").stringValue());
-            note.setTitle(item.get("title").stringValue());
-            note.setPriority(Integer.parseInt(item.get("priority").stringValue()));
-        }        
+        
+        try {
+            String title = this.tripleStore.getObjectString(note.getUri(), NOTE_HAS_TITLE.toString());
+            String text = this.tripleStore.getObjectString(note.getUri(), NOTE_HAS_TEXT.toString());
+            int priority = this.tripleStore.getValue(note.getUri(), NOTE_HAS_PRIORITY.toString());
+            String created = this.tripleStore.getObjectString(note.getUri(), NOTE_HAS_DATE.toString());
+            
+            String patientUri = "";
+            Model statementList;        
+            
+            statementList = this.tripleStore.getStatementList(null, PATIENT_HAS_NOTE.toString(), note.getUri());
+            for (Statement statement : statementList) {
+                patientUri = statement.getSubject().stringValue();
+            }             
+                    
+            note.setTitle(title);
+            note.setText(text);
+            note.setPriority(priority);
+            note.setPatientUri(patientUri);
+            note.setCreated(DateUtil.getDateTimeFromString(created));
+        }
+        catch (RepositoryException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        
         note = getConceptsToNote(note);
+        
         return note;
     }
     
     @Override
     public Note getConceptsToNote(Note note) throws SpirontoException {
-        
-        note = getNoteByUri(note.getUri());
         
         Model statementList;        
        

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import org.openrdf.repository.RepositoryException;
+
 import de.klinikum.domain.Concept;
 import de.klinikum.domain.Note;
 import de.klinikum.domain.Patient;
@@ -36,8 +38,10 @@ public interface NoteService {
      * @param uri
      * @return
      * @throws SpirontoException
+     * @throws IOException 
+     * @throws RepositoryException 
      */
-    Note getNoteByUri(String uri) throws SpirontoException;
+    Note getNoteByUri(String uri) throws SpirontoException, RepositoryException, IOException;
 
     /**
      * Connect a concept to an note.
@@ -56,9 +60,11 @@ public interface NoteService {
      * @param note
      * @return
      * @throws SpirontoException 
+     * @throws IOException 
+     * @throws RepositoryException 
      */
 
-    Note getConceptsToNote(Note note) throws SpirontoException;
+    Note getConceptsToNote(Note note) throws SpirontoException, RepositoryException, IOException;
 
     /**
      * Updates an note. All existing links to other concepts are being removed and the new ones are set. The

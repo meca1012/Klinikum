@@ -78,11 +78,12 @@ public class NoteREST {
      * Mostly used for fetching data
      * @throws IOException
      * @throws SpirontoException
+     * @throws RepositoryException 
      */
     @Path("/getNoteByUri")
     @POST
     @Produces(MediaType.APPLICATION_XML)
-    public Note getNote(Note note) throws IOException, SpirontoException {
+    public Note getNote(Note note) throws IOException, SpirontoException, RepositoryException {
         return this.noteService.getNoteByUri(note.getUri());
     }
 
@@ -158,11 +159,12 @@ public class NoteREST {
      * Purpose: Connects given Concept with given note
      * @throws IOException
      * @throws SpirontoException
+     * @throws RepositoryException 
      */
     @Path("/addConceptToNote")
     @POST
     @Produces(MediaType.APPLICATION_XML)
-    public Note addConceptToNote(Note note) throws IOException, SpirontoException {
+    public Note addConceptToNote(Note note) throws IOException, SpirontoException, RepositoryException {
         
         if (note.getUri() == null) {
             return null;
@@ -208,7 +210,7 @@ public class NoteREST {
     @Path("/getConceptsToNote")
     @POST
     @Produces(MediaType.APPLICATION_XML)
-    public Note getConceptsToNote(Note note) throws SpirontoException {
+    public Note getConceptsToNote(Note note) throws SpirontoException, RepositoryException, IOException {
         if (note != null) {
             if (note.getUri() != null) {
                 note = this.noteService.getConceptsToNote(note);
