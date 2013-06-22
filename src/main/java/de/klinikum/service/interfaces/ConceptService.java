@@ -12,7 +12,7 @@ import de.klinikum.exceptions.SpirontoException;
 
 public interface ConceptService {
 
-	/**
+    /**
      * Returns all TabConcepts to a patientUri. Fetches the connectedConcepts of each.
      * 
      * @return
@@ -22,7 +22,7 @@ public interface ConceptService {
     List<Concept> getTabConcepts(Patient patient) throws IOException, SpirontoException;
 
     /**
-     * Create a new concept to a patient by his uri. ConnectedConcepts are getting set.
+     * Creates a new concept to a patient by his uri. ConnectedConcepts are getting set.
      * 
      * @param concept
      * @return
