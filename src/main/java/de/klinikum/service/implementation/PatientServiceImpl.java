@@ -401,6 +401,7 @@ public class PatientServiceImpl implements PatientService {
 						Concept concept = new Concept();
 						concept.setPatientUri(patient.getUri());
 						concept.setLabel(fc.toString());
+						concept.setEditable(false);
 						this.conceptService.createConcept(concept);
 						this.conceptService.connectSingleConcept(tabConcept,
 								concept);
@@ -413,6 +414,7 @@ public class PatientServiceImpl implements PatientService {
 						Concept concept = new Concept();
 						concept.setPatientUri(patient.getUri());
 						concept.setLabel(dc.toString());
+						concept.setEditable(false);
 						this.conceptService.createConcept(concept);
 						this.conceptService.connectSingleConcept(tabConcept,
 								concept);
@@ -425,6 +427,7 @@ public class PatientServiceImpl implements PatientService {
 						Concept concept = new Concept();
 						concept.setPatientUri(patient.getUri());
 						concept.setLabel(sc.toString());
+						concept.setEditable(false);
 						this.conceptService.createConcept(concept);
 						this.conceptService.connectSingleConcept(tabConcept,
 								concept);
@@ -437,6 +440,7 @@ public class PatientServiceImpl implements PatientService {
 						Concept concept = new Concept();
 						concept.setPatientUri(patient.getUri());
 						concept.setLabel(bc.toString());
+						concept.setEditable(false);
 						this.conceptService.createConcept(concept);
 						this.conceptService.connectSingleConcept(tabConcept,
 								concept);
@@ -450,6 +454,7 @@ public class PatientServiceImpl implements PatientService {
 						Concept concept = new Concept();
 						concept.setPatientUri(patient.getUri());
 						concept.setLabel(sci.toString());
+						concept.setEditable(false);
 						this.conceptService.createConcept(concept);
 						this.conceptService.connectSingleConcept(tabConcept,
 								concept);
