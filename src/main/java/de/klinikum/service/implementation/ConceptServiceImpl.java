@@ -123,20 +123,23 @@ public class ConceptServiceImpl implements ConceptService {
                     connectedConcepts.add(conceptToAdd);
                 }
                 else {
-                    connectedConcepts.add(this.getConceptByUri(conceptStatement.getObject().toString()));
+                    Concept conceptToAdd = new Concept();
+                    conceptToAdd = this.getConceptByUri(conceptStatement.getObject().stringValue());
+                    connectedConcepts.add(conceptToAdd);
                 }
             }
             statementList = this.tripleStore.getStatementList(null, ONTOLOGIE_CONCEPT_LINKED_TO.toString(),
                     concept.getUri());
-            for (Statement conceptStatement : statementList) {
-                Concept conceptToAdd = new Concept();
+            for (Statement conceptStatement : statementList) {                
                 if (onlyUris) {
+                    Concept conceptToAdd = new Concept();
                     conceptToAdd.setUri(conceptStatement.getSubject().stringValue());
                     if (!connectedConcepts.contains(conceptToAdd)) {
                         connectedConcepts.add(conceptToAdd);
                     }
                 }
                 else {
+                    Concept conceptToAdd = new Concept();
                     conceptToAdd = this.getConceptByUri(conceptStatement.getSubject().stringValue());
                     if (!connectedConcepts.contains(conceptToAdd)) {
                         connectedConcepts.add(conceptToAdd);
