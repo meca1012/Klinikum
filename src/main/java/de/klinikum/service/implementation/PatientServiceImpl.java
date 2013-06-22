@@ -25,8 +25,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.joda.time.DateTime;
-import org.openrdf.model.Model;
-import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.RDF;
@@ -105,34 +103,32 @@ public class PatientServiceImpl implements PatientService {
 			throw new TripleStoreException(e);
 		}
 	}
-
+	
 	@Override
-	public Patient getPatientByPatientNumber(String patientNumber) throws TripleStoreException {
-		try {
-			Model statementList;
+    public Patient getPatientByPatientNumber(String patientNumber) throws TripleStoreException {        
+        try {            
+            Patient patientToReturn = new Patient();
+            
+            String sparqlQuery = "SELECT DISTINCT ?Uri WHERE {";
+            
+            sparqlQuery += "?Uri <" + PATIENT_HAS_PATIENT_NUMBER + ">\"" + patientNumber + "\"";
 
-			statementList = this.tripleStore.getStatementList(null, PATIENT_HAS_PATIENT_NUMBER.toString(), patientNumber);
+            sparqlQuery += "}";
 
-			Set<Resource> patientRessourceList = statementList.subjects();
+            Set<HashMap<String, Value>> result = this.tripleStore.executeSelectSPARQLQuery(sparqlQuery);
 
-			Patient p = new Patient();
+            for (HashMap<String, Value> item : result) {
+                String patientUri = item.get("Uri").stringValue();
+                patientToReturn = getPatientByUri(patientUri);
+            }
+            
+            return patientToReturn;
 
-			for (Resource patientRessource : patientRessourceList) {
-				p = this.getPatientByUri(patientRessource.toString());
-			}
-			return p;
-
-		} catch (RepositoryException e) {
-			e.printStackTrace();
-			throw new TripleStoreException(e);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new TripleStoreException(e);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new TripleStoreException(e);
-		}
-	}
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new TripleStoreException(e);
+        }
+    }
 
 	@Override
 	public Address getAddressByUri(Address address) throws TripleStoreException {
