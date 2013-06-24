@@ -50,9 +50,10 @@ public interface ConceptService {
     Concept createTabConcept(Concept concept) throws IOException;
 
     /**
+     * Returnes all concept to a concept that are direct connected to it. 
      * 
      * @param concept
-     * @param onlyUris
+     * @param onlyUris -> if set only the uris are set in the concept object.
      * @return
      * @throws IOException
      * @throws SpirontoException
@@ -71,7 +72,7 @@ public interface ConceptService {
     List<Concept> findAllConceptsOfPatient(Patient patient) throws IOException, SpirontoException;
 
     /**
-     * Return all concepts that are connected to a tabconcept
+     * Return all concepts that are connected to a tabconcept. Returns null if not tabconcept.
      * 
      * @param tabConcept
      * @return
@@ -85,6 +86,7 @@ public interface ConceptService {
 
     /**
      * Recursive method to return all concepts that are connected to a concept. Gets directly and indirectly connected.
+     * Searches bidirectional -> a->b and b->a.
      * 
      * @param conceptUri
      * @param connected
@@ -152,7 +154,7 @@ public interface ConceptService {
 
     /**
      * Updates a concept. If connectedConcepts are set, all existing links to other concepts are being removed and the
-     * new ones are set. The connectedConcepts themselves are ignored.
+     * new ones are set. The connectedConcepts themselves are not getting updated..
      * 
      * @throws ModelException
      * @throws RepositoryException

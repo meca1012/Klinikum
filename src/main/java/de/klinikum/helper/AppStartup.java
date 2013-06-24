@@ -21,7 +21,8 @@ import de.klinikum.service.implementation.PatientServiceImpl;
 
 /**
  * 
- * AppStartup.java Purpose: Creates TestData for Prototype- Test
+ * AppStartup.java Purpose: Creates TestData for Prototype- Test.
+ * Creates connected patients, concepts and notes.
  * 
  * @author Spironto Team 1
  * @version 1.0 08/06/13

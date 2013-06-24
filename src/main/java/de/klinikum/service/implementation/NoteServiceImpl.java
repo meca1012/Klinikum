@@ -138,7 +138,7 @@ public class NoteServiceImpl implements NoteService {
             statementList = this.tripleStore.getStatementList(null, PATIENT_HAS_NOTE.toString(), note.getUri());
             for (Statement statement : statementList) {
                 patientUri = statement.getSubject().stringValue();
-            }             
+            }
                     
             note.setTitle(title);
             note.setText(text);

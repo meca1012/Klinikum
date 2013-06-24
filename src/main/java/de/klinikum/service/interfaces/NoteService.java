@@ -24,7 +24,7 @@ public interface NoteService {
     Note createNote(Note note) throws IOException, URISyntaxException;
 
     /**
-     * Returns a note to a patient by his uri.
+     * Returns all notes connected to the patientUri.
      * 
      * @param patient
      * @return

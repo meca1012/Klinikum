@@ -50,67 +50,70 @@ import de.klinikum.service.interfaces.PatientService;
 
 @Named
 public class PatientServiceImpl implements PatientService {
-	
+
     private static final Logger LOGGER = LoggerFactory.getLogger(PatientServiceImpl.class);
 
-	@Inject
-	ConceptService conceptService;
-	
-	@Inject
-	SesameTripleStore tripleStore;
+    @Inject
+    ConceptService conceptService;
 
-	@PostConstruct
-	public void afterCreate() {
-	}
+    @Inject
+    SesameTripleStore tripleStore;
 
-	@Override
-	public Patient getPatientByUri(String patientUri) throws TripleStoreException {
-		try {
-			Patient returnPatient = new Patient();
-			URI patientURI = this.tripleStore.getValueFactory().createURI(patientUri.toString());
-			String firstName = this.tripleStore.getObjectString(patientURI.toString(),
-					PATIENT_HAS_FIRST_NAME.toString());
-			String lastName = this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_LAST_NAME.toString());
-			String patientNumber = this.tripleStore.getObjectString(patientURI.toString(),
-					PATIENT_HAS_PATIENT_NUMBER.toString());
+    @PostConstruct
+    public void afterCreate() {
+    }
 
-			DateTime dateOfBirth = DateUtil.getDateTimeFromString(this.tripleStore.getObjectString(patientURI.toString(),
-					PATIENT_HAS_DATE_OF_BIRTH.toString()));
+    @Override
+    public Patient getPatientByUri(String patientUri) throws TripleStoreException {
+        try {
+            Patient returnPatient = new Patient();
+            URI patientURI = this.tripleStore.getValueFactory().createURI(patientUri.toString());
+            String firstName = this.tripleStore.getObjectString(patientURI.toString(),
+                    PATIENT_HAS_FIRST_NAME.toString());
+            String lastName = this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_LAST_NAME.toString());
+            String patientNumber = this.tripleStore.getObjectString(patientURI.toString(),
+                    PATIENT_HAS_PATIENT_NUMBER.toString());
 
-			// Date patientDate = Date.parse(dateOfBirth);
+            DateTime dateOfBirth = DateUtil.getDateTimeFromString(this.tripleStore.getObjectString(
+                    patientURI.toString(), PATIENT_HAS_DATE_OF_BIRTH.toString()));
 
-			// if(patient.getAddress() != null) {
-			returnPatient.setAddress(new Address());
-			String addressUri = this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_ADDRESS.toString());
-			returnPatient.getAddress().setUri(addressUri);
-			returnPatient.setAddress(this.getAddressByUri(returnPatient.getAddress()));
-			// }
-			returnPatient.setUri(patientURI.toString());
-			returnPatient.setPatientNumber(patientNumber);
-			returnPatient.setFirstName(firstName);
-			returnPatient.setLastName(lastName);
-			returnPatient.setDateOfBirth(dateOfBirth);
-			return returnPatient;
+            // Date patientDate = Date.parse(dateOfBirth);
 
-		} catch (RepositoryException e) {
-			e.printStackTrace();
-			throw new TripleStoreException(e);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new TripleStoreException(e);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new TripleStoreException(e);
-		}
-	}
-	
-	@Override
-    public Patient getPatientByPatientNumber(String patientNumber) throws TripleStoreException {        
-        try {            
+            // if(patient.getAddress() != null) {
+            returnPatient.setAddress(new Address());
+            String addressUri = this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_ADDRESS.toString());
+            returnPatient.getAddress().setUri(addressUri);
+            returnPatient.setAddress(this.getAddressByUri(returnPatient.getAddress()));
+            // }
+            returnPatient.setUri(patientURI.toString());
+            returnPatient.setPatientNumber(patientNumber);
+            returnPatient.setFirstName(firstName);
+            returnPatient.setLastName(lastName);
+            returnPatient.setDateOfBirth(dateOfBirth);
+            return returnPatient;
+
+        }
+        catch (RepositoryException e) {
+            e.printStackTrace();
+            throw new TripleStoreException(e);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            throw new TripleStoreException(e);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new TripleStoreException(e);
+        }
+    }
+
+    @Override
+    public Patient getPatientByPatientNumber(String patientNumber) throws TripleStoreException {
+        try {
             Patient patientToReturn = new Patient();
-            
+
             String sparqlQuery = "SELECT DISTINCT ?Uri WHERE {";
-            
+
             sparqlQuery += "?Uri <" + PATIENT_HAS_PATIENT_NUMBER + ">\"" + patientNumber + "\"";
 
             sparqlQuery += "}";
@@ -121,208 +124,242 @@ public class PatientServiceImpl implements PatientService {
                 String patientUri = item.get("Uri").stringValue();
                 patientToReturn = getPatientByUri(patientUri);
             }
-            
+
             return patientToReturn;
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
             throw new TripleStoreException(e);
         }
     }
 
-	@Override
-	public Address getAddressByUri(Address address) throws TripleStoreException {
-	    
-	    Address addressToReturn = new Address();
-		try {
-			URI addressURI = this.tripleStore.getValueFactory().createURI(address.getUri().toString());
-			String addressStreet = this.tripleStore.getObjectString(addressURI.toString(),
-					ADDRESS_HAS_ADDRESS_STREET.toString());
-			String addressStreetNumber = this.tripleStore.getObjectString(addressURI.toString(),
-					ADDRESS_HAS_ADDRESS_STREET_NUMBER.toString());
-			String addressCity = this.tripleStore.getObjectString(addressURI.toString(),
-					ADDRESS_HAS_ADDRESS_CITY.toString());
-			String addressZip = this.tripleStore.getObjectString(addressURI.toString(),
-					ADDRESS_HAS_ADDRESS_ZIP.toString());
-			String addressCountry = this.tripleStore.getObjectString(addressURI.toString(),
-					ADDRESS_IN_COUNTRY.toString());
-			String addressPhone = this.tripleStore.getObjectString(addressURI.toString(),
-					ADDRESS_HAS_PHONENUMBER.toString());
-			addressToReturn.setUri(address.getUri());
-			addressToReturn.setStreet(addressStreet);
-			addressToReturn.setStreetNumber(addressStreetNumber);
-			addressToReturn.setCity(addressCity);
-			addressToReturn.setZip(addressZip);
-			addressToReturn.setCountry(addressCountry);
-			addressToReturn.setPhone(addressPhone);
-			return addressToReturn;
+    @Override
+    public Address getAddressByUri(Address address) throws TripleStoreException {
 
-		} catch (RepositoryException e) {
-			e.printStackTrace();
-			throw new TripleStoreException(e);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new TripleStoreException(e);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new TripleStoreException(e);
-		}
-	}
+        Address addressToReturn = new Address();
+        try {
+            URI addressURI = this.tripleStore.getValueFactory().createURI(address.getUri().toString());
+            String addressStreet = this.tripleStore.getObjectString(addressURI.toString(),
+                    ADDRESS_HAS_ADDRESS_STREET.toString());
+            String addressStreetNumber = this.tripleStore.getObjectString(addressURI.toString(),
+                    ADDRESS_HAS_ADDRESS_STREET_NUMBER.toString());
+            String addressCity = this.tripleStore.getObjectString(addressURI.toString(),
+                    ADDRESS_HAS_ADDRESS_CITY.toString());
+            String addressZip = this.tripleStore.getObjectString(addressURI.toString(),
+                    ADDRESS_HAS_ADDRESS_ZIP.toString());
+            String addressCountry = this.tripleStore.getObjectString(addressURI.toString(),
+                    ADDRESS_IN_COUNTRY.toString());
+            String addressPhone = this.tripleStore.getObjectString(addressURI.toString(),
+                    ADDRESS_HAS_PHONENUMBER.toString());
+            addressToReturn.setUri(address.getUri());
+            addressToReturn.setStreet(addressStreet);
+            addressToReturn.setStreetNumber(addressStreetNumber);
+            addressToReturn.setCity(addressCity);
+            addressToReturn.setZip(addressZip);
+            addressToReturn.setCountry(addressCountry);
+            addressToReturn.setPhone(addressPhone);
+            return addressToReturn;
 
-	@Override
-	public Patient createPatientRDF(Patient patient) throws TripleStoreException {
-		try {
-			// Get Unique PatientURI Prefix
-			URI patientUri = this.tripleStore.getUniqueURI(PATIENT_TYPE.toString());
+        }
+        catch (RepositoryException e) {
+            e.printStackTrace();
+            throw new TripleStoreException(e);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            throw new TripleStoreException(e);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new TripleStoreException(e);
+        }
+    }
 
-			// Adding URI to Patient Element
-			patient.setUri(patientUri.toString());
+    @Override
+    public Patient createPatientRDF(Patient patient) throws TripleStoreException {
+        try {
+            // Checks if the patientNumber already exists
+            Patient existingPatient = getPatientByPatientNumber(patient.getPatientNumber());
+            if (existingPatient != null) {
+                return null;
+            }
 
-			this.tripleStore.addTriple(patientUri.toString(), RDF.TYPE.toString(), PATIENT_TYPE.toString());
-			
-			this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_PATIENT_NUMBER.toString(), patient.getPatientNumber());
-			this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_LAST_NAME.toString(), patient.getLastName());
-			this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_FIRST_NAME.toString(), patient.getFirstName());
-			this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_DATE_OF_BIRTH.toString(), patient.getDateOfBirth().toString());
+            // Get Unique PatientURI Prefix
+            URI patientUri = this.tripleStore.getUniqueURI(PATIENT_TYPE.toString());
 
-			// check if patient has address, if true call createAddress
-			if (patient.getAddress() != null) {
-				patient.setAddress(this.createAddressRDF(patient.getAddress()));
+            // Adding URI to Patient Element
+            patient.setUri(patientUri.toString());
 
-				// Create Address Element Triple
-				this.tripleStore.addTriple(patient.getUri(), PATIENT_HAS_ADDRESS.toString(), patient.getAddress().getUri());
-			}
-			
-//			TODO: add createStandardConcepts here
-			this.createStandardConcepts(patient);
-			
-			return patient;
+            this.tripleStore.addTriple(patientUri.toString(), RDF.TYPE.toString(), PATIENT_TYPE.toString());
 
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new TripleStoreException(e);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new TripleStoreException(e);
-		}
-	}
+            this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_PATIENT_NUMBER.toString(),
+                    patient.getPatientNumber());
+            this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_LAST_NAME.toString(),
+                    patient.getLastName());
+            this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_FIRST_NAME.toString(),
+                    patient.getFirstName());
+            this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_DATE_OF_BIRTH.toString(), patient
+                    .getDateOfBirth().toString());
 
-	@Override
-	public Address createAddressRDF(Address address) throws TripleStoreException {
-		try {
-			URI addressUri = this.tripleStore.getUniqueURI(ADDRESS_TYPE.toString());
-			
-			address.setUri(addressUri.toString());
-			
-			this.tripleStore.addTriple(address.getUri(), RDF.TYPE.toString(), ADDRESS_TYPE.toString());
+            // check if patient has address, if true call createAddress
+            if (patient.getAddress() != null) {
+                patient.setAddress(this.createAddressRDF(patient.getAddress()));
 
-			this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_ADDRESS_STREET.toString(), address.getStreet());
-			this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_ADDRESS_STREET_NUMBER.toString(), address.getStreetNumber());
-			this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_ADDRESS_ZIP.toString(), address.getZip());
-			this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_ADDRESS_CITY.toString(), address.getCity());
-			this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_IN_COUNTRY.toString(), address.getCountry());
-			this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_PHONENUMBER.toString(), address.getPhone());
+                // Create Address Element Triple
+                this.tripleStore.addTriple(patient.getUri(), PATIENT_HAS_ADDRESS.toString(), patient.getAddress()
+                        .getUri());
+            }
 
-			return address;
+            // TODO: add createStandardConcepts here
+            this.createStandardConcepts(patient);
 
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new TripleStoreException(e);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new TripleStoreException(e);
-		}
-	}
+            return patient;
 
-	// Update Patient
-	@Override
-	public boolean updatePatientRDF(Patient patient) throws IOException, RepositoryException, TripleStoreException {
-	    
-	    if (patient.getUri() == null) {
-	        return false;
-	    }
-	    
-	    Patient existingPatient = getPatientByUri(patient.getUri());
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            throw new TripleStoreException(e);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new TripleStoreException(e);
+        }
+    }
 
-		// FirstName
-		if (patient.getFirstName() != null && !patient.getFirstName().isEmpty()) {
-		    if (!patient.getFirstName().equals(existingPatient.getFirstName())) {
-		        this.tripleStore.removeTriples(existingPatient.getUri(), PATIENT_HAS_FIRST_NAME.toString(), null);
-		        this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_FIRST_NAME.toString(), patient.getFirstName());
-		    }			
-		}
-		
-		// LastName
-		if (patient.getLastName() != null && !patient.getLastName().isEmpty()) {
-            if (!patient.getLastName().equals(existingPatient.getLastName())) {
-                this.tripleStore.removeTriples(existingPatient.getUri(), PATIENT_HAS_LAST_NAME.toString(), null);
-                this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_LAST_NAME.toString(), patient.getLastName());
+    @Override
+    public Address createAddressRDF(Address address) throws TripleStoreException {
+        try {
+            URI addressUri = this.tripleStore.getUniqueURI(ADDRESS_TYPE.toString());
+
+            address.setUri(addressUri.toString());
+
+            this.tripleStore.addTriple(address.getUri(), RDF.TYPE.toString(), ADDRESS_TYPE.toString());
+
+            this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_ADDRESS_STREET.toString(),
+                    address.getStreet());
+            this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_ADDRESS_STREET_NUMBER.toString(),
+                    address.getStreetNumber());
+            this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_ADDRESS_ZIP.toString(),
+                    address.getZip());
+            this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_ADDRESS_CITY.toString(),
+                    address.getCity());
+            this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_IN_COUNTRY.toString(),
+                    address.getCountry());
+            this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_PHONENUMBER.toString(),
+                    address.getPhone());
+
+            return address;
+
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            throw new TripleStoreException(e);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new TripleStoreException(e);
+        }
+    }
+
+    // Update Patient
+    @Override
+    public boolean updatePatientRDF(Patient patient) throws IOException, RepositoryException, TripleStoreException {
+
+        if (patient.getUri() == null) {
+            return false;
+        }
+
+        Patient existingPatient = getPatientByUri(patient.getUri());
+
+        // FirstName
+        if (patient.getFirstName() != null && !patient.getFirstName().isEmpty()) {
+            if (!patient.getFirstName().equals(existingPatient.getFirstName())) {
+                this.tripleStore.removeTriples(existingPatient.getUri(), PATIENT_HAS_FIRST_NAME.toString(), null);
+                this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_FIRST_NAME.toString(),
+                        patient.getFirstName());
             }
         }
-		
-		// PatientNumber
+
+        // LastName
+        if (patient.getLastName() != null && !patient.getLastName().isEmpty()) {
+            if (!patient.getLastName().equals(existingPatient.getLastName())) {
+                this.tripleStore.removeTriples(existingPatient.getUri(), PATIENT_HAS_LAST_NAME.toString(), null);
+                this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_LAST_NAME.toString(),
+                        patient.getLastName());
+            }
+        }
+
+        // PatientNumber
         if (patient.getPatientNumber() != null && !patient.getPatientNumber().isEmpty()) {
             if (!patient.getPatientNumber().equals(existingPatient.getPatientNumber())) {
                 this.tripleStore.removeTriples(existingPatient.getUri(), PATIENT_HAS_PATIENT_NUMBER.toString(), null);
-                this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_PATIENT_NUMBER.toString(), patient.getPatientNumber());
+                this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_PATIENT_NUMBER.toString(),
+                        patient.getPatientNumber());
             }
         }
-        
+
         // DateOfBirth
         if (patient.getDateOfBirth() != null) {
             if (!patient.getDateOfBirth().equals(existingPatient.getDateOfBirth())) {
                 this.tripleStore.removeTriples(existingPatient.getUri(), PATIENT_HAS_DATE_OF_BIRTH.toString(), null);
-                this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_DATE_OF_BIRTH.toString(), patient.getDateOfBirth().toString());
+                this.tripleStore.addTripleWithStringLiteral(patient.getUri(), PATIENT_HAS_DATE_OF_BIRTH.toString(),
+                        patient.getDateOfBirth().toString());
             }
-        }		
+        }
 
-		// Address
-		if (patient.getAddress() != null) {
-			this.updateAddressRDF(patient.getAddress());
-		}
+        // Address
+        if (patient.getAddress() != null) {
+            this.updateAddressRDF(patient.getAddress());
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	// Update Address
-	@Override
-	public boolean updateAddressRDF(Address address) throws IOException, RepositoryException, TripleStoreException {
-	    
-	    if (address.getUri() == null) {
-	        return false;
-	    }
-	    
-	    Address existingAddress = getAddressByUri(address);
-	    
-	    // Street
+    // Update Address
+    @Override
+    public boolean updateAddressRDF(Address address) throws IOException, RepositoryException, TripleStoreException {
+
+        if (address.getUri() == null) {
+            return false;
+        }
+
+        Address existingAddress = getAddressByUri(address);
+
+        // Street
         if (address.getStreet() != null && !address.getStreet().isEmpty()) {
             if (!address.getStreet().equals(existingAddress.getStreet())) {
                 this.tripleStore.removeTriples(existingAddress.getUri(), ADDRESS_HAS_ADDRESS_STREET.toString(), null);
-                this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_ADDRESS_STREET.toString(), address.getStreet());
+                this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_ADDRESS_STREET.toString(),
+                        address.getStreet());
             }
         }
-        
+
         // StreetNumber
         if (address.getStreetNumber() != null && !address.getStreetNumber().isEmpty()) {
             if (!address.getStreetNumber().equals(existingAddress.getStreetNumber())) {
-                this.tripleStore.removeTriples(existingAddress.getUri(), ADDRESS_HAS_ADDRESS_STREET_NUMBER.toString(), null);
-                this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_ADDRESS_STREET_NUMBER.toString(), address.getStreetNumber());
+                this.tripleStore.removeTriples(existingAddress.getUri(), ADDRESS_HAS_ADDRESS_STREET_NUMBER.toString(),
+                        null);
+                this.tripleStore.addTripleWithStringLiteral(address.getUri(),
+                        ADDRESS_HAS_ADDRESS_STREET_NUMBER.toString(), address.getStreetNumber());
             }
         }
-        
+
         // ZIP
         if (address.getZip() != null && !address.getZip().isEmpty()) {
             if (!address.getZip().equals(existingAddress.getZip())) {
                 this.tripleStore.removeTriples(existingAddress.getUri(), ADDRESS_HAS_ADDRESS_ZIP.toString(), null);
-                this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_ADDRESS_ZIP.toString(), address.getZip());
+                this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_ADDRESS_ZIP.toString(),
+                        address.getZip());
             }
-        }		
+        }
 
         // City
         if (address.getCity() != null && !address.getCity().isEmpty()) {
             if (!address.getCity().equals(existingAddress.getCity())) {
                 this.tripleStore.removeTriples(existingAddress.getUri(), ADDRESS_HAS_ADDRESS_CITY.toString(), null);
-                this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_ADDRESS_CITY.toString(), address.getCity());
+                this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_ADDRESS_CITY.toString(),
+                        address.getCity());
             }
         }
 
@@ -330,7 +367,8 @@ public class PatientServiceImpl implements PatientService {
         if (address.getCountry() != null && !address.getCountry().isEmpty()) {
             if (!address.getCountry().equals(existingAddress.getCountry())) {
                 this.tripleStore.removeTriples(existingAddress.getUri(), ADDRESS_IN_COUNTRY.toString(), null);
-                this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_IN_COUNTRY.toString(), address.getCountry());
+                this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_IN_COUNTRY.toString(),
+                        address.getCountry());
             }
         }
 
@@ -338,126 +376,121 @@ public class PatientServiceImpl implements PatientService {
         if (address.getPhone() != null && !address.getPhone().isEmpty()) {
             if (!address.getPhone().equals(existingAddress.getPhone())) {
                 this.tripleStore.removeTriples(existingAddress.getUri(), ADDRESS_HAS_PHONENUMBER.toString(), null);
-                this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_PHONENUMBER.toString(), address.getPhone());
+                this.tripleStore.addTripleWithStringLiteral(address.getUri(), ADDRESS_HAS_PHONENUMBER.toString(),
+                        address.getPhone());
             }
         }
 
-		return true;
+        return true;
 
-	}
+    }
 
-	// Searches Patients with first name , last name, and PatientNumber
-	// Uses SPARQL to Query Sesame
-	@Override
-	public List<Patient> searchPatientSPARQL(Patient patient) throws SpirontoException {
-		List<Patient> returnPatientList = new ArrayList<Patient>();
-		String sparqlQuery = "SELECT ?Uri WHERE {";
+    // Searches Patients with first name , last name, and PatientNumber
+    // Uses SPARQL to Query Sesame
+    @Override
+    public List<Patient> searchPatientSPARQL(Patient patient) throws SpirontoException {
+        List<Patient> returnPatientList = new ArrayList<Patient>();
+        String sparqlQuery = "SELECT ?Uri WHERE {";
 
-		if (patient.getPatientNumber() != null && !patient.getPatientNumber().isEmpty()) {
-			sparqlQuery += "?Uri <" + PATIENT_HAS_PATIENT_NUMBER + ">\"" + patient.getPatientNumber() + "\". ";
-		}
-		if (patient.getLastName() != null && !patient.getLastName().isEmpty()) {
-			sparqlQuery += "?Uri <" + PATIENT_HAS_LAST_NAME + ">\"" + patient.getLastName() + "\". ";
-		}
-		if (patient.getFirstName() != null && !patient.getFirstName().isEmpty()) {
-			sparqlQuery += "?Uri <" + PATIENT_HAS_FIRST_NAME + ">\"" + patient.getFirstName() + "\". ";
-		}
+        if (patient.getPatientNumber() != null && !patient.getPatientNumber().isEmpty()) {
+            sparqlQuery += "?Uri <" + PATIENT_HAS_PATIENT_NUMBER + ">\"" + patient.getPatientNumber() + "\". ";
+        }
+        if (patient.getLastName() != null && !patient.getLastName().isEmpty()) {
+            sparqlQuery += "?Uri <" + PATIENT_HAS_LAST_NAME + ">\"" + patient.getLastName() + "\". ";
+        }
+        if (patient.getFirstName() != null && !patient.getFirstName().isEmpty()) {
+            sparqlQuery += "?Uri <" + PATIENT_HAS_FIRST_NAME + ">\"" + patient.getFirstName() + "\". ";
+        }
 
-		if (patient.getDateOfBirth() != null) {
+        if (patient.getDateOfBirth() != null) {
 
-			sparqlQuery += "?Uri <" + PATIENT_HAS_DATE_OF_BIRTH + ">\"" + patient.getDateOfBirth().toString() + "\"";
-		}
+            sparqlQuery += "?Uri <" + PATIENT_HAS_DATE_OF_BIRTH + ">\"" + patient.getDateOfBirth().toString() + "\"";
+        }
 
-		sparqlQuery += "}";
+        sparqlQuery += "}";
 
-		Set<HashMap<String, Value>> result = this.tripleStore.executeSelectSPARQLQuery(sparqlQuery);
+        Set<HashMap<String, Value>> result = this.tripleStore.executeSelectSPARQLQuery(sparqlQuery);
 
-		for (HashMap<String, Value> item : result) {
-			returnPatientList.add(this.getPatientByUri(item.get("Uri").toString()));
-		}
+        for (HashMap<String, Value> item : result) {
+            returnPatientList.add(this.getPatientByUri(item.get("Uri").toString()));
+        }
 
-		return returnPatientList;
-	}
-	
-	@Override
-	public void createStandardConcepts(Patient patient) throws IOException {
+        return returnPatientList;
+    }
 
-		// creates standard tabConcepts
-		for (TabConcepts tc : TabConcepts.values()) {
-			Concept tabConcept = new Concept();
-			tabConcept.setPatientUri(patient.getUri());
-			tabConcept.setLabel(tc.toString());
-			this.conceptService.createTabConcept(tabConcept);
+    @Override
+    public void createStandardConcepts(Patient patient) throws IOException {
 
-			switch (tc) {
-			
-				case FAMILY:
-					// adds family concepts
-					for (FamilyConcepts fc : FamilyConcepts.values()) {
-						Concept concept = new Concept();
-						concept.setPatientUri(patient.getUri());
-						concept.setLabel(fc.toString());
-						concept.setEditable(false);
-						this.conceptService.createConcept(concept);
-						this.conceptService.connectSingleConcept(tabConcept,
-								concept);
-					}
-					break;
-					
-				case COURSEOFDISEASE:
-					// adds disease running concepts
-					for (DiseaseConcepts dc : DiseaseConcepts.values()) {
-						Concept concept = new Concept();
-						concept.setPatientUri(patient.getUri());
-						concept.setLabel(dc.toString());
-						concept.setEditable(false);
-						this.conceptService.createConcept(concept);
-						this.conceptService.connectSingleConcept(tabConcept,
-								concept);
-					}
-					break;
-					
-				case SPIRITUALITY_RELIGION:					
-					// adds spirituality concepts
-					for (SpiritualityConcepts sc : SpiritualityConcepts.values()) {
-						Concept concept = new Concept();
-						concept.setPatientUri(patient.getUri());
-						concept.setLabel(sc.toString());
-						concept.setEditable(false);
-						this.conceptService.createConcept(concept);
-						this.conceptService.connectSingleConcept(tabConcept,
-								concept);
-					}
-					break;
-					
-				case ORIGIN:				
-					// adds background concepts
-					for (BackgroundConcepts bc : BackgroundConcepts.values()) {
-						Concept concept = new Concept();
-						concept.setPatientUri(patient.getUri());
-						concept.setLabel(bc.toString());
-						concept.setEditable(false);
-						this.conceptService.createConcept(concept);
-						this.conceptService.connectSingleConcept(tabConcept,
-								concept);
-					}
-					break;
-					
-				case SPIRITUAL_CARE_INTERVENTION:
-					// adds spiritualy care interventions concepts
-					for (SpiritualCareInterventionConcepts sci : SpiritualCareInterventionConcepts
-							.values()) {
-						Concept concept = new Concept();
-						concept.setPatientUri(patient.getUri());
-						concept.setLabel(sci.toString());
-						concept.setEditable(false);
-						this.conceptService.createConcept(concept);
-						this.conceptService.connectSingleConcept(tabConcept,
-								concept);
-					}
-					break;
-				}
-		}		
-	}
+        // creates standard tabConcepts
+        for (TabConcepts tc : TabConcepts.values()) {
+            Concept tabConcept = new Concept();
+            tabConcept.setPatientUri(patient.getUri());
+            tabConcept.setLabel(tc.toString());
+            this.conceptService.createTabConcept(tabConcept);
+
+            switch (tc) {
+
+            case FAMILY:
+                // adds family concepts
+                for (FamilyConcepts fc : FamilyConcepts.values()) {
+                    Concept concept = new Concept();
+                    concept.setPatientUri(patient.getUri());
+                    concept.setLabel(fc.toString());
+                    concept.setEditable(false);
+                    this.conceptService.createConcept(concept);
+                    this.conceptService.connectSingleConcept(tabConcept, concept);
+                }
+                break;
+
+            case COURSEOFDISEASE:
+                // adds disease running concepts
+                for (DiseaseConcepts dc : DiseaseConcepts.values()) {
+                    Concept concept = new Concept();
+                    concept.setPatientUri(patient.getUri());
+                    concept.setLabel(dc.toString());
+                    concept.setEditable(false);
+                    this.conceptService.createConcept(concept);
+                    this.conceptService.connectSingleConcept(tabConcept, concept);
+                }
+                break;
+
+            case SPIRITUALITY_RELIGION:
+                // adds spirituality concepts
+                for (SpiritualityConcepts sc : SpiritualityConcepts.values()) {
+                    Concept concept = new Concept();
+                    concept.setPatientUri(patient.getUri());
+                    concept.setLabel(sc.toString());
+                    concept.setEditable(false);
+                    this.conceptService.createConcept(concept);
+                    this.conceptService.connectSingleConcept(tabConcept, concept);
+                }
+                break;
+
+            case ORIGIN:
+                // adds background concepts
+                for (BackgroundConcepts bc : BackgroundConcepts.values()) {
+                    Concept concept = new Concept();
+                    concept.setPatientUri(patient.getUri());
+                    concept.setLabel(bc.toString());
+                    concept.setEditable(false);
+                    this.conceptService.createConcept(concept);
+                    this.conceptService.connectSingleConcept(tabConcept, concept);
+                }
+                break;
+
+            case SPIRITUAL_CARE_INTERVENTION:
+                // adds spiritualy care interventions concepts
+                for (SpiritualCareInterventionConcepts sci : SpiritualCareInterventionConcepts.values()) {
+                    Concept concept = new Concept();
+                    concept.setPatientUri(patient.getUri());
+                    concept.setLabel(sci.toString());
+                    concept.setEditable(false);
+                    this.conceptService.createConcept(concept);
+                    this.conceptService.connectSingleConcept(tabConcept, concept);
+                }
+                break;
+            }
+        }
+    }
 
 }
