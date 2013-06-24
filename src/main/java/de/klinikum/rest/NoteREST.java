@@ -22,6 +22,7 @@ import de.klinikum.domain.Concept;
 import de.klinikum.domain.Note;
 import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
+import de.klinikum.exceptions.TripleStoreException;
 import de.klinikum.service.interfaces.ConceptService;
 import de.klinikum.service.interfaces.NoteService;
 
@@ -84,7 +85,18 @@ public class NoteREST {
     @POST
     @Produces(MediaType.APPLICATION_XML)
     public Note getNote(Note note) throws IOException, SpirontoException, RepositoryException {
-        return this.noteService.getNoteByUri(note.getUri());
+       
+    	 try {
+    	return this.noteService.getNoteByUri(note.getUri());
+    }
+    	 catch (TripleStoreException e) {
+             e.printStackTrace();
+             throw new SpirontoException("Error getting note: " + e);
+         }
+         catch (Exception e) {
+             e.printStackTrace();
+             throw new SpirontoException("Error getting note: " + e.toString(), e);
+         }
     }
 
     /**
@@ -103,8 +115,10 @@ public class NoteREST {
     @Produces(MediaType.APPLICATION_XML)
     public Note createNote(Note note) throws IOException, RepositoryException, ModelException, SpirontoException, URISyntaxException {
         
+    	try {
         note = this.noteService.createNote(note);
-        
+    	    	   
+    	
         if (note == null) {
             return null;
         }
@@ -130,7 +144,16 @@ public class NoteREST {
         }
         return note;
     }
+    catch (TripleStoreException e) {
+        e.printStackTrace();
+        throw new SpirontoException("Error creating note: " + e);
+    }
+    catch (Exception e) {
+        e.printStackTrace();
+        throw new SpirontoException("Error creating note: " + e.toString(), e);
+    }
 
+    }
     /**
      * 
      * @param patient --> Consumes an PatienObject from GUI- side
@@ -143,12 +166,22 @@ public class NoteREST {
     @POST
     @Produces(MediaType.APPLICATION_XML)
     public List<Note> getNotes(Patient patient) throws IOException, SpirontoException {
-        
+    	try {  	
         if (patient.getUri() == null) {
             return null;
         }
         
+        
         return this.noteService.getNotes(patient);
+    }
+        catch (TripleStoreException e) {
+            e.printStackTrace();
+            throw new SpirontoException("Error getting note: " + e);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new SpirontoException("Error getting note: " + e.toString(), e);
+        }
     }
     
     /**
@@ -165,11 +198,9 @@ public class NoteREST {
     @POST
     @Produces(MediaType.APPLICATION_XML)
     public Note addConceptToNote(Note note) throws IOException, SpirontoException, RepositoryException {
-        
-        if (note.getUri() == null) {
-            return null;
-        }
-        
+    	
+         
+        try {
         if (note.getConcepts() != null) {
             for (Concept c : note.getConcepts()) {
                 if (c.getUri() != null) {
@@ -182,12 +213,23 @@ public class NoteREST {
         }
         return note;
     }
+        catch (TripleStoreException e) {
+            e.printStackTrace();
+            throw new SpirontoException("Error getting note: " + e);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new SpirontoException("Error getting note: " + e.toString(), e);
+        }
+    }
     
     @Path("/updateNote")
     @POST
     @Produces(MediaType.APPLICATION_XML)
     public Note updateNote(Note note) throws IOException, RepositoryException, ModelException, SpirontoException {
-        if (note != null) {
+        
+    	try{
+    	if (note != null) {
             if (note.getConcepts() != null) {
                 for (Concept c : note.getConcepts()) {
                     c.setConnectedConcepts(null);
@@ -206,12 +248,23 @@ public class NoteREST {
         }
         return note;
     }
-    
+    	catch (TripleStoreException e) {
+            e.printStackTrace();
+            throw new SpirontoException("Error updating note: " + e);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new SpirontoException("Error updating note: " + e.toString(), e);
+        }
+    }
+    	
     @Path("/getConceptsToNote")
     @POST
     @Produces(MediaType.APPLICATION_XML)
     public Note getConceptsToNote(Note note) throws SpirontoException, RepositoryException, IOException {
-        if (note != null) {
+        
+    	try{
+    	if (note != null) {
             if (note.getUri() != null) {
                 note = this.noteService.getConceptsToNote(note);
                 if (note != null) {
@@ -221,5 +274,14 @@ public class NoteREST {
         }
         return null;
     }
+    	catch (TripleStoreException e) {
+            e.printStackTrace();
+            throw new SpirontoException("Error getting note: " + e);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new SpirontoException("Error getting note: " + e.toString(), e);
+        }
     
+}
 }

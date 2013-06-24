@@ -30,6 +30,7 @@ import de.klinikum.domain.Concept;
 import de.klinikum.domain.Note;
 import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
+import de.klinikum.exceptions.TripleStoreException;
 import de.klinikum.helper.DateUtil;
 import de.klinikum.lucene.LuceneServiceImpl;
 import de.klinikum.persistence.SesameTripleStore;
@@ -51,14 +52,15 @@ public class NoteServiceImpl implements NoteService {
     LuceneServiceImpl luceneService;
        
     @Override
-    public Note createNote(Note note) throws IOException, URISyntaxException {
-        
-        if (note.getPatientUri() == null) {
-            return null;
-        }
-        
+    public Note createNote(Note note) throws IOException, URISyntaxException, TripleStoreException {
+    	
+    	 if (note.getPatientUri() == null) {
+             throw new TripleStoreException("Missing patientUri!");
+         }
+    	    	        
+       
         if (!this.tripleStore.repositoryHasStatement(note.getPatientUri(), RDF.TYPE.toString(), PATIENT_TYPE.toString())) {
-            return null;
+        	throw new TripleStoreException("Patient with the Uri \"" + note.getPatientUri() + "\" does not exist!");
         }
 
         URI noteUri = this.tripleStore.getUniqueURI(NOTE_TYPE.toString());
@@ -87,6 +89,12 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public Note addConceptToNote(Note note, Concept concept) throws IOException {
+    	
+    	
+    	if (note.getUri() == null) {
+            return null;
+        }
+    	
         if (this.tripleStore.repositoryHasStatement(note.getUri(), NOTE_POINTS_TO_CONCEPT.toString(), concept.getUri())) {
             return null;
         }        
@@ -96,6 +104,17 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public List<Note> getNotes(Patient patient) throws SpirontoException {
+    	
+    	   if (patient == null) {
+               throw new TripleStoreException("Patient is null!");
+           }
+    	   
+
+           if (patient.getUri() == null) {
+               throw new TripleStoreException("Patient uri is null!");
+           }
+
+          
 
         List<Note> notes = new ArrayList<Note>();
         Model statementList;
@@ -121,7 +140,11 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public Note getNoteByUri(String noteUri) throws SpirontoException {
-
+    	
+    	if(noteUri.isEmpty()) {
+    		throw new TripleStoreException("Note Uri is empty!");
+    	}
+    	
         Note note = new Note();
         note.setUri(noteUri);
         
@@ -160,6 +183,14 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public Note getConceptsToNote(Note note) throws SpirontoException {
         
+    	if (note == null) {
+            throw new TripleStoreException("Note is null!");
+        }
+    	
+    	if (note.getUri() == null) {
+    		throw new TripleStoreException("Note Uri is null!");
+        }
+    	
         Model statementList;        
        
         try {
@@ -183,6 +214,18 @@ public class NoteServiceImpl implements NoteService {
     
     @Override
     public Note updateNote(Note note) throws SpirontoException, IOException {
+    	
+    	 if (note == null) {
+             throw new TripleStoreException("Note is null!");
+         }
+    	
+    	if (note.getUri() == null) {
+    		throw new TripleStoreException("Note Uri is null!");
+        }
+    	
+    	if (!noteExists(note.getUri())) {
+            throw new TripleStoreException("Note with the uri \"" + note.getUri() + "\" already exists!");
+        }
         
         if (!this.tripleStore.repositoryHasStatement(note.getUri(),RDF.TYPE.toString() , NOTE_TYPE.toString())) {
             return null;
@@ -221,4 +264,9 @@ public class NoteServiceImpl implements NoteService {
         }        
         return note;
     }
+
+	private boolean noteExists(String uri) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

@@ -10,6 +10,7 @@ import de.klinikum.domain.Concept;
 import de.klinikum.domain.Note;
 import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
+import de.klinikum.exceptions.TripleStoreException;
 
 public interface NoteService {
     /**
@@ -19,9 +20,10 @@ public interface NoteService {
      * @return
      * @throws IOException
      * @throws URISyntaxException
+     * @throws TripleStoreException 
      */
 
-    Note createNote(Note note) throws IOException, URISyntaxException;
+    Note createNote(Note note) throws IOException, URISyntaxException, TripleStoreException;
 
     /**
      * Returns all notes connected to the patientUri.
