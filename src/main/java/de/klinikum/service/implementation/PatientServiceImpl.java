@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -59,10 +58,6 @@ public class PatientServiceImpl implements PatientService {
     @Inject
     SesameTripleStore tripleStore;
 
-    @PostConstruct
-    public void afterCreate() {
-    }
-
     @Override
     public Patient getPatientByUri(String patientUri) throws TripleStoreException {
         try {
@@ -77,9 +72,6 @@ public class PatientServiceImpl implements PatientService {
             DateTime dateOfBirth = DateUtil.getDateTimeFromString(this.tripleStore.getObjectString(
                     patientURI.toString(), PATIENT_HAS_DATE_OF_BIRTH.toString()));
 
-            // Date patientDate = Date.parse(dateOfBirth);
-
-            // if(patient.getAddress() != null) {
             returnPatient.setAddress(new Address());
             String addressUri = this.tripleStore.getObjectString(patientURI.toString(), PATIENT_HAS_ADDRESS.toString());
             returnPatient.getAddress().setUri(addressUri);
@@ -180,7 +172,7 @@ public class PatientServiceImpl implements PatientService {
     public Patient createPatientRDF(Patient patient) throws TripleStoreException {
         try {
             if (getPatientByPatientNumber(patient.getPatientNumber()) == null) {
-                return null;
+                throw new TripleStoreException("Patientnumber " + patient.getPatientNumber() + " already exists!");
             }
 
             // Get Unique PatientURI Prefix
@@ -258,12 +250,15 @@ public class PatientServiceImpl implements PatientService {
         }
     }
 
-    // Update Patient
     @Override
     public boolean updatePatientRDF(Patient patient) throws IOException, RepositoryException, TripleStoreException {
 
         if (patient.getUri() == null) {
-            return false;
+            throw new TripleStoreException("Patient uri is null!");
+        }
+        
+        if (!patientExists(patient.getUri())) {
+            throw new TripleStoreException("Patient with the uri \"" + patient.getUri() + "\" already exists!");
         }
 
         Patient existingPatient = getPatientByUri(patient.getUri());
@@ -312,7 +307,6 @@ public class PatientServiceImpl implements PatientService {
         return true;
     }
 
-    // Update Address
     @Override
     public boolean updateAddressRDF(Address address) throws IOException, RepositoryException, TripleStoreException {
 
@@ -381,8 +375,6 @@ public class PatientServiceImpl implements PatientService {
 
     }
 
-    // Searches Patients with first name , last name, and PatientNumber
-    // Uses SPARQL to Query Sesame
     @Override
     public List<Patient> searchPatientSPARQL(Patient patient) throws SpirontoException {
         List<Patient> returnPatientList = new ArrayList<Patient>();
@@ -415,7 +407,12 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public void createStandardConcepts(Patient patient) throws IOException {
+    public boolean patientExists(String patientUri) throws IOException {
+        return this.tripleStore.repositoryHasStatement(patientUri, RDF.TYPE.toString(), PATIENT_TYPE.toString());
+    }
+
+    @Override
+    public void createStandardConcepts(Patient patient) throws IOException, TripleStoreException {
 
         // creates standard tabConcepts
         for (TabConcepts tc : TabConcepts.values()) {
@@ -488,5 +485,4 @@ public class PatientServiceImpl implements PatientService {
             }
         }
     }
-
 }

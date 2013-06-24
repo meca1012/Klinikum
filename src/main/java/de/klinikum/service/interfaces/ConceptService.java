@@ -9,6 +9,7 @@ import org.openrdf.repository.RepositoryException;
 import de.klinikum.domain.Concept;
 import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
+import de.klinikum.exceptions.TripleStoreException;
 
 public interface ConceptService {
 
@@ -27,9 +28,10 @@ public interface ConceptService {
      * @param concept
      * @return
      * @throws IOException
+     * @throws TripleStoreException
      */
 
-    Concept createConcept(Concept concept) throws IOException;
+    Concept createConcept(Concept concept) throws IOException, TripleStoreException;
 
     /**
      * Connect a concept to an other concept.
@@ -37,8 +39,9 @@ public interface ConceptService {
      * @param from
      * @param to
      * @throws IOException
+     * @throws TripleStoreException
      */
-    void connectSingleConcept(Concept from, Concept to) throws IOException;
+    void connectSingleConcept(Concept from, Concept to) throws IOException, TripleStoreException;
 
     /**
      * Create a new tabConcept to a patient. ConnectedConcepts are getting set.
@@ -46,14 +49,16 @@ public interface ConceptService {
      * @param concept
      * @return
      * @throws IOException
+     * @throws TripleStoreException
      */
-    Concept createTabConcept(Concept concept) throws IOException;
+    Concept createTabConcept(Concept concept) throws IOException, TripleStoreException;
 
     /**
-     * Returnes all concept to a concept that are direct connected to it. 
+     * Returnes all concept to a concept that are direct connected to it.
      * 
      * @param concept
-     * @param onlyUris -> if set only the uris are set in the concept object.
+     * @param onlyUris
+     *            -> if set only the uris are set in the concept object.
      * @return
      * @throws IOException
      * @throws SpirontoException
@@ -117,8 +122,9 @@ public interface ConceptService {
      * @param to
      *            -> List of concepts to whose the from concept gets connected
      * @throws IOException
+     * @throws TripleStoreException
      */
-    void connectMultipleConcepts(Concept from, List<Concept> to) throws IOException;
+    void connectMultipleConcepts(Concept from, List<Concept> to) throws IOException, TripleStoreException;
 
     /**
      * Checks wether a concept is a tabConcept or not
@@ -129,15 +135,6 @@ public interface ConceptService {
      * @throws IOException
      */
     boolean isTabConcept(Concept concept) throws RepositoryException, IOException;
-
-    /**
-     * Checks wether a concept exists or not
-     * 
-     * @return
-     * @throws IOException
-     * @throws SpirontoException
-     */
-    boolean conceptExists(Concept concept) throws IOException;
 
     /**
      * Used to return only the uris of the direct connected concepts to a concept.
@@ -160,5 +157,23 @@ public interface ConceptService {
      * @throws RepositoryException
      */
     Concept updateConcept(Concept concept) throws SpirontoException, IOException, RepositoryException, ModelException;
+
+    /**
+     * Checks whether a concept exists.
+     * 
+     * @param conceptUri
+     * @return
+     * @throws IOException
+     */
+    boolean conceptExists(String conceptUri) throws IOException;
+
+    /**
+     * Checks whether a patient exists.
+     * 
+     * @param patientUri
+     * @return
+     * @throws IOException
+     */
+    boolean patientExists(String patientUri) throws IOException;
 
 }

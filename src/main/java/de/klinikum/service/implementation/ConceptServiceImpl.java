@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import de.klinikum.domain.Concept;
 import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
+import de.klinikum.exceptions.TripleStoreException;
 import de.klinikum.persistence.SesameTripleStore;
 import de.klinikum.service.interfaces.ConceptService;
 
@@ -42,7 +43,15 @@ public class ConceptServiceImpl implements ConceptService {
     SesameTripleStore tripleStore;
 
     @Override
-    public List<Concept> getTabConcepts(Patient patient) throws SpirontoException {
+    public List<Concept> getTabConcepts(Patient patient) throws SpirontoException, IOException {
+
+        if (patient.getUri() == null) {
+            throw new TripleStoreException("Patient uri is null!");
+        }
+
+        if (!patientExists(patient.getUri())) {
+            throw new TripleStoreException("Patient with the uri \"" + patient.getUri() + "\" does not exist!");
+        }
 
         List<Concept> tabConcepts = new ArrayList<Concept>();
 
@@ -61,15 +70,15 @@ public class ConceptServiceImpl implements ConceptService {
     }
 
     @Override
-    public Concept createConcept(Concept concept) throws IOException {
+    public Concept createConcept(Concept concept) throws IOException, TripleStoreException {
 
         if (concept.getPatientUri() == null) {
-            return null;
+            throw new TripleStoreException("Missing patientUri!");
         }
 
         if (!this.tripleStore.repositoryHasStatement(concept.getPatientUri(), RDF.TYPE.toString(),
                 PATIENT_TYPE.toString())) {
-            return null;
+            throw new TripleStoreException("Patient with the Uri \"" + concept.getPatientUri() + "\" does not exist!");
         }
 
         // Concept anlegen
@@ -91,7 +100,20 @@ public class ConceptServiceImpl implements ConceptService {
     }
 
     @Override
-    public void connectSingleConcept(Concept from, Concept to) throws IOException {
+    public void connectSingleConcept(Concept from, Concept to) throws IOException, TripleStoreException {
+
+        if (from == null || to == null) {
+            throw new TripleStoreException("Concept null! Connection not possible.");
+        }
+
+        if (!conceptExists(from.getUri())) {
+            throw new TripleStoreException("The concept with the uri \"" + from.getUri() + "\" does not exist");
+        }
+
+        if (!conceptExists(to.getUri())) {
+            throw new TripleStoreException("The concept with the uri \"" + to.getUri() + "\" does not exist");
+        }
+
         if (this.tripleStore.repositoryHasStatement(from.getUri(), ONTOLOGIE_CONCEPT_LINKED_TO.toString(), to.getUri())) {
             return;
         }
@@ -99,7 +121,7 @@ public class ConceptServiceImpl implements ConceptService {
     }
 
     @Override
-    public Concept createTabConcept(Concept concept) throws IOException {
+    public Concept createTabConcept(Concept concept) throws IOException, TripleStoreException {
 
         concept.setEditable(false);
         concept = this.createConcept(concept);
@@ -111,7 +133,15 @@ public class ConceptServiceImpl implements ConceptService {
     }
 
     @Override
-    public List<Concept> getDirectConnected(Concept concept, boolean onlyUris) throws SpirontoException {
+    public List<Concept> getDirectConnected(Concept concept, boolean onlyUris) throws SpirontoException, IOException {
+
+        if (concept.getUri() == null) {
+            throw new TripleStoreException("Concept uri is null!");
+        }
+
+        if (!conceptExists(concept.getUri())) {
+            throw new TripleStoreException("Concept with the uri \"" + concept.getUri() + "\" does not exist!");
+        }
 
         List<Concept> connectedConcepts = new ArrayList<Concept>();
         Model statementList;
@@ -160,7 +190,16 @@ public class ConceptServiceImpl implements ConceptService {
     }
 
     @Override
-    public List<Concept> findAllConceptsOfPatient(Patient patient) throws SpirontoException {
+    public List<Concept> findAllConceptsOfPatient(Patient patient) throws SpirontoException, IOException {
+
+        if (patient.getUri() == null) {
+            throw new TripleStoreException("Patient uri is null!");
+        }
+
+        if (!patientExists(patient.getUri())) {
+            throw new TripleStoreException("Patient with the uri \"" + patient.getUri() + "\" does not exist!");
+        }
+
         List<Concept> concepts = new ArrayList<Concept>();
         Model statementList;
 
@@ -182,8 +221,17 @@ public class ConceptServiceImpl implements ConceptService {
     @Override
     public List<Concept> findConceptsOfTabConcept(Concept tabConcept) throws RepositoryException, IOException,
             ModelException, SpirontoException {
+
+        if (tabConcept.getUri() == null) {
+            throw new TripleStoreException("Concept uri is null!");
+        }
+
+        if (!conceptExists(tabConcept.getUri())) {
+            throw new TripleStoreException("Concept with the uri \"" + tabConcept.getUri() + "\" does not exist!");
+        }
+
         if (!this.isTabConcept(tabConcept)) {
-            return null;
+            throw new TripleStoreException("Concept with the uri \"" + tabConcept.getUri() + "\" is not a TabConcept!");
         }
         List<Concept> conceptsToReturn = new ArrayList<Concept>();
         conceptsToReturn = this.getConnected(tabConcept.getUri(), conceptsToReturn, false);
@@ -237,7 +285,7 @@ public class ConceptServiceImpl implements ConceptService {
     }
 
     @Override
-    public void connectMultipleConcepts(Concept from, List<Concept> to) throws IOException {
+    public void connectMultipleConcepts(Concept from, List<Concept> to) throws IOException, TripleStoreException {
         for (Concept c : to) {
             this.connectSingleConcept(from, c);
         }
@@ -246,17 +294,6 @@ public class ConceptServiceImpl implements ConceptService {
     @Override
     public boolean isTabConcept(Concept concept) throws RepositoryException, IOException {
         return this.tripleStore.repositoryHasStatement(concept.getUri(), RDF.TYPE.toString(), GUI_TAB_TYPE.toString());
-    }
-
-    @Override
-    public boolean conceptExists(Concept concept) throws IOException {
-        if (concept.getUri() == null) {
-            return false;
-        }
-        else {
-            return this.tripleStore.repositoryHasStatement(concept.getUri(), RDF.TYPE.toString(),
-                    ONTOLOGIE_CONCEPT_TYPE.toString());
-        }
     }
 
     @Override
@@ -272,9 +309,12 @@ public class ConceptServiceImpl implements ConceptService {
     public Concept updateConcept(Concept concept) throws SpirontoException, IOException, RepositoryException,
             ModelException {
 
-        if (!this.tripleStore.repositoryHasStatement(concept.getUri(), RDF.TYPE.toString(),
-                ONTOLOGIE_CONCEPT_TYPE.toString())) {
-            return null;
+        if (concept.getUri() == null) {
+            throw new TripleStoreException("Concept uri is null!");
+        }
+
+        if (!conceptExists(concept.getUri())) {
+            throw new TripleStoreException("Concept with the uri \"" + concept.getUri() + "\" does not exist!");
         }
 
         Concept existingConcept = getConceptByUri(concept.getUri());
@@ -310,7 +350,17 @@ public class ConceptServiceImpl implements ConceptService {
                 this.tripleStore.addTriple(concept.getUri(), ONTOLOGIE_CONCEPT_LINKED_TO.toString(), c.getUri());
             }
         }
-
         return concept;
+    }
+
+    @Override
+    public boolean conceptExists(String conceptUri) throws IOException {
+        return this.tripleStore.repositoryHasStatement(conceptUri, RDF.TYPE.toString(),
+                ONTOLOGIE_CONCEPT_TYPE.toString());
+    }
+    
+    @Override
+    public boolean patientExists(String patientUri) throws IOException {
+        return this.tripleStore.repositoryHasStatement(patientUri, RDF.TYPE.toString(), PATIENT_TYPE.toString());
     }
 }

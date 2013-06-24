@@ -91,9 +91,19 @@ public interface PatientService {
     boolean updateAddressRDF(Address address) throws IOException, RepositoryException, TripleStoreException;
 
     /**
+     * Checks whether a patient exists.
+     * 
+     * @param patientUri
+     * @return
+     * @throws IOException
+     */
+    boolean patientExists(String patientUri) throws IOException;
+
+    /**
      * Called on createPatient to create all standard concept for this patient.
      * 
      * @throws IOException
+     * @throws TripleStoreException
      */
-    void createStandardConcepts(Patient patient) throws IOException;
+    void createStandardConcepts(Patient patient) throws IOException, TripleStoreException;
 }
