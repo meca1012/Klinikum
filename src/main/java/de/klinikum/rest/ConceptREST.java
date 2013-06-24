@@ -252,10 +252,11 @@ public class ConceptREST {
     public Concept getConceptByUriFetchDirectConnected(Concept concept) throws IOException, RepositoryException,
             SpirontoException {
         try {
-            concept = this.conceptService.getConceptByUri(concept.getUri());
             if (concept == null) {
                 return null;
             }
+            concept = this.conceptService.getConceptByUri(concept.getUri());
+            
             concept.setConnectedConcepts(this.conceptService.getDirectConnected(concept, false));
             return concept;
         }

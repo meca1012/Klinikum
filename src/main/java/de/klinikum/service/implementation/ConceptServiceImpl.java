@@ -45,6 +45,10 @@ public class ConceptServiceImpl implements ConceptService {
     @Override
     public List<Concept> getTabConcepts(Patient patient) throws SpirontoException, IOException {
 
+        if (patient == null) {
+            throw new TripleStoreException("Patient is null!");
+        }
+
         if (patient.getUri() == null) {
             throw new TripleStoreException("Patient uri is null!");
         }
@@ -72,12 +76,15 @@ public class ConceptServiceImpl implements ConceptService {
     @Override
     public Concept createConcept(Concept concept) throws IOException, TripleStoreException {
 
+        if (concept == null) {
+            throw new TripleStoreException("Concept is null!");
+        }
+
         if (concept.getPatientUri() == null) {
             throw new TripleStoreException("Missing patientUri!");
         }
 
-        if (!this.tripleStore.repositoryHasStatement(concept.getPatientUri(), RDF.TYPE.toString(),
-                PATIENT_TYPE.toString())) {
+        if (!patientExists(concept.getPatientUri())) {
             throw new TripleStoreException("Patient with the Uri \"" + concept.getPatientUri() + "\" does not exist!");
         }
 
@@ -123,6 +130,14 @@ public class ConceptServiceImpl implements ConceptService {
     @Override
     public Concept createTabConcept(Concept concept) throws IOException, TripleStoreException {
 
+        if (concept == null) {
+            throw new TripleStoreException("Concept is null!");
+        }
+
+        if (concept.getPatientUri() == null) {
+            throw new TripleStoreException("Missing patientUri!");
+        }
+
         concept.setEditable(false);
         concept = this.createConcept(concept);
         if (concept == null) {
@@ -134,6 +149,10 @@ public class ConceptServiceImpl implements ConceptService {
 
     @Override
     public List<Concept> getDirectConnected(Concept concept, boolean onlyUris) throws SpirontoException, IOException {
+
+        if (concept == null) {
+            throw new TripleStoreException("Concept is null!");
+        }
 
         if (concept.getUri() == null) {
             throw new TripleStoreException("Concept uri is null!");
@@ -192,6 +211,10 @@ public class ConceptServiceImpl implements ConceptService {
     @Override
     public List<Concept> findAllConceptsOfPatient(Patient patient) throws SpirontoException, IOException {
 
+        if (patient == null) {
+            throw new TripleStoreException("Patient is null!");
+        }
+
         if (patient.getUri() == null) {
             throw new TripleStoreException("Patient uri is null!");
         }
@@ -221,6 +244,10 @@ public class ConceptServiceImpl implements ConceptService {
     @Override
     public List<Concept> findConceptsOfTabConcept(Concept tabConcept) throws RepositoryException, IOException,
             ModelException, SpirontoException {
+
+        if (tabConcept == null) {
+            throw new TripleStoreException("TabConcept is null!");
+        }
 
         if (tabConcept.getUri() == null) {
             throw new TripleStoreException("Concept uri is null!");
@@ -270,6 +297,11 @@ public class ConceptServiceImpl implements ConceptService {
 
     @Override
     public Concept getConceptByUri(String conceptUri) throws SpirontoException {
+        
+        if (conceptUri.isEmpty()) {
+            throw new TripleStoreException("Concept uri is empty!");
+        }
+
         Concept conceptToReturn = new Concept();
         conceptToReturn.setUri(conceptUri);
 
@@ -299,6 +331,18 @@ public class ConceptServiceImpl implements ConceptService {
     @Override
     public List<Concept> getConnectedConceptUris(Concept concept) throws RepositoryException, ModelException,
             IOException, SpirontoException {
+        
+        if (concept == null) {
+            throw new TripleStoreException("Concept is null!");
+        }
+
+        if (concept.getUri() == null) {
+            throw new TripleStoreException("Concept uri is null!");
+        }
+
+        if (!conceptExists(concept.getUri())) {
+            throw new TripleStoreException("Concept with the uri \"" + concept.getUri() + "\" does not exist!");
+        }
 
         List<Concept> conceptsToReturn = this.getDirectConnected(concept, true);
 
@@ -309,6 +353,10 @@ public class ConceptServiceImpl implements ConceptService {
     public Concept updateConcept(Concept concept) throws SpirontoException, IOException, RepositoryException,
             ModelException {
 
+        if (concept == null) {
+            throw new TripleStoreException("Concept is null!");
+        }
+        
         if (concept.getUri() == null) {
             throw new TripleStoreException("Concept uri is null!");
         }
@@ -358,7 +406,7 @@ public class ConceptServiceImpl implements ConceptService {
         return this.tripleStore.repositoryHasStatement(conceptUri, RDF.TYPE.toString(),
                 ONTOLOGIE_CONCEPT_TYPE.toString());
     }
-    
+
     @Override
     public boolean patientExists(String patientUri) throws IOException {
         return this.tripleStore.repositoryHasStatement(patientUri, RDF.TYPE.toString(), PATIENT_TYPE.toString());
