@@ -25,7 +25,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.joda.time.DateTime;
-import org.openrdf.model.Model;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.RDF;
@@ -180,7 +179,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public Patient createPatientRDF(Patient patient) throws TripleStoreException {
         try {
-            if (patientNumberExists(patient.getPatientNumber())) {
+            if (getPatientByPatientNumber(patient.getPatientNumber()) == null) {
                 return null;
             }
 
@@ -209,8 +208,6 @@ public class PatientServiceImpl implements PatientService {
                 this.tripleStore.addTriple(patient.getUri(), PATIENT_HAS_ADDRESS.toString(), patient.getAddress()
                         .getUri());
             }
-
-            // TODO: add createStandardConcepts here
             this.createStandardConcepts(patient);
 
             return patient;
@@ -415,25 +412,6 @@ public class PatientServiceImpl implements PatientService {
         }
 
         return returnPatientList;
-    }
-
-    private boolean patientNumberExists(String patientNumber) {
-
-        Model statementList;
-        try {
-            statementList = this.tripleStore.getStatementList(null, PATIENT_HAS_PATIENT_NUMBER.toString(),
-                    patientNumber);
-            if (statementList.isEmpty()) {
-                return false;
-            }
-        }
-        catch (RepositoryException e) {
-            e.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return true;
     }
 
     @Override

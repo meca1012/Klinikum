@@ -64,7 +64,6 @@ public class NoteServiceImpl implements NoteService {
         URI noteUri = this.tripleStore.getUniqueURI(NOTE_TYPE.toString());
 
         note.setUri(noteUri.toString());
-//        note.setCreated(new DateTime(System.currentTimeMillis()));
         note.setCreated(new DateTime());
 
         this.tripleStore.addTriple(noteUri.toString(), RDF.TYPE.toString(), NOTE_TYPE.toString());
