@@ -76,5 +76,5 @@ public interface NoteService {
      * @throws IOException
      */
 
-    Note updateNote(Note note) throws SpirontoException, IOException;
+    Note updateNote(Note note) throws SpirontoException, IOException;    
 }

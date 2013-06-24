@@ -24,7 +24,8 @@ public interface PatientService {
     /**
      * Creates a new Patient. If the patientNumber is already in use, null is returned.
      * 
-     * @param patient with address
+     * @param patient
+     *            with address
      * @return
      * @throws TripleStoreException
      */
