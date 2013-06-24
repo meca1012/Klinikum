@@ -82,7 +82,7 @@ public class NoteServiceTest {
 	}
 
 	@Test
-	public void createNoteTest() throws IOException, URISyntaxException {
+	public void createNoteTest() throws IOException, URISyntaxException, TripleStoreException {
 		Note note = new Note();
 		String patientUri = this.patient.getUri();
 		note.setPatientUri(patientUri);

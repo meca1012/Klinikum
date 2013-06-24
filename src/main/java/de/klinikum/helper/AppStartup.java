@@ -46,7 +46,7 @@ public class AppStartup {
 
     }
 
-    public void createTestData() throws IOException, URISyntaxException {
+    public void createTestData() throws IOException, URISyntaxException, TripleStoreException {
 
         try {
             this.triplestore.removeTriples(null, RDF.TYPE, null);
