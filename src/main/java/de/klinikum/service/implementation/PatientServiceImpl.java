@@ -252,6 +252,10 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public boolean updatePatientRDF(Patient patient) throws IOException, RepositoryException, TripleStoreException {
+        
+        if (patient == null) {
+            throw new TripleStoreException("Patient is null!");
+        }
 
         if (patient.getUri() == null) {
             throw new TripleStoreException("Patient uri is null!");
