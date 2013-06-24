@@ -1,18 +1,18 @@
 package de.klinikum.service.implementation;
 
-import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_ADDRESS_CITY;
-import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_ADDRESS_STREET;
-import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_ADDRESS_STREET_NUMBER;
-import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_ADDRESS_ZIP;
-import static de.klinikum.domain.NameSpaces.ADDRESS_HAS_PHONENUMBER;
-import static de.klinikum.domain.NameSpaces.ADDRESS_IN_COUNTRY;
-import static de.klinikum.domain.NameSpaces.ADDRESS_TYPE;
-import static de.klinikum.domain.NameSpaces.PATIENT_HAS_ADDRESS;
-import static de.klinikum.domain.NameSpaces.PATIENT_HAS_DATE_OF_BIRTH;
-import static de.klinikum.domain.NameSpaces.PATIENT_HAS_FIRST_NAME;
-import static de.klinikum.domain.NameSpaces.PATIENT_HAS_LAST_NAME;
-import static de.klinikum.domain.NameSpaces.PATIENT_HAS_PATIENT_NUMBER;
-import static de.klinikum.domain.NameSpaces.PATIENT_TYPE;
+import static de.klinikum.persistence.NameSpaces.ADDRESS_HAS_ADDRESS_CITY;
+import static de.klinikum.persistence.NameSpaces.ADDRESS_HAS_ADDRESS_STREET;
+import static de.klinikum.persistence.NameSpaces.ADDRESS_HAS_ADDRESS_STREET_NUMBER;
+import static de.klinikum.persistence.NameSpaces.ADDRESS_HAS_ADDRESS_ZIP;
+import static de.klinikum.persistence.NameSpaces.ADDRESS_HAS_PHONENUMBER;
+import static de.klinikum.persistence.NameSpaces.ADDRESS_IN_COUNTRY;
+import static de.klinikum.persistence.NameSpaces.ADDRESS_TYPE;
+import static de.klinikum.persistence.NameSpaces.PATIENT_HAS_ADDRESS;
+import static de.klinikum.persistence.NameSpaces.PATIENT_HAS_DATE_OF_BIRTH;
+import static de.klinikum.persistence.NameSpaces.PATIENT_HAS_FIRST_NAME;
+import static de.klinikum.persistence.NameSpaces.PATIENT_HAS_LAST_NAME;
+import static de.klinikum.persistence.NameSpaces.PATIENT_HAS_PATIENT_NUMBER;
+import static de.klinikum.persistence.NameSpaces.PATIENT_TYPE;
 
 import java.io.IOException;
 import java.util.ArrayList;

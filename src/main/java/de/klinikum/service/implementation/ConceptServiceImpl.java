@@ -1,12 +1,12 @@
 package de.klinikum.service.implementation;
 
-import static de.klinikum.domain.NameSpaces.CONCEPT_IS_EDITABLE;
-import static de.klinikum.domain.NameSpaces.GUI_TAB_TYPE;
-import static de.klinikum.domain.NameSpaces.ONTOLOGIE_CONCEPT_HAS_LABEL;
-import static de.klinikum.domain.NameSpaces.ONTOLOGIE_CONCEPT_LINKED_TO;
-import static de.klinikum.domain.NameSpaces.ONTOLOGIE_CONCEPT_TYPE;
-import static de.klinikum.domain.NameSpaces.PATIENT_HAS_CONCEPT;
-import static de.klinikum.domain.NameSpaces.PATIENT_TYPE;
+import static de.klinikum.persistence.NameSpaces.CONCEPT_IS_EDITABLE;
+import static de.klinikum.persistence.NameSpaces.GUI_TAB_TYPE;
+import static de.klinikum.persistence.NameSpaces.ONTOLOGIE_CONCEPT_HAS_LABEL;
+import static de.klinikum.persistence.NameSpaces.ONTOLOGIE_CONCEPT_LINKED_TO;
+import static de.klinikum.persistence.NameSpaces.ONTOLOGIE_CONCEPT_TYPE;
+import static de.klinikum.persistence.NameSpaces.PATIENT_HAS_CONCEPT;
+import static de.klinikum.persistence.NameSpaces.PATIENT_TYPE;
 
 import java.io.IOException;
 import java.util.ArrayList;

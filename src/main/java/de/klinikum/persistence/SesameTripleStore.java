@@ -1,7 +1,7 @@
 package de.klinikum.persistence;
 
-import static de.klinikum.domain.NameSpaces.LAST_ID;
-import static de.klinikum.domain.NameSpaces.TYPE_DATASTORE;
+import static de.klinikum.persistence.NameSpaces.LAST_ID;
+import static de.klinikum.persistence.NameSpaces.TYPE_DATASTORE;
 import info.aduna.iteration.Iterations;
 
 import java.io.IOException;
