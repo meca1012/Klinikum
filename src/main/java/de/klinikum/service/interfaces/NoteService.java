@@ -20,7 +20,7 @@ public interface NoteService {
      * @return
      * @throws IOException
      * @throws URISyntaxException
-     * @throws TripleStoreException 
+     * @throws TripleStoreException
      */
 
     Note createNote(Note note) throws IOException, URISyntaxException, TripleStoreException;
@@ -40,8 +40,8 @@ public interface NoteService {
      * @param uri
      * @return
      * @throws SpirontoException
-     * @throws IOException 
-     * @throws RepositoryException 
+     * @throws IOException
+     * @throws RepositoryException
      */
     Note getNoteByUri(String uri) throws SpirontoException, RepositoryException, IOException;
 
@@ -61,9 +61,9 @@ public interface NoteService {
      * 
      * @param note
      * @return
-     * @throws SpirontoException 
-     * @throws IOException 
-     * @throws RepositoryException 
+     * @throws SpirontoException
+     * @throws IOException
+     * @throws RepositoryException
      */
 
     Note getConceptsToNote(Note note) throws SpirontoException, RepositoryException, IOException;
@@ -78,5 +78,14 @@ public interface NoteService {
      * @throws IOException
      */
 
-    Note updateNote(Note note) throws SpirontoException, IOException;    
+    Note updateNote(Note note) throws SpirontoException, IOException;
+
+    /**
+     * Checks whether a note exists.
+     * 
+     * @param noteUri
+     * @return
+     * @throws IOException
+     */
+    boolean noteExists(String noteUri) throws IOException;
 }
