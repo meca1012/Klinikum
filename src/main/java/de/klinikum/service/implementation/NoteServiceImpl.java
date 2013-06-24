@@ -1,13 +1,13 @@
 package de.klinikum.service.implementation;
 
-import static de.klinikum.domain.NameSpaces.NOTE_HAS_DATE;
-import static de.klinikum.domain.NameSpaces.NOTE_HAS_PRIORITY;
-import static de.klinikum.domain.NameSpaces.NOTE_HAS_TEXT;
-import static de.klinikum.domain.NameSpaces.NOTE_HAS_TITLE;
-import static de.klinikum.domain.NameSpaces.NOTE_POINTS_TO_CONCEPT;
-import static de.klinikum.domain.NameSpaces.NOTE_TYPE;
-import static de.klinikum.domain.NameSpaces.PATIENT_HAS_NOTE;
-import static de.klinikum.domain.NameSpaces.PATIENT_TYPE;
+import static de.klinikum.persistence.NameSpaces.NOTE_HAS_DATE;
+import static de.klinikum.persistence.NameSpaces.NOTE_HAS_PRIORITY;
+import static de.klinikum.persistence.NameSpaces.NOTE_HAS_TEXT;
+import static de.klinikum.persistence.NameSpaces.NOTE_HAS_TITLE;
+import static de.klinikum.persistence.NameSpaces.NOTE_POINTS_TO_CONCEPT;
+import static de.klinikum.persistence.NameSpaces.NOTE_TYPE;
+import static de.klinikum.persistence.NameSpaces.PATIENT_HAS_NOTE;
+import static de.klinikum.persistence.NameSpaces.PATIENT_TYPE;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
