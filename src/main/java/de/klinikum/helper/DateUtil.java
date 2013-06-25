@@ -14,6 +14,11 @@ import org.joda.time.DateTime;
 
 public class DateUtil {
 
+    /**
+     * Parses a string to yoda DateTime.
+     * @param sDate
+     * @return
+     */
     public static DateTime getDateTimeFromString(String sDate) {
         
         return new DateTime(sDate);

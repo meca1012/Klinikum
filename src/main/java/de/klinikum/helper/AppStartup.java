@@ -21,7 +21,7 @@ import de.klinikum.service.implementation.PatientServiceImpl;
 
 /**
  * 
- * AppStartup.java Purpose: Creates TestData for Prototype- Test
+ * AppStartup.java Purpose: Creates TestData for Prototype- Test. Creates connected patients, concepts and notes.
  * 
  * @author Spironto Team 1
  * @version 1.0 08/06/13
@@ -46,7 +46,7 @@ public class AppStartup {
 
     }
 
-    public void createTestData() throws IOException, URISyntaxException {
+    public void createTestData() throws IOException, URISyntaxException, TripleStoreException {
 
         try {
             this.triplestore.removeTriples(null, RDF.TYPE, null);
@@ -133,6 +133,9 @@ public class AppStartup {
             this.conceptService.connectSingleConcept(concept4, concept5);
             concept4.addConnectedConcepts(concept6);
             this.conceptService.connectSingleConcept(concept4, concept6);
+        }
+        catch (TripleStoreException e) {
+            e.printStackTrace();
         }
         catch (IOException e) {
             // TODO Auto-generated catch block

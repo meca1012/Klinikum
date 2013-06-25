@@ -9,7 +9,10 @@ import de.klinikum.helper.PropertyLoader;
 
 public enum BackgroundConcepts {
 
-    ATHOME("at home"), MIGRATIONBACKGROUND("migration background");
+    HOME("home"),
+    MIGRATIONBACKGROUND("migration background"),
+    CITY("city"),
+    COUNTRY("country"); 
 
     private final String value;
     private static final Logger LOGGER = LoggerFactory.getLogger(SpiritualityConcepts.class);

@@ -8,6 +8,13 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
+/** Date Adapter for patient birthdate to marshal/unmarshal XML date.
+ *  Uses yoda DateTime.
+ *  Returned format dd-MM-yyyy
+ * 
+ * @author Spironto Team 1
+ *
+ */
 public class XmlBirthDateAdapter extends XmlAdapter<String, DateTime> {
 
     public DateTime unmarshal(String v) throws Exception {

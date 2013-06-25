@@ -8,6 +8,13 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
+/** Date Adapter for created date of concept to marshal/unmarshal XML date.
+ *  Uses yoda DateTime.
+ *  Returned format dd-MM-yyyy HH:mm:ss
+ * 
+ * @author Spironto Team 1
+ *
+ */
 public class XmlDateTimeAdapter extends XmlAdapter<String, DateTime> {   
      
     public DateTime unmarshal(String v) throws Exception {        

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -14,7 +15,6 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.joda.time.DateTime;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,26 +31,31 @@ import de.klinikum.service.interfaces.PatientService;
 
 @RunWith(Arquillian.class)
 public class PatientServiceTest {
+	
+	Random generator = new Random(System.currentTimeMillis());
 
 	@Inject
 	PatientService patientService;
 
-	private static Patient patient;
-	
-	private static String patientUri;
-	
-	@Before
-	public void before() {
-		this.patient = new Patient();
-		this.patient.setFirstName("Alice");
-		this.patient.setLastName("Smith");
-		this.patient.setDateOfBirth(new DateTime());
-//		this.patient.setUri("http://spironto.de/spironto#patient-gen1");
-		this.patient.setPatientNumber("112233");
+	private Patient generateNewPatientWithAddress() {
+		Patient patient = new Patient();
+		patient.setFirstName("Alice");
+		patient.setLastName("Smith");
+		patient.setDateOfBirth(new DateTime());
+		patient.setPatientNumber(String.valueOf(this.generator.nextInt()));
 		Address address = new Address(null, "Musterstr.", "1", "Musterstadt",
 				"76123", "D", "110");
-		this.patient.setAddress(address);
-//		this.patientService.createPatientRDF(this.patient);
+		patient.setAddress(address);
+		return patient;
+	}
+	
+	private Patient generateNewPatientWithoutAddress() {
+		Patient patient = new Patient();
+		patient.setFirstName("Alice");
+		patient.setLastName("Smith");
+		patient.setDateOfBirth(new DateTime());
+		patient.setPatientNumber(String.valueOf(this.generator.nextInt()));
+		return patient;
 	}
 
 	/**
@@ -66,51 +71,30 @@ public class PatientServiceTest {
 
 	@Test
 	public void createPatientRDFTest() throws TripleStoreException {
+		Patient patient = this.generateNewPatientWithAddress();	
+		Patient returnPatient = this.patientService
+				.createPatientRDF(patient);
 
-		Patient returnPatient = this.patientService.createPatientRDF(this.patient);
-
-		assertEquals(patient.getFirstName(), returnPatient.getFirstName());
-		assertEquals(patient.getLastName(), returnPatient.getLastName());
-		assertEquals(patient.getPatientNumber(), returnPatient.getPatientNumber());
-		assertNotNull(patient.getUri());
-
-		assertEquals(patient.getAddress().getStreet(), returnPatient.getAddress()
-				.getStreet());
-		assertEquals(patient.getAddress().getStreetNumber(), returnPatient
-				.getAddress().getStreetNumber());
-		assertEquals(patient.getAddress().getCity(), returnPatient.getAddress()
-				.getCity());
-		assertEquals(patient.getAddress().getZip(), returnPatient.getAddress()
-				.getZip());
-		assertEquals(patient.getAddress().getCountry(), returnPatient.getAddress()
-				.getCountry());
-		assertEquals(patient.getAddress().getPhone(), returnPatient.getAddress()
-				.getPhone());
-		assertNotNull(patient.getAddress().getUri());
-	
-		String patientUri = returnPatient.getUri();
-		this.patientUri = patientUri;
+		assertNotNull(returnPatient);
 	}
 
 	@Test
-	public void getPatientByUriTest() throws TripleStoreException {
-		Patient patient = new Patient();
-		patient = this.patientService.getPatientByUri(this.patientUri);
-
-		assertEquals(this.patientUri, patient.getUri());
-		assertNotNull(patient.getFirstName());
-		assertNotNull(patient.getLastName());
-		assertNotNull(patient.getAddress());
-	}
-
-	@Test
-	public void searchPatientSPARQLTest() throws RepositoryException,
-			IOException, SpirontoException {
-		Patient patient = new Patient();
-		patient.setUri(this.patientUri);
-		List<Patient> patients = this.patientService
-				.searchPatientSPARQL(patient);
+	public void getPatientByUriTest() throws TripleStoreException{
+		Patient patient = this.generateNewPatientWithAddress();
+		patient = this.patientService.createPatientRDF(patient);
 		
+		Patient returnPatient = this.patientService.getPatientByUri(patient.getUri());
+
+		assertEquals(returnPatient, patient);
+	}
+
+	@Test
+	public void searchPatientSPARQLTest() throws SpirontoException{
+		Patient patient = this.generateNewPatientWithAddress();
+		patient = this.patientService.createPatientRDF(patient);
+		
+		List<Patient> patients = this.patientService.searchPatientSPARQL(patient);
+
 		assertNotNull(patients);
 	}
 
@@ -122,7 +106,7 @@ public class PatientServiceTest {
 		Patient patient = new Patient();
 		patient.setFirstName("Klaus");
 		patient.setLastName("Blau");
-		patient.setPatientNumber("3456");
+		patient.setPatientNumber(String.valueOf(this.generator.nextInt()));
 		patient.setDateOfBirth(new DateTime());
 		Address address = new Address(null, "Moltkestraﬂe", "30", "Karlsruhe",
 				"76133", "D", "00");
@@ -134,24 +118,37 @@ public class PatientServiceTest {
 		updatePatient.setUri(patient.getUri());
 		updatePatient.setLastName("Gelb");
 		this.patientService.updatePatientRDF(updatePatient);
-		
+
 		updatePatient = this.patientService.getPatientByUri(patient.getUri());
 		patient.setLastName("Gelb");
-		
+
 		assertEquals(updatePatient, patient);
+	}
+
+	@Test
+	public void getAddressByUriTest() throws TripleStoreException {
+		Patient patient = this.generateNewPatientWithAddress();
+		patient = this.patientService.createPatientRDF(patient);
+		Address returnAddress = patient.getAddress();
+		try {
+			returnAddress = this.patientService.getAddressByUri(returnAddress);
+		} catch (TripleStoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		assertEquals(returnAddress, patient.getAddress());
+	}
+
+	@Test
+	public void getPatientByPatientNumberTest() throws TripleStoreException {
+		Patient patient = this.generateNewPatientWithAddress();
+		patient = this.patientService.createPatientRDF(patient);	
+		String patientNumber = patient.getPatientNumber();
+		Patient returnPatient = null;
 		
-	}
+		returnPatient = this.patientService.getPatientByPatientNumber(patientNumber);
 
-	@Test
-	@Ignore
-	public void getAddressByUriTest() {
-
-	}
-
-	@Test
-	@Ignore
-	public void getPatientByPatientNumberTest() {
-
+		assertEquals(returnPatient.getUri(),patient.getUri());
 	}
 
 	@Test
@@ -170,14 +167,6 @@ public class PatientServiceTest {
 	@Ignore
 	public void createStandardConceptsTest() {
 
-	}
-
-	public static String getPatientUri() {
-		return patientUri;
-	}
-
-	public static void setPatientUri(String patientUri) {
-		PatientServiceTest.patientUri = patientUri;
 	}
 
 }

@@ -10,6 +10,7 @@ import de.klinikum.domain.Concept;
 import de.klinikum.domain.Note;
 import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
+import de.klinikum.exceptions.TripleStoreException;
 
 public interface NoteService {
     /**
@@ -19,12 +20,13 @@ public interface NoteService {
      * @return
      * @throws IOException
      * @throws URISyntaxException
+     * @throws TripleStoreException
      */
 
-    Note createNote(Note note) throws IOException, URISyntaxException;
+    Note createNote(Note note) throws IOException, URISyntaxException, TripleStoreException;
 
     /**
-     * Returns a note to a patient by his uri.
+     * Returns all notes connected to the patientUri.
      * 
      * @param patient
      * @return
@@ -38,8 +40,8 @@ public interface NoteService {
      * @param uri
      * @return
      * @throws SpirontoException
-     * @throws IOException 
-     * @throws RepositoryException 
+     * @throws IOException
+     * @throws RepositoryException
      */
     Note getNoteByUri(String uri) throws SpirontoException, RepositoryException, IOException;
 
@@ -59,9 +61,9 @@ public interface NoteService {
      * 
      * @param note
      * @return
-     * @throws SpirontoException 
-     * @throws IOException 
-     * @throws RepositoryException 
+     * @throws SpirontoException
+     * @throws IOException
+     * @throws RepositoryException
      */
 
     Note getConceptsToNote(Note note) throws SpirontoException, RepositoryException, IOException;
@@ -77,4 +79,13 @@ public interface NoteService {
      */
 
     Note updateNote(Note note) throws SpirontoException, IOException;
+
+    /**
+     * Checks whether a note exists.
+     * 
+     * @param noteUri
+     * @return
+     * @throws IOException
+     */
+    boolean noteExists(String noteUri) throws IOException;
 }

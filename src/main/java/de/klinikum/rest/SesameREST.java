@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import org.openrdf.model.Value;
 
 import de.klinikum.exceptions.SpirontoException;
+import de.klinikum.exceptions.TripleStoreException;
 import de.klinikum.helper.AppStartup;
 import de.klinikum.service.interfaces.SesameService;
 
@@ -66,11 +67,12 @@ public class SesameREST {
 	/**
 	 * Creates Testdata on call. 
 	 * @throws URISyntaxException 
+	 * @throws TripleStoreException 
 	 */
 	@GET
 	@Path("/createTestData")
 	@Produces(MediaType.TEXT_PLAIN)
-	public void createTestData() throws URISyntaxException {
+	public void createTestData() throws URISyntaxException, TripleStoreException {
 	    try {
             this.startup.createTestData();
         }

@@ -11,7 +11,8 @@ public enum SpiritualCareInterventionConcepts {
 
     SILENCE("meaningful silence"), 
     SPIRITUAL_ATTENDANCE("spirituelle attendance"), 
-    COUNSEL("Counsel");
+    COUNSEL("Counsel"),
+    CLOTHES("clothes");
 
     private final String value;
     private String conceptFilePath;

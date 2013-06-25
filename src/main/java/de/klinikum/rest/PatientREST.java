@@ -30,11 +30,9 @@ import de.klinikum.service.interfaces.PatientService;
 
 /**
  * 
- * PatientRest.java
- * Purpose: REST- Connection- Points for UI
- * Main Task is to deliver Patientdata from SesameStore
+ * PatientRest.java Purpose: REST- Connection- Points for UI Main Task is to deliver Patientdata from SesameStore
  * 
- * @author  Spironto Team 1
+ * @author Spironto Team 1
  * @version 1.0 08/06/13
  */
 @Path("/patient")
@@ -43,15 +41,15 @@ import de.klinikum.service.interfaces.PatientService;
 @Stateless
 public class PatientREST {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(PatientREST.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PatientREST.class);
 
-	//CDI for PatientServiceClass -> TODO: Change to Interface 
-	@Inject
-	PatientService patientService;
+    // CDI for PatientServiceClass -> TODO: Change to Interface
+    @Inject
+    PatientService patientService;
 
     /**
      * 
-     * @return Returns a standard XML- Parse of an Patient.class 
+     * @return Returns a standard XML- Parse of an Patient.class
      * @throws ParseException
      */
     @Path("/getPatientXML")
@@ -59,7 +57,7 @@ public class PatientREST {
     @Produces(MediaType.APPLICATION_XML)
     public Patient getPatientXML() throws ParseException {
 
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy");  
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy");
         DateTime date = dtf.parseDateTime("01/08/1985");
 
         Address a1 = new Address("http://spironto.de/spironto#address-gen4", "Hauptstrasse", "12", "Karlsruhe",
@@ -78,130 +76,138 @@ public class PatientREST {
 
     /**
      * TODO: ReWrite
-     * @param patientNumber -> Consumes an StringnObject from GUI- side
-     * @return Returns Patient search by PatientNumber
-     * Purpose: Main Searched used by Careteam. Patientnumber is set from #
-     * CareTeam and should
-     * be the same as in the Patient- Documents from the Hospital or be different in #
-     * case of anoymous SpirontoOPatient
-     * and hospital documentation
+     * 
+     * @param patientNumber
+     *            -> Consumes an StringnObject from GUI- side
+     * @return Returns Patient search by PatientNumber Purpose: Main Searched used by Careteam. Patientnumber is set
+     *         from # CareTeam and should be the same as in the Patient- Documents from the Hospital or be different in
+     *         # case of anoymous SpirontoOPatient and hospital documentation
      * @throws SpirontoException
      */
-	@Path("/getPatientByPatientNumber/{patientNumber}")
-	@GET
-	@Produces(MediaType.APPLICATION_XML)
-	public Patient getPatientByPatientNumber(@PathParam("patientNumber") String patientNumber) 
-	                                                                    throws SpirontoException {
-		try {
-			return this.patientService.getPatientByPatientNumber(patientNumber);
-		} 
-		    catch (TripleStoreException e) {
-			e.printStackTrace();
-			throw new SpirontoException("Error getting patient: " + e.toString(), e);
-		} 
-		    catch (Exception e) {
-			e.printStackTrace();
-			throw new SpirontoException("Error getting patient: " + e.toString(), e);
-		}
-	}
+    @Path("/getPatientByPatientNumber/{patientNumber}")
+    @GET
+    @Produces(MediaType.APPLICATION_XML)
+    public Patient getPatientByPatientNumber(@PathParam("patientNumber") String patientNumber) throws SpirontoException {
+        try {
+            return this.patientService.getPatientByPatientNumber(patientNumber);
+        }
+        catch (TripleStoreException e) {
+            e.printStackTrace();
+            throw new SpirontoException("Error getting patient: " + e);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new SpirontoException("Error getting patient: " + e.toString(), e);
+        }
+    }
 
-	/**
-	 * 
-	 * @param patient -> Consumes an PatienObject from GUI- side
-	 * @return Response HTTP status code depending on function result
-	 * Purpose: Update hole Patient Data. Function updates all notNull Field 
-	 * from given Object
-	 * @throws IOException
-	 * @throws RepositoryException
-	 * @throws TripleStoreException 
-	 */
-	@POST
-	@Path("/updatePatient")
-	@Consumes(MediaType.APPLICATION_XML)
-	public Response updatePatientRDF(Patient patient) throws IOException, RepositoryException, TripleStoreException {
+    /**
+     * 
+     * @param patient
+     *            -> Consumes an PatienObject from GUI- side
+     * @return Response HTTP status code depending on function result Purpose: Update hole Patient Data. Function
+     *         updates all notNull Field from given Object
+     * @throws IOException
+     * @throws RepositoryException
+     * @throws SpirontoException
+     */
+    @POST
+    @Path("/updatePatient")
+    @Consumes(MediaType.APPLICATION_XML)
+    public Response updatePatientRDF(Patient patient) throws IOException, RepositoryException, SpirontoException {
 
-		if (this.patientService.updatePatientRDF(patient)) {
-			return Response.status(Response.Status.OK).entity("ok").build();
-		}
-		return Response.status(Response.Status.NOT_MODIFIED).entity("not modified").build();
+        try {
+            if (this.patientService.updatePatientRDF(patient)) {
+                return Response.status(Response.Status.OK).entity("ok").build();
+            }
+            return Response.status(Response.Status.NOT_MODIFIED).entity("not modified").build();
+        }
+        catch (TripleStoreException e) {
+            e.printStackTrace();
+            throw new SpirontoException("Error updating patient: " + e);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new SpirontoException("Error creating patient: " + e.toString(), e);
+        }
 
-	}
+    }
 
-	/**
-	 * 
-	 * @param patient -> Consumes an PatienObject from GUI- side
-	 * @return Returns created PatientObject with URI generated by Sesame
-	 * Purpose: Creates User in Sesame
-	 * @throws SpirontoException
-	 */
-	@POST
-	@Path("/createPatient")
-	@Consumes(MediaType.APPLICATION_XML)
-	public Patient createPatientRDF(Patient patient) throws SpirontoException {
-		try {
-			return this.patientService.createPatientRDF(patient);
-		}
-		    catch (TripleStoreException e) {
-    			e.printStackTrace();
-    			throw new SpirontoException("Error creating patient: " + e.toString(), e);
-		} 
-		    catch (Exception e) {
-    			e.printStackTrace();
-    			throw new SpirontoException("Error creating patient: " + e.toString(), e);
-		}
+    /**
+     * 
+     * @param patient
+     *            -> Consumes an PatienObject from GUI- side
+     * @return Returns created PatientObject with URI generated by Sesame Purpose: Creates User in Sesame
+     * @throws SpirontoException
+     */
+    @POST
+    @Path("/createPatient")
+    @Consumes(MediaType.APPLICATION_XML)
+    public Patient createPatientRDF(Patient patient) throws SpirontoException {
+        try {
+            return this.patientService.createPatientRDF(patient);
+        }
+        catch (TripleStoreException e) {
+            e.printStackTrace();
+            throw new SpirontoException("Error creating patient: " + e);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new SpirontoException("Error creating patient: " + e.toString(), e);
+        }
 
-	}
+    }
 
-	/**
-	 * 
-	 * @param patient -> Consumes an PatienObject from GUI- side
-	 * @return PatientObject
-	 * Purpose: Searches for Patient by URI -> Mostly used for fetching data. 
-	 * Normally the PatientNumber is the used primarykey
-	 * @throws SpirontoException
-	 */
-	@POST
-	@Path("/getPatientByUri")
-	@Consumes(MediaType.APPLICATION_XML)
-	public Patient getPatientByUri(Patient patient) throws SpirontoException {
-		try {
-			return this.patientService.getPatientByUri(patient.getUri());
-		}
-		catch (TripleStoreException e) {
-			e.printStackTrace();
-			throw new SpirontoException("Error getting patient: " + e.toString(), e);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			throw new SpirontoException("Error getting patient: " + e.toString(), e);
-		}
-	}
-	
-	/**
-	 * 
-	 * @param patient -> Consumes an PatienObject from GUI- side
-	 * @return -> Consumes an PatienObject or null depending on Methodresult
-	 * Pupose: Searches for Patient in Sesame on given Patiendate
-	 * Used Parameters in Searchmethod (searchPatientSPARQL)
-	 *     Firstname, Lastname, DateofBirth, PatientNumber
-	 * @throws SpirontoException
-	 */
-	@POST
-	@Path("/searchPatient")
-	@Consumes(MediaType.APPLICATION_XML)
-	public List<Patient> searchPatient(Patient patient) throws SpirontoException {
-		try {
-			List<Patient> p1 = this.patientService.searchPatientSPARQL(patient);
-			return p1;
-		}
-		catch (TripleStoreException e) {
-			e.printStackTrace();
-			throw new SpirontoException("Error searching patient: " + e.toString(), e);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			throw new SpirontoException("Error searching patient: " + e.toString(), e);
-		}
-	}
+    /**
+     * 
+     * @param patient
+     *            -> Consumes an PatienObject from GUI- side
+     * @return PatientObject Purpose: Searches for Patient by URI -> Mostly used for fetching data. Normally the
+     *         PatientNumber is the used primarykey
+     * @throws SpirontoException
+     */
+    @POST
+    @Path("/getPatientByUri")
+    @Consumes(MediaType.APPLICATION_XML)
+    public Patient getPatientByUri(Patient patient) throws SpirontoException {
+        try {
+            return this.patientService.getPatientByUri(patient.getUri());
+        }
+        catch (TripleStoreException e) {
+            e.printStackTrace();
+            throw new SpirontoException("Error getting patient: " + e);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new SpirontoException("Error getting patient: " + e.toString(), e);
+        }
+    }
+
+    /**
+     * 
+     * @param patient
+     *            -> Consumes an PatienObject from GUI- side
+     * @return -> Consumes an PatienObject or null depending on Methodresult Pupose: Searches for Patient in Sesame on
+     *         given Patiendate Used Parameters in Searchmethod (searchPatientSPARQL) Firstname, Lastname, DateofBirth,
+     *         PatientNumber
+     * @throws SpirontoException
+     */
+    @POST
+    @Path("/searchPatient")
+    @Consumes(MediaType.APPLICATION_XML)
+    public List<Patient> searchPatient(Patient patient) throws SpirontoException {
+        try {
+            List<Patient> p1 = this.patientService.searchPatientSPARQL(patient);
+            return p1;
+        }
+        catch (TripleStoreException e) {
+            e.printStackTrace();
+            throw new SpirontoException("Error searching patient: " + e);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new SpirontoException("Error searching patient: " + e.toString(), e);
+        }
+    }
 
 }

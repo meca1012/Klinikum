@@ -1,4 +1,4 @@
-package de.klinikum.domain;
+package de.klinikum.persistence;
 
 /**
  * 

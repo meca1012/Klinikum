@@ -22,16 +22,17 @@ public interface PatientService {
     Patient getPatientByUri(String patientUri) throws TripleStoreException;
 
     /**
-     * Creates a new Patient.
+     * Creates a new Patient. If the patientNumber is already in use, null is returned.
      * 
      * @param patient
+     *            with address
      * @return
      * @throws TripleStoreException
      */
     Patient createPatientRDF(Patient patient) throws TripleStoreException;
 
     /**
-     * Returns a patien by various search criteria (patienNumber, fristName, lastName)
+     * Returns a patient by various search criteria (patienNumber, fristName, lastName, birthDate)
      * 
      * @param patient
      * @return
@@ -41,7 +42,7 @@ public interface PatientService {
     List<Patient> searchPatientSPARQL(Patient patient) throws TripleStoreException, SpirontoException;
 
     /**
-     * Updates a patient to a patientUri.The transferred data are updated.
+     * Updates a patient identified by his patientUri.The transfered data is updated.
      * 
      * @param patient
      * @return
@@ -52,7 +53,7 @@ public interface PatientService {
     boolean updatePatientRDF(Patient patient) throws IOException, RepositoryException, TripleStoreException;
 
     /**
-     * Returns an address to a patientUri.
+     * Returns an address by its Uri.
      * 
      * @param address
      * @return
@@ -70,7 +71,7 @@ public interface PatientService {
     Patient getPatientByPatientNumber(String patientNumber) throws TripleStoreException;
 
     /**
-     * Creates a new address to a Patient.
+     * Creates a new address. Should only be called on the service layer.
      * 
      * @param address
      * @return
@@ -79,7 +80,7 @@ public interface PatientService {
     Address createAddressRDF(Address address) throws TripleStoreException;
 
     /**
-     * Updating the address of a patient.
+     * Updates an address. Should only be called from the service layer in case of updating a patient.
      * 
      * @param address
      * @return
@@ -90,9 +91,19 @@ public interface PatientService {
     boolean updateAddressRDF(Address address) throws IOException, RepositoryException, TripleStoreException;
 
     /**
-     * adds standard tabConcepts and concepts to patient
+     * Checks whether a patient exists.
      * 
+     * @param patientUri
+     * @return
      * @throws IOException
      */
-    void createStandardConcepts(Patient patient) throws IOException;
+    boolean patientExists(String patientUri) throws IOException;
+
+    /**
+     * Called on createPatient to create all standard concept for this patient.
+     * 
+     * @throws IOException
+     * @throws TripleStoreException
+     */
+    void createStandardConcepts(Patient patient) throws IOException, TripleStoreException;
 }
