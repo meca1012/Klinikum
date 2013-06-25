@@ -10,6 +10,11 @@ import java.util.Properties;
 
 import javax.ws.rs.core.Response;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.klinikum.lucene.LuceneServiceImpl;
+
 /**
  * 
  * PropertyLoader.java Purpose: Reads Configuration -File for getting Sesamestorage Configuration
@@ -29,7 +34,7 @@ public class PropertyLoader {
     private final String sesameLanguageSetting = "spironto.language";
     private final String english = "en";
     private final String german = "de";
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(PropertyLoader.class);
     /**
      * Constructor and Properties() initialization
      */
@@ -89,10 +94,12 @@ public class PropertyLoader {
                 props.setProperty(sesameLanguageSetting, language);
                 props.store(out, null);
                 out.close();
+                LOGGER.info("Language was changed to " + language);
                 return true;
              }
            catch(Exception e)
            {
+               LOGGER.warn("Language NOT changed");
                return false;
            }
         }
