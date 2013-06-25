@@ -423,6 +423,7 @@ public class PatientServiceImpl implements PatientService {
             Concept tabConcept = new Concept();
             tabConcept.setPatientUri(patient.getUri());
             tabConcept.setLabel(tc.toString());
+            tabConcept.setEditable(false);
             this.conceptService.createTabConcept(tabConcept);
 
             switch (tc) {
