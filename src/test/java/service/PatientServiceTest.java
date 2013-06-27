@@ -1,9 +1,11 @@
 package service;
 
+import static de.klinikum.persistence.NameSpaces.PATIENT_TYPE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
@@ -18,6 +20,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openrdf.model.vocabulary.RDF;
 
 import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
@@ -120,6 +123,11 @@ public class PatientServiceTest {
         Patient returnPatient = this.patientService.getPatientByPatientNumber(patientNumber);
 
         assertEquals(returnPatient.getUri(), this.patient.getUri());
+    }
+    
+    @Test
+    public void patientExistsTest() throws IOException {
+        assertTrue(this.patientService.patientExists(this.patient.getUri()));
     }
 
     @Test
