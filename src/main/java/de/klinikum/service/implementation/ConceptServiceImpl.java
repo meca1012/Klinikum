@@ -172,8 +172,7 @@ public class ConceptServiceImpl implements ConceptService {
         Model statementList;
 
         try {
-            statementList = this.tripleStore.getStatementList(concept.getUri(), CONCEPT_LINKED_TO.toString(),
-                    null);
+            statementList = this.tripleStore.getStatementList(concept.getUri(), CONCEPT_LINKED_TO.toString(), null);
             for (Statement conceptStatement : statementList) {
                 if (onlyUris) {
                     Concept conceptToAdd = new Concept();
@@ -186,8 +185,7 @@ public class ConceptServiceImpl implements ConceptService {
                     connectedConcepts.add(conceptToAdd);
                 }
             }
-            statementList = this.tripleStore.getStatementList(null, CONCEPT_LINKED_TO.toString(),
-                    concept.getUri());
+            statementList = this.tripleStore.getStatementList(null, CONCEPT_LINKED_TO.toString(), concept.getUri());
             for (Statement conceptStatement : statementList) {
                 if (onlyUris) {
                     Concept conceptToAdd = new Concept();
@@ -285,16 +283,20 @@ public class ConceptServiceImpl implements ConceptService {
                     this.getConnected(conceptStatement.getObject().stringValue(), connected, onlyUris);
                 }
             }
-            else {
-                if (onlyUris) {
+
+            if (onlyUris) {
+                for (Statement conceptStatement : statementList) {
                     Concept conceptToAdd = new Concept();
-                    conceptToAdd.setUri(statementList.objectURI().stringValue());
+                    conceptToAdd.setUri(conceptStatement.getObject().stringValue());
                     connected.add(conceptToAdd);
-                }
-                else {
-                    connected.add(getConceptByUri(statementList.objectURI().stringValue()));
+                }                
+            }
+            else {
+                for (Statement conceptStatement : statementList) {                
+                    connected.add(getConceptByUri(conceptStatement.getObject().stringValue()));
                 }
             }
+
             return connected;
         }
         catch (RepositoryException re) {
@@ -391,10 +393,10 @@ public class ConceptServiceImpl implements ConceptService {
             if (existingConcept.getConnectedConcepts() != null) {
                 for (Concept ec : existingConcept.getConnectedConcepts()) {
 
-                    if (this.tripleStore.repositoryHasStatement(existingConcept.getUri(),
-                            CONCEPT_LINKED_TO.toString(), ec.getUri())) {
-                        this.tripleStore.removeTriples(existingConcept.getUri(),
-                                CONCEPT_LINKED_TO.toString(), ec.getUri());
+                    if (this.tripleStore.repositoryHasStatement(existingConcept.getUri(), CONCEPT_LINKED_TO.toString(),
+                            ec.getUri())) {
+                        this.tripleStore.removeTriples(existingConcept.getUri(), CONCEPT_LINKED_TO.toString(),
+                                ec.getUri());
                     }
                     else {
                         this.tripleStore.removeTriples(ec.getUri(), CONCEPT_LINKED_TO.toString(),
@@ -412,8 +414,7 @@ public class ConceptServiceImpl implements ConceptService {
 
     @Override
     public boolean conceptExists(String conceptUri) throws IOException {
-        return this.tripleStore.repositoryHasStatement(conceptUri, RDF.TYPE.toString(),
-                CONCEPT_TYPE.toString());
+        return this.tripleStore.repositoryHasStatement(conceptUri, RDF.TYPE.toString(), CONCEPT_TYPE.toString());
     }
 
     @Override

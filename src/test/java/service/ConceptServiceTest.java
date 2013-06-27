@@ -22,7 +22,6 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.joda.time.DateTime;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openrdf.model.util.ModelException;
@@ -148,8 +147,10 @@ public class ConceptServiceTest {
     }
 
     @Test
-    @Ignore
     public void getDirectConnected() {
+        /*
+         * Tested in method getTabConcepts().
+         */
     }
 
     @Test
