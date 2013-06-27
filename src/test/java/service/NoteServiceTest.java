@@ -1,7 +1,9 @@
 package service;
 
+import static de.klinikum.persistence.NameSpaces.PATIENT_HAS_NOTE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -17,7 +19,6 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.joda.time.DateTime;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openrdf.repository.RepositoryException;
@@ -46,13 +47,16 @@ import de.klinikum.service.interfaces.PatientService;
 public class NoteServiceTest {
 
     @Inject
+    ConceptService conceptService;
+    
+    @Inject
     NoteService noteService;
 
     @Inject
     PatientService patientService;
-
+    
     @Inject
-    ConceptService conceptService;
+    SesameTripleStore tripleStore;
 
     private Random generator = new Random(System.currentTimeMillis());
 
@@ -92,7 +96,18 @@ public class NoteServiceTest {
 
         assertNotNull(note);
     }
-
+    
+    @Test
+    public void getNotesTest() throws SpirontoException, IOException{
+       List<Note> notes = this.noteService.getNotes(this.patient);
+       
+       assertNotNull(notes);
+       
+       for(Note note : notes){
+           this.tripleStore.repositoryHasStatement(this.patient.getUri(), PATIENT_HAS_NOTE.toString(), note.getUri());          
+       }
+    }
+    
     @Test
     public void addConceptToNote() throws IOException, URISyntaxException, RepositoryException, SpirontoException {
         Note note = new Note();
@@ -133,7 +148,6 @@ public class NoteServiceTest {
     }
 
     @Test
-    @Ignore
     public void getConceptsToNoteTest() {
         // tested in addConceptToNote
     }
@@ -152,6 +166,20 @@ public class NoteServiceTest {
         Note updatedNote = this.noteService.updateNote(note);
 
         assertEquals(updatedNote.getText(), note.getText());
+    }
+    
+    @Test
+    public void noteExists() throws TripleStoreException, IOException, URISyntaxException{
+        Note note = new Note();
+        note.setPatientUri(this.patient.getUri());
+        note.setPriority(3);
+        note.setTitle("Hier koennte Ihr Titel stehen:");
+        note.setText("Das ist eine Notiz");
+        note = this.noteService.createNote(note);
+        
+        boolean exists = this.noteService.noteExists(note.getUri());
+        
+        assertTrue(exists);
     }
 
     public Patient getPatient() {

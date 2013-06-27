@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
@@ -37,12 +38,12 @@ public class PatientServiceTest {
     @Inject
     PatientService patientService;
 
-    Random generator = new Random(System.currentTimeMillis());
+    private Random generator = new Random(System.currentTimeMillis());
 
     private Patient patient;
 
     @Before
-    public void createPatient() throws Exception {
+    public void createNewPatientWithAddress() throws Exception {
         this.patient = new Patient();
         this.patient.setFirstName("Anke");
         this.patient.setLastName("Musterfrau");
@@ -120,6 +121,11 @@ public class PatientServiceTest {
         Patient returnPatient = this.patientService.getPatientByPatientNumber(patientNumber);
 
         assertEquals(returnPatient.getUri(), this.patient.getUri());
+    }
+    
+    @Test
+    public void patientExistsTest() throws IOException {
+        assertTrue(this.patientService.patientExists(this.patient.getUri()));
     }
 
     @Test
