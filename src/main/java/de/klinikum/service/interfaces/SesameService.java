@@ -16,6 +16,12 @@ public interface SesameService {
     /**
      * Execute a SELECT SPARQL query.
      * 
+     * This function is like Forrest Gumps mum always said...
+     * As.. Life is like a box of chocolates - you never know what you're gonna get...
+     * This function returns a construct Set<Hashmap<String,Value> from Sesame and you never now that’s inside..
+     * So it cannot passed through the REST -Service.
+
+     *  
      * @param queryString
      * @return Hashmap with results
      * @throws SpirontoException
