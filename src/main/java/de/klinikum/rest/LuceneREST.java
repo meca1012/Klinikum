@@ -88,7 +88,6 @@ public class LuceneREST {
             luceneService.storeNote(note);
         }
         catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return "Done";

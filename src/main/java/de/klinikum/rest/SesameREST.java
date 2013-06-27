@@ -77,7 +77,6 @@ public class SesameREST {
             this.startup.createTestData();
         }
         catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }        
 	}

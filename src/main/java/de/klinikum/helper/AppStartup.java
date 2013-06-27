@@ -53,7 +53,6 @@ public class AppStartup {
             this.triplestore.setDatastoreTriple();
         }
         catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -140,7 +139,6 @@ public class AppStartup {
             e.printStackTrace();
         }
         catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 

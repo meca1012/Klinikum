@@ -70,7 +70,7 @@ public class PatientREST {
     }
 
     /**
-     * TODO: ReWrite
+     * Searches for a patient by his unique patientnumber.
      * 
      * @param patientNumber
      *            -> Consumes an StringnObject from GUI- side
