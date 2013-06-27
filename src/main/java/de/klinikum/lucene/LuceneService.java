@@ -7,6 +7,17 @@ import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import de.klinikum.domain.LuceneSearchRequest;
 import de.klinikum.domain.Note;
 
+/**
+ * 
+ * LuceneServiceImpl.java 
+ * Purpose: Lucene Textsearch -> Supports a search through all indexed elements
+ * Stores Index to Path defined by lucene.propertiesstores 
+ * /de/klinikum/lucene/index in deployed filestructure
+ * 
+ * @author Constantin Treiber
+ * @version 1.0 08/06/13
+ */
+
 public interface LuceneService {
 
     /**
