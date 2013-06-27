@@ -7,6 +7,11 @@ import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import de.klinikum.domain.LuceneSearchRequest;
 import de.klinikum.domain.Note;
 
+/**
+ * 
+ * @author Constantin Treiber
+ *
+ */
 public interface LuceneService {
 
     /**

@@ -33,7 +33,11 @@ import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.exceptions.TripleStoreException;
 import de.klinikum.persistence.SesameTripleStore;
 import de.klinikum.service.interfaces.ConceptService;
-
+/**
+ * 
+ * @author Andreas Schillinger, Carsten Meiser
+ *
+ */
 @Named
 public class ConceptServiceImpl implements ConceptService {
 
@@ -297,7 +301,7 @@ public class ConceptServiceImpl implements ConceptService {
 
     @Override
     public Concept getConceptByUri(String conceptUri) throws SpirontoException {
-        
+
         if (conceptUri.isEmpty()) {
             throw new TripleStoreException("Concept uri is empty!");
         }
@@ -305,12 +309,14 @@ public class ConceptServiceImpl implements ConceptService {
         Concept conceptToReturn = new Concept();
         conceptToReturn.setUri(conceptUri);
 
-        String sparqlQuery = "SELECT ?Label ?patientUri WHERE {";
+        String sparqlQuery = "SELECT ?Label ?patientUri ?editable WHERE {";
         sparqlQuery += "<" + conceptUri + "> <" + ONTOLOGIE_CONCEPT_HAS_LABEL + "> ?Label . ";
+        sparqlQuery += "<" + conceptUri + "> <" + CONCEPT_IS_EDITABLE + "> ?editable . ";
         sparqlQuery += "?patientUri <" + PATIENT_HAS_CONCEPT + "> <" + conceptUri + ">}";
         Set<HashMap<String, Value>> queryResult = this.tripleStore.executeSelectSPARQLQuery(sparqlQuery);
         for (HashMap<String, Value> item : queryResult) {
             conceptToReturn.setLabel(item.get("Label").stringValue());
+            conceptToReturn.setEditable(Boolean.parseBoolean(item.get("editable").stringValue()));
             conceptToReturn.setPatientUri(item.get("patientUri").toString());
         }
         return conceptToReturn;
@@ -331,7 +337,7 @@ public class ConceptServiceImpl implements ConceptService {
     @Override
     public List<Concept> getConnectedConceptUris(Concept concept) throws RepositoryException, ModelException,
             IOException, SpirontoException {
-        
+
         if (concept == null) {
             throw new TripleStoreException("Concept is null!");
         }
@@ -356,7 +362,7 @@ public class ConceptServiceImpl implements ConceptService {
         if (concept == null) {
             throw new TripleStoreException("Concept is null!");
         }
-        
+
         if (concept.getUri() == null) {
             throw new TripleStoreException("Concept uri is null!");
         }

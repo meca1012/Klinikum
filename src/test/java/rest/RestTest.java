@@ -15,7 +15,7 @@ import org.junit.Test;
 
 /**
  * 
- * @author Carsten Meiser
+ * @author Carsten Meiser, Matthias Schwarzenbach
  *
  */
 public class RestTest {

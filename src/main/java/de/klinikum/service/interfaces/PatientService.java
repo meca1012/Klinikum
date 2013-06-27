@@ -9,7 +9,11 @@ import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.exceptions.TripleStoreException;
-
+/**
+ * 
+ * @author Andreas Schillinger, Carsten Meiser, Constantin Treiber, Ivan Tepeluk, Matthias Schwarzenbach
+ *
+ */
 public interface PatientService {
 
     /**

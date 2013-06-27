@@ -8,7 +8,7 @@ import org.joda.time.DateTime;
  * Purpose: Reading and Formatting Dateobject 
  * For Sesamestorage and UI delivery
  *          
- * @author  Spironto Team 1
+ * @author  Constantin Treiber, Andreas Schillinger
  * @version 1.0 08/06/13
  */
 

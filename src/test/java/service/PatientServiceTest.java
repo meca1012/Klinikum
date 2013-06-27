@@ -31,7 +31,7 @@ import de.klinikum.service.interfaces.PatientService;
 
 /**
  * 
- * @author Carsten Meiser
+ * @author Carsten Meiser, Matthias Schwarzenbach, Ivan Tepeluk
  * 
  */
 @RunWith(Arquillian.class)

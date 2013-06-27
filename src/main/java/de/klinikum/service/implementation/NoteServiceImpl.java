@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.openrdf.model.Model;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
@@ -36,7 +37,11 @@ import de.klinikum.lucene.LuceneService;
 import de.klinikum.persistence.SesameTripleStore;
 import de.klinikum.service.interfaces.ConceptService;
 import de.klinikum.service.interfaces.NoteService;
-
+/**
+ * 
+ * @author Andreas Schillinger, Carsten Meiser, Matthias Schwarzenbach
+ *
+ */
 @Named
 public class NoteServiceImpl implements NoteService {
 
@@ -66,7 +71,7 @@ public class NoteServiceImpl implements NoteService {
         URI noteUri = this.tripleStore.getUniqueURI(NOTE_TYPE.toString());
 
         note.setUri(noteUri.toString());
-        note.setCreated(new DateTime());
+        note.setCreated(new DateTime().toDateTime(DateTimeZone.forID(this.tripleStore.getTimeZone())));
 
         this.tripleStore.addTriple(noteUri.toString(), RDF.TYPE.toString(), NOTE_TYPE.toString());
         this.tripleStore.addTriple(note.getPatientUri(), PATIENT_HAS_NOTE.toString(), note.getUri());

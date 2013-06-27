@@ -29,7 +29,7 @@ import de.klinikum.service.interfaces.ConceptService;
  * 
  * ConceptREST.java Purpose: REST- Connection- Points for Sesame Ontologie Concepts
  * 
- * @author Spironto Team 1
+ * @author Carsten Meiser, Andreas Schillinger
  * @version 1.0 08/06/13
  */
 

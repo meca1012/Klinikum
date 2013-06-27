@@ -18,7 +18,7 @@ import de.klinikum.helper.XmlBirthDateAdapter;
  * Purpose: DomainObject to Store Sesame- Data and Exchange 
  * Represents a Patient with his basic personal Data         
  * 
- * @author  Spironto Team 1
+ * @author  Ivan Tepeluk, Matthias Schwarzenbach
  * @version 1.0 08/06/13
  */
 
