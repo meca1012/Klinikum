@@ -2,6 +2,7 @@ package service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 import java.util.Random;
@@ -14,13 +15,12 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.joda.time.DateTime;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
-import de.klinikum.exceptions.TripleStoreException;
 import de.klinikum.persistence.SesameTripleStore;
 import de.klinikum.service.implementation.ConceptServiceImpl;
 import de.klinikum.service.implementation.PatientServiceImpl;
@@ -34,20 +34,23 @@ import de.klinikum.service.interfaces.PatientService;
 @RunWith(Arquillian.class)
 public class PatientServiceTest {
 
-    Random generator = new Random(System.currentTimeMillis());
-
     @Inject
     PatientService patientService;
 
-    private Patient generateNewPatientWithAddress() {
-        Patient patient = new Patient();
-        patient.setFirstName("Alice");
-        patient.setLastName("Smith");
-        patient.setDateOfBirth(new DateTime());
-        patient.setPatientNumber(String.valueOf(this.generator.nextInt()));
+    Random generator = new Random(System.currentTimeMillis());
+
+    private Patient patient;
+
+    @Before
+    public void createPatient() throws Exception {
+        this.patient = new Patient();
+        this.patient.setFirstName("Anke");
+        this.patient.setLastName("Musterfrau");
+        this.patient.setDateOfBirth(new DateTime());
+        this.patient.setPatientNumber(String.valueOf(this.generator.nextInt()));
         Address address = new Address(null, "Musterstr.", "1", "Musterstadt", "76123", "D", "110");
-        patient.setAddress(address);
-        return patient;
+        this.patient.setAddress(address);
+        this.patient = this.patientService.createPatientRDF(this.patient);
     }
 
     /**
@@ -61,100 +64,81 @@ public class PatientServiceTest {
 
     @Test
     public void createPatientRDFTest() throws Exception {
-        Patient patient = this.generateNewPatientWithAddress();
+        Patient patient = new Patient();
+        patient.setFirstName("Alice");
+        patient.setLastName("Smith");
+        patient.setDateOfBirth(new DateTime());
+        patient.setPatientNumber(String.valueOf(this.generator.nextInt()));
+        Address address = new Address(null, "Musterstr.", "1", "Musterstadt", "76123", "D", "110");
+        patient.setAddress(address);
+
         Patient returnPatient = this.patientService.createPatientRDF(patient);
 
         assertNotNull(returnPatient);
+        assertNotNull(returnPatient.getUri());
     }
 
     @Test
     public void getPatientByUriTest() throws Exception {
-        Patient patient = this.generateNewPatientWithAddress();
-        patient = this.patientService.createPatientRDF(patient);
+        Patient returnPatient = this.patientService.getPatientByUri(this.patient.getUri());
 
-        Patient returnPatient = this.patientService.getPatientByUri(patient.getUri());
-
-        assertEquals(returnPatient, patient);
+        assertEquals(returnPatient, this.patient);
     }
 
     @Test
     public void searchPatientSPARQLTest() throws Exception {
-        Patient patient = this.generateNewPatientWithAddress();
-        patient = this.patientService.createPatientRDF(patient);
-
-        List<Patient> patients = this.patientService.searchPatientSPARQL(patient);
+        List<Patient> patients = this.patientService.searchPatientSPARQL(this.patient);
 
         assertNotNull(patients);
     }
 
     @Test
     public void updatePatientRDFTest() throws Exception {
-
-        // Create a new patient
-        Patient patient = new Patient();
-        patient.setFirstName("Klaus");
-        patient.setLastName("Blau");
-        patient.setPatientNumber(String.valueOf(this.generator.nextInt()));
-        patient.setDateOfBirth(new DateTime());
-        Address address = new Address(null, "Moltkestraﬂe", "30", "Karlsruhe", "76133", "D", "00");
-        patient.setAddress(address);
-        patient = this.patientService.createPatientRDF(patient);
-
         // Update the lastname
-        Patient updatePatient = new Patient();
-        updatePatient.setUri(patient.getUri());
+        Patient updatePatient = this.patientService.getPatientByUri(this.patient.getUri());
         updatePatient.setLastName("Gelb");
-        this.patientService.updatePatientRDF(updatePatient);
+        boolean updated = this.patientService.updatePatientRDF(updatePatient);
 
-        updatePatient = this.patientService.getPatientByUri(patient.getUri());
-        patient.setLastName("Gelb");
+        updatePatient = this.patientService.getPatientByUri(updatePatient.getUri());
+        this.patient.setLastName("Gelb");
 
-        assertEquals(updatePatient, patient);
+        assertTrue(updated);
+        assertEquals(updatePatient, this.patient);
     }
 
     @Test
     public void getAddressByUriTest() throws Exception {
-        Patient patient = this.generateNewPatientWithAddress();
-        patient = this.patientService.createPatientRDF(patient);
-        Address returnAddress = patient.getAddress();
-        try {
-            returnAddress = this.patientService.getAddressByUri(returnAddress);
-        }
-        catch (TripleStoreException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        assertEquals(returnAddress, patient.getAddress());
+        Address returnAddress = this.patient.getAddress();
+        returnAddress = this.patientService.getAddressByUri(returnAddress);
+
+        assertEquals(returnAddress, this.patient.getAddress());
     }
 
     @Test
     public void getPatientByPatientNumberTest() throws Exception {
-        Patient patient = this.generateNewPatientWithAddress();
-        patient = this.patientService.createPatientRDF(patient);
-        String patientNumber = patient.getPatientNumber();
-        Patient returnPatient = null;
+        String patientNumber = this.patient.getPatientNumber();
+        Patient returnPatient = this.patientService.getPatientByPatientNumber(patientNumber);
 
-        returnPatient = this.patientService.getPatientByPatientNumber(patientNumber);
-
-        assertEquals(returnPatient.getUri(), patient.getUri());
+        assertEquals(returnPatient.getUri(), this.patient.getUri());
     }
 
     @Test
-    @Ignore
-    public void createAddressRDFTest() {
-
-    }
-
-    @Test
-    @Ignore
     public void updateAddressRDFTest() {
-
+        // updateAddressRDF is called in createPatientRDF
     }
 
     @Test
-    @Ignore
     public void createStandardConceptsTest() {
+        // createStandardConceptsTest is called in createPatientRDF
+        // and is tested in ConceptServiceTest
+    }
 
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 
 }
