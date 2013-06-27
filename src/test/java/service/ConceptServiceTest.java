@@ -177,7 +177,6 @@ public class ConceptServiceTest {
     }
 
     @Test
-    @Ignore
     public void findConceptsOfTabConcept() throws IOException, SpirontoException, RepositoryException, ModelException {
         Concept firstTabConcept = this.conceptService.getTabConcepts(this.patient).get(0);
         List<Concept> concepts = this.conceptService.findConceptsOfTabConcept(firstTabConcept);
@@ -195,17 +194,31 @@ public class ConceptServiceTest {
     }
 
     @Test
-    @Ignore
-    public void getConnected() {
+    public void getConnected() throws IOException, SpirontoException, RepositoryException, ModelException {
+        Concept concept = this.conceptService.getTabConcepts(this.patient).get(0);
+        List<Concept> connected = this.conceptService.getConnectedConceptUris(concept);
+        assertNotNull(connected);
+        for (Concept c : connected) {
+            assertNotNull(c);
+            assertTrue(this.conceptService.conceptExists(c.getUri()));
+            boolean one = this.tripleStore.repositoryHasStatement(c.getUri(), CONCEPT_LINKED_TO.toString(), concept.getUri());
+            boolean two = this.tripleStore.repositoryHasStatement(concept.getUri(), CONCEPT_LINKED_TO.toString(), c.getUri());
+            boolean isConnected = false;
+            if (one || two) {
+                isConnected = true;
+            }
+            assertTrue(isConnected);
+        }
     }
 
-    @Test
-    @Ignore
+    @Test    
     public void connectMultipleConcepts() {
+        /*
+         * Is tested with connectSingle test.
+         */
     }
 
     @Test
-    @Ignore
     public void isTabConcept() throws TripleStoreException, IOException, RepositoryException {
         Concept concept = new Concept();
         concept.setLabel("New TabConcept");
@@ -216,7 +229,6 @@ public class ConceptServiceTest {
     }
 
     @Test
-    @Ignore
     public void conceptExists() throws TripleStoreException, IOException {
         Concept concept = new Concept();
         concept.setLabel("New Concept");
@@ -227,7 +239,6 @@ public class ConceptServiceTest {
     }
 
     @Test
-    @Ignore
     public void getConnectedConceptUris() throws IOException, SpirontoException, RepositoryException, ModelException {
         Concept concept = this.conceptService.getTabConcepts(this.patient).get(0);
         List<Concept> connected = this.conceptService.getConnectedConceptUris(concept);

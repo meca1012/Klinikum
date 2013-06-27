@@ -1,10 +1,10 @@
 package de.klinikum.service.implementation;
 
-import static de.klinikum.persistence.NameSpaces.CONCEPT_IS_EDITABLE;
-import static de.klinikum.persistence.NameSpaces.GUI_TAB_TYPE;
 import static de.klinikum.persistence.NameSpaces.CONCEPT_HAS_LABEL;
+import static de.klinikum.persistence.NameSpaces.CONCEPT_IS_EDITABLE;
 import static de.klinikum.persistence.NameSpaces.CONCEPT_LINKED_TO;
 import static de.klinikum.persistence.NameSpaces.CONCEPT_TYPE;
+import static de.klinikum.persistence.NameSpaces.GUI_TAB_TYPE;
 import static de.klinikum.persistence.NameSpaces.PATIENT_HAS_CONCEPT;
 import static de.klinikum.persistence.NameSpaces.PATIENT_TYPE;
 
@@ -288,11 +288,11 @@ public class ConceptServiceImpl implements ConceptService {
             else {
                 if (onlyUris) {
                     Concept conceptToAdd = new Concept();
-                    conceptToAdd.setUri(statementList.objectURI().toString());
+                    conceptToAdd.setUri(statementList.objectURI().stringValue());
                     connected.add(conceptToAdd);
                 }
                 else {
-                    connected.add(this.getConceptByUri(statementList.objectURI().toString()));
+                    connected.add(getConceptByUri(statementList.objectURI().stringValue()));
                 }
             }
             return connected;
