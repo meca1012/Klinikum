@@ -86,7 +86,9 @@ public class AppStartup {
             patient2 = this.patientService.createPatientRDF(patient2);
         }
         catch (TripleStoreException e) {
-            // TODO Auto-generated catch block
+            throw new TripleStoreException(e);
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
 

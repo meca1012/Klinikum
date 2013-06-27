@@ -1,8 +1,8 @@
 package service;
 
-import static de.klinikum.persistence.NameSpaces.GUI_TAB_TYPE;
 import static de.klinikum.persistence.NameSpaces.CONCEPT_LINKED_TO;
 import static de.klinikum.persistence.NameSpaces.CONCEPT_TYPE;
+import static de.klinikum.persistence.NameSpaces.GUI_TAB_TYPE;
 import static de.klinikum.persistence.NameSpaces.PATIENT_HAS_CONCEPT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -32,7 +32,6 @@ import de.klinikum.domain.Address;
 import de.klinikum.domain.Concept;
 import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
-import de.klinikum.exceptions.TripleStoreException;
 import de.klinikum.persistence.SesameTripleStore;
 import de.klinikum.service.implementation.ConceptServiceImpl;
 import de.klinikum.service.implementation.PatientServiceImpl;
@@ -70,7 +69,7 @@ public class ConceptServiceTest {
     }
     
     @Before
-    public void createPatient() throws TripleStoreException{
+    public void createPatient() throws Exception{
         this.patient = new Patient();
         this.patient.setFirstName("Anke");
         this.patient.setLastName("Musterfrau");
@@ -93,7 +92,7 @@ public class ConceptServiceTest {
     }
  
     @Test
-    public void createConcept() throws TripleStoreException, IOException {
+    public void createConcept() throws Exception {
         Patient patient = this.generateNewPatientWithAddress();
         patient = this.patientService.createPatientRDF(patient);
         Concept newConcept = new Concept();
@@ -118,12 +117,10 @@ public class ConceptServiceTest {
     
     /**
      * Get the standard tabConcepts
-     * 
-     * @throws IOException
-     * @throws SpirontoException
+     * @throws Exception 
      */
     @Test
-    public void getTabConcepts() throws IOException, SpirontoException {
+    public void getTabConcepts() throws Exception {
         Patient patient = this.generateNewPatientWithAddress();
         patient = this.patientService.createPatientRDF(patient);
         List<Concept> tabConcepts = new ArrayList<Concept>();
@@ -136,7 +133,7 @@ public class ConceptServiceTest {
     }
 
     @Test
-    public void connectSingleConcept() throws TripleStoreException, IOException {
+    public void connectSingleConcept() throws Exception {
         Patient patient = this.generateNewPatientWithAddress();
         patient = this.patientService.createPatientRDF(patient);
         Concept concept1 = new Concept();
@@ -154,7 +151,7 @@ public class ConceptServiceTest {
     }
 
     @Test
-    public void addTabConcept() throws TripleStoreException, IOException {
+    public void addTabConcept() throws Exception {
         Patient patient = this.generateNewPatientWithAddress();
         patient = this.patientService.createPatientRDF(patient);
         Concept tabConcept = new Concept();

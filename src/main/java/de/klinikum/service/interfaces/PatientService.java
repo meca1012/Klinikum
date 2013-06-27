@@ -32,8 +32,9 @@ public interface PatientService {
      *            with address
      * @return
      * @throws TripleStoreException
+     * @throws Exception 
      */
-    Patient createPatientRDF(Patient patient) throws TripleStoreException;
+    Patient createPatientRDF(Patient patient) throws TripleStoreException, Exception;
 
     /**
      * Returns a patient by various search criteria (patienNumber, fristName, lastName, birthDate)
@@ -80,8 +81,9 @@ public interface PatientService {
      * @param address
      * @return
      * @throws TripleStoreException
+     * @throws Exception 
      */
-    Address createAddressRDF(Address address) throws TripleStoreException;
+    Address createAddressRDF(Address address) throws TripleStoreException, Exception;
 
     /**
      * Updates an address. Should only be called from the service layer in case of updating a patient.

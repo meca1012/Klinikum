@@ -108,7 +108,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public List<Note> getNotes(Patient patient) throws SpirontoException {
+    public List<Note> getNotes(Patient patient) throws SpirontoException, TripleStoreException {
 
         if (patient == null) {
             throw new TripleStoreException("Patient is null!");
@@ -141,7 +141,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public Note getNoteByUri(String noteUri) throws SpirontoException {
+    public Note getNoteByUri(String noteUri) throws SpirontoException, TripleStoreException {
 
         if (noteUri.isEmpty()) {
             throw new TripleStoreException("Note Uri is empty!");
@@ -183,7 +183,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public Note getConceptsToNote(Note note) throws SpirontoException {
+    public Note getConceptsToNote(Note note) throws SpirontoException, TripleStoreException {
 
         if (note == null) {
             throw new TripleStoreException("Note is null!");
@@ -215,7 +215,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public Note updateNote(Note note) throws SpirontoException, IOException {
+    public Note updateNote(Note note) throws SpirontoException, IOException, TripleStoreException {
 
         if (note == null) {
             throw new TripleStoreException("Note is null!");
