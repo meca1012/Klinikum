@@ -205,9 +205,11 @@ public class ConceptServiceImpl implements ConceptService {
         }
         catch (RepositoryException e) {
             e.printStackTrace();
+            throw new SpirontoException(e);
         }
         catch (IOException e) {
             e.printStackTrace();
+            throw new SpirontoException(e);
         }
         return connectedConcepts;
     }
@@ -239,9 +241,11 @@ public class ConceptServiceImpl implements ConceptService {
         }
         catch (RepositoryException e) {
             e.printStackTrace();
+            throw new SpirontoException(e);
         }
         catch (IOException e) {
             e.printStackTrace();
+            throw new SpirontoException(e);
         }
         return concepts;
     }
@@ -300,7 +304,7 @@ public class ConceptServiceImpl implements ConceptService {
             return connected;
         }
         catch (RepositoryException re) {
-            throw new IOException(re);
+            throw new SpirontoException(re);
         }
     }
 

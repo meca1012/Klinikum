@@ -22,8 +22,9 @@ public interface PatientService {
      * @param patientUri
      * @return
      * @throws TripleStoreException
+     * @throws SpirontoException 
      */
-    Patient getPatientByUri(String patientUri) throws TripleStoreException;
+    Patient getPatientByUri(String patientUri) throws TripleStoreException, SpirontoException;
 
     /**
      * Creates a new Patient. If the patientNumber is already in use, null is returned.
@@ -54,8 +55,9 @@ public interface PatientService {
      * @throws IOException
      * @throws RepositoryException
      * @throws TripleStoreException
+     * @throws SpirontoException 
      */
-    boolean updatePatientRDF(Patient patient) throws IOException, RepositoryException, TripleStoreException;
+    boolean updatePatientRDF(Patient patient) throws IOException, RepositoryException, TripleStoreException, SpirontoException;
 
     /**
      * Returns an address by its Uri.
@@ -72,8 +74,9 @@ public interface PatientService {
      * @param patientNumber
      * @return
      * @throws TripleStoreException
+     * @throws SpirontoException 
      */
-    Patient getPatientByPatientNumber(String patientNumber) throws TripleStoreException;
+    Patient getPatientByPatientNumber(String patientNumber) throws TripleStoreException, SpirontoException;
 
     /**
      * Creates a new address. Should only be called on the service layer.

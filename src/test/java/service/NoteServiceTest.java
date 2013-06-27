@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Random;
 
@@ -21,14 +20,12 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openrdf.repository.RepositoryException;
 
 import de.klinikum.domain.Address;
 import de.klinikum.domain.Concept;
 import de.klinikum.domain.Note;
 import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
-import de.klinikum.exceptions.TripleStoreException;
 import de.klinikum.lucene.LuceneServiceImpl;
 import de.klinikum.persistence.SesameTripleStore;
 import de.klinikum.service.implementation.ConceptServiceImpl;
@@ -85,7 +82,7 @@ public class NoteServiceTest {
     }
 
     @Test
-    public void createNoteTest() throws IOException, URISyntaxException, TripleStoreException {
+    public void createNoteTest() throws Exception {
         Note note = new Note();
         String patientUri = this.patient.getUri();
         note.setPatientUri(patientUri);
@@ -109,7 +106,7 @@ public class NoteServiceTest {
     }
     
     @Test
-    public void addConceptToNote() throws IOException, URISyntaxException, RepositoryException, SpirontoException {
+    public void addConceptToNote() throws Exception {
         Note note = new Note();
         String patientUri = this.patient.getUri();
         note.setPatientUri(patientUri);
@@ -134,7 +131,7 @@ public class NoteServiceTest {
     }
 
     @Test
-    public void getNoteByUriTest() throws IOException, URISyntaxException, RepositoryException, SpirontoException {
+    public void getNoteByUriTest() throws Exception {
         Note note = new Note();
         String patientUri = this.patient.getUri();
         note.setPatientUri(patientUri);
@@ -153,7 +150,7 @@ public class NoteServiceTest {
     }
 
     @Test
-    public void updateNoteTest() throws IOException, URISyntaxException, SpirontoException {
+    public void updateNoteTest() throws Exception {
         Note note = new Note();
         String patientUri = this.patient.getUri();
         note.setPatientUri(patientUri);
@@ -169,7 +166,7 @@ public class NoteServiceTest {
     }
     
     @Test
-    public void noteExists() throws TripleStoreException, IOException, URISyntaxException{
+    public void noteExists() throws Exception{
         Note note = new Note();
         note.setPatientUri(this.patient.getUri());
         note.setPriority(3);

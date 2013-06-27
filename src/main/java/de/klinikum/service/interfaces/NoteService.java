@@ -25,9 +25,10 @@ public interface NoteService {
      * @throws IOException
      * @throws URISyntaxException
      * @throws TripleStoreException
+     * @throws Exception 
      */
 
-    Note createNote(Note note) throws IOException, URISyntaxException, TripleStoreException;
+    Note createNote(Note note) throws IOException, URISyntaxException, TripleStoreException, Exception;
 
     /**
      * Returns all notes connected to the patientUri.

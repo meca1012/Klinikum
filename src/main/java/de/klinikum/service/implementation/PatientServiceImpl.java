@@ -64,7 +64,7 @@ public class PatientServiceImpl implements PatientService {
     SesameTripleStore tripleStore;
 
     @Override
-    public Patient getPatientByUri(String patientUri) throws TripleStoreException {
+    public Patient getPatientByUri(String patientUri) throws SpirontoException {
 
         Patient returnPatient = new Patient();
         try {
@@ -95,47 +95,42 @@ public class PatientServiceImpl implements PatientService {
         }
         catch (RepositoryException e) {
             e.printStackTrace();
+            throw new SpirontoException(e);
         }
         catch (IOException e) {
             e.printStackTrace();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
+            throw new SpirontoException(e);
         }
         return returnPatient;
     }
 
     @Override
-    public Patient getPatientByPatientNumber(String patientNumber) throws TripleStoreException {
+    public Patient getPatientByPatientNumber(String patientNumber) throws SpirontoException {
 
         Patient patientToReturn = new Patient();
 
-        try {
-            String sparqlQuery = "SELECT DISTINCT ?Uri WHERE {";
+        String sparqlQuery = "SELECT DISTINCT ?Uri WHERE {";
 
-            sparqlQuery += "?Uri <" + PATIENT_HAS_PATIENT_NUMBER + ">\"" + patientNumber + "\"";
+        sparqlQuery += "?Uri <" + PATIENT_HAS_PATIENT_NUMBER + ">\"" + patientNumber + "\"";
 
-            sparqlQuery += "}";
+        sparqlQuery += "}";
 
-            Set<HashMap<String, Value>> result = this.tripleStore.executeSelectSPARQLQuery(sparqlQuery);
+        Set<HashMap<String, Value>> result = this.tripleStore.executeSelectSPARQLQuery(sparqlQuery);
 
-            if (result != null) {
-                if (result.size() > 1) {
-                    throw new TripleStoreException("Multiple patients found with same patient number!");
-                }
-            }
-            else {
-                throw new TripleStoreException("No patient found with the patient number " + patientNumber);
-            }
-
-            for (HashMap<String, Value> item : result) {
-                String patientUri = item.get("Uri").stringValue();
-                patientToReturn = getPatientByUri(patientUri);
+        if (result != null) {
+            if (result.size() > 1) {
+                throw new TripleStoreException("Multiple patients found with same patient number!");
             }
         }
-        catch (Exception e) {
-            e.printStackTrace();
+        else {
+            throw new TripleStoreException("No patient found with the patient number " + patientNumber);
         }
+
+        for (HashMap<String, Value> item : result) {
+            String patientUri = item.get("Uri").stringValue();
+            patientToReturn = getPatientByUri(patientUri);
+        }
+
         return patientToReturn;
     }
 
@@ -171,16 +166,13 @@ public class PatientServiceImpl implements PatientService {
         catch (IOException e) {
             e.printStackTrace();
         }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
         return addressToReturn;
     }
 
     @Override
     public Patient createPatientRDF(Patient patient) throws Exception, TripleStoreException {
         try {
-            if (getPatientByPatientNumber(patient.getPatientNumber()) == null) {
+            if (getPatientByPatientNumber(patient.getPatientNumber()) != null) {
                 throw new TripleStoreException("Patientnumber " + patient.getPatientNumber() + " already exists!");
             }
 
@@ -212,10 +204,6 @@ public class PatientServiceImpl implements PatientService {
             this.createStandardConcepts(patient);
         }
         catch (IOException e) {
-            e.printStackTrace();
-            throw new Exception(e);
-        }
-        catch (Exception e) {
             e.printStackTrace();
             throw new Exception(e);
         }
@@ -251,14 +239,10 @@ public class PatientServiceImpl implements PatientService {
             e.printStackTrace();
             throw new Exception(e);
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception(e);
-        }
     }
 
     @Override
-    public boolean updatePatientRDF(Patient patient) throws IOException, RepositoryException, TripleStoreException {
+    public boolean updatePatientRDF(Patient patient) throws IOException, RepositoryException, SpirontoException {
 
         if (patient == null) {
             throw new TripleStoreException("Patient is null!");

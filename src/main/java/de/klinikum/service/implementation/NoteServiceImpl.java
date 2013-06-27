@@ -10,7 +10,6 @@ import static de.klinikum.persistence.NameSpaces.PATIENT_HAS_NOTE;
 import static de.klinikum.persistence.NameSpaces.PATIENT_TYPE;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +56,7 @@ public class NoteServiceImpl implements NoteService {
     LuceneService luceneService;
 
     @Override
-    public Note createNote(Note note) throws IOException, URISyntaxException, TripleStoreException {
+    public Note createNote(Note note) throws Exception {
 
         if (note.getPatientUri() == null) {
             throw new TripleStoreException("Missing patientUri!");
@@ -81,14 +80,8 @@ public class NoteServiceImpl implements NoteService {
         this.tripleStore.addTripleWithStringLiteral(noteUri.toString(), NOTE_HAS_TEXT.toString(), note.getText());
         this.tripleStore.addTripleWithStringLiteral(noteUri.toString(), NOTE_HAS_TITLE.toString(), note.getTitle());
         this.tripleStore.setValue(noteUri.toString(), NOTE_HAS_PRIORITY.toString(), note.getPriority());
-
-        try {
-            luceneService.storeNote(note);
-        }
-        catch (Exception e) {
-            LOGGER.warn("Note could not been stored to LuceneIndex");
-            LOGGER.warn(e.toString());
-        }
+        
+        luceneService.storeNote(note);
 
         return note;
     }
@@ -130,12 +123,11 @@ public class NoteServiceImpl implements NoteService {
         }
         catch (RepositoryException e) {
             e.printStackTrace();
+            throw new SpirontoException(e);
         }
         catch (IOException e) {
             e.printStackTrace();
-        }
-        catch (SpirontoException e) {
-            e.printStackTrace();
+            throw new SpirontoException(e);
         }
         return notes;
     }
@@ -172,9 +164,11 @@ public class NoteServiceImpl implements NoteService {
         }
         catch (RepositoryException e) {
             e.printStackTrace();
+            throw new SpirontoException(e);
         }
         catch (IOException e) {
             e.printStackTrace();
+            throw new SpirontoException(e);
         }
 
         note = getConceptsToNote(note);
@@ -204,12 +198,11 @@ public class NoteServiceImpl implements NoteService {
         }
         catch (RepositoryException e) {
             e.printStackTrace();
+            throw new SpirontoException(e);
         }
         catch (IOException e) {
             e.printStackTrace();
-        }
-        catch (SpirontoException e) {
-            e.printStackTrace();
+            throw new SpirontoException(e);
         }
         return note;
     }

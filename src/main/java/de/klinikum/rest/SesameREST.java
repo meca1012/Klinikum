@@ -17,7 +17,6 @@ import javax.ws.rs.core.MediaType;
 import org.openrdf.model.Value;
 
 import de.klinikum.exceptions.SpirontoException;
-import de.klinikum.exceptions.TripleStoreException;
 import de.klinikum.helper.AppStartup;
 import de.klinikum.service.interfaces.SesameService;
 
@@ -51,33 +50,38 @@ public class SesameREST {
 	 * @param String -> Consumes an StringObject from GUI- side
 	 * Purpose: Execute given String directly in Sesamestore
 	 * @return Depence on Result, Return of Hashmap not yet possible
+	 * @throws SpirontoException 
 	 */
 	@POST
 	@Path("/executequery")
 	@Consumes(MediaType.TEXT_PLAIN)
-	public Set<HashMap<String, Value>> executeSPARQLQuery(String queryString) {
+	public Set<HashMap<String, Value>> executeSPARQLQuery(String queryString) throws SpirontoException {
 		try {
 			return this.SesameService.executeSPARQLQuery(queryString);
 		} catch (SpirontoException e) {
 			e.printStackTrace();
-			return null;
+			throw new SpirontoException("Error executing query: " + e.toString(), e);
 		}
 	}
 	
 	/**
 	 * Creates Testdata on call. 
 	 * @throws URISyntaxException 
-	 * @throws TripleStoreException 
+	 * @throws SpirontoException 
 	 */
 	@GET
 	@Path("/createTestData")
 	@Produces(MediaType.TEXT_PLAIN)
-	public void createTestData() throws URISyntaxException, TripleStoreException {
+	public void createTestData() throws URISyntaxException, SpirontoException {
 	    try {
             this.startup.createTestData();
         }
         catch (IOException e) {
             e.printStackTrace();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new SpirontoException("Error creating Testdata: " + e.toString(), e);
         }        
 	}
 }

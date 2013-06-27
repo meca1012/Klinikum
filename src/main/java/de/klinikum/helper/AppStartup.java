@@ -1,7 +1,6 @@
 package de.klinikum.helper;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -46,7 +45,7 @@ public class AppStartup {
 
     }
 
-    public void createTestData() throws IOException, URISyntaxException, TripleStoreException {
+    public void createTestData() throws Exception {
 
         try {
             this.triplestore.removeTriples(null, RDF.TYPE, null);
