@@ -12,18 +12,18 @@ import org.joda.time.format.ISODateTimeFormat;
  *  Uses yoda DateTime.
  *  Returned format dd-MM-yyyy HH:mm:ss
  * 
- * @author Spironto Team 1
+ * @author Constantin Treiber, Andreas Schillinger
  *
  */
-public class XmlDateTimeAdapter extends XmlAdapter<String, DateTime> {   
+public class XmlDateTimeAdapter extends XmlAdapter<String, DateTime> {
      
-    public DateTime unmarshal(String v) throws Exception {        
+    public DateTime unmarshal(String v) throws Exception {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy HH:mm:ss");
         DateTime dt = formatter.parseDateTime(v);
         return dt;
     }
  
-    public String marshal(DateTime v) throws Exception {        
+    public String marshal(DateTime v) throws Exception {
         String dateFormat = "dd-MM-yyyy HH:mm:ss";
         DateTimeFormatter dtf = ISODateTimeFormat.dateTime();
         LocalDateTime parsedDate = dtf.parseLocalDateTime(v.toString());

@@ -51,7 +51,7 @@ import de.klinikum.helper.PropertyLoader;
  * Implementation of Reading, Creating and Deleting Data as Triples, as well execute SPARQL Querys. Store Configuration
  * comes with the configuration file in properties package. Implementation for Sesame 2.7.0
  * 
- * @author Spironto Team 1, FZI - Information Process Engineering
+ * @author FZI - Information Process Engineering, Andreas Schillinger, Constantin Treiber
  * @version 1.0 08/06/13
  */
 
@@ -63,6 +63,7 @@ public class SesameTripleStore {
     private static final String repositoryIdKey = "server.repositoryId";
     private static final String repositoryTextKey = "server.repositoryText";
     private static final String spirontoNsKey = "spironto.namespace";
+    private static final String timeZone = "timezone.canonicalID";
 
     private PropertyLoader propertyLoader;
     private RepositoryManager repoManager;
@@ -74,6 +75,7 @@ public class SesameTripleStore {
     private String repositoryID;
     private String repositoryText;
     private String spirontoNs;
+    private String timezoneID = "Europe/Berlin";
 
     /**
      * Creates SesameTripleStore Object and reads the ConfigData from /de/klinikum/properties/sesame.properties
@@ -86,6 +88,7 @@ public class SesameTripleStore {
             this.repositoryID = propFile.getProperty(repositoryIdKey);
             this.repositoryText = propFile.getProperty(repositoryTextKey);
             this.spirontoNs = propFile.getProperty(spirontoNsKey);
+            this.timezoneID = propFile.getProperty(timeZone);
 
         }
         catch (Exception e) {
@@ -382,6 +385,10 @@ public class SesameTripleStore {
 
     public URI getDatastoreURI() {
         return this.datastoreURI;
+    }
+
+    public String getTimeZone() {
+        return this.timezoneID;
     }
 
     /**

@@ -10,7 +10,11 @@ import de.klinikum.domain.Concept;
 import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.exceptions.TripleStoreException;
-
+/**
+ * 
+ * @author Andreas Schillinger, Carsten Meiser
+ *
+ */
 public interface ConceptService {
 
     /**

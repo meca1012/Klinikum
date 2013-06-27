@@ -18,7 +18,7 @@ import de.klinikum.helper.XmlDateTimeAdapter;
  * Note.java Purpose: DomainObject to Store Sesame- Data and Exchange Stores Patient- Documentation and can be linked to
  * concepts
  * 
- * @author Spironto Team 1
+ * @author Ivan Tepeluk, Matthias Schwarzenbach
  * @version 1.0 08/06/13
  */
 

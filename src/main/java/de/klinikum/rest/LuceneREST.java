@@ -25,7 +25,7 @@ import de.klinikum.service.interfaces.NoteService;
  * LuceneREST.java
  * Purpose: REST- Connection- Points for Lucene Fulltext Search
  * 
- * @author  Spironto Team 1
+ * @author  Constantin Treiber
  * @version 1.0 08/06/13
  */
 

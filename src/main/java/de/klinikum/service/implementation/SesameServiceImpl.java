@@ -15,7 +15,11 @@ import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.helper.PropertyLoader;
 import de.klinikum.persistence.SesameTripleStore;
 import de.klinikum.service.interfaces.SesameService;
-
+/**
+ * 
+ * @author Constantin Treiber, Ivan Tepeluk, Carsten Meiser
+ *
+ */
 @Named
 public class SesameServiceImpl implements SesameService {
 

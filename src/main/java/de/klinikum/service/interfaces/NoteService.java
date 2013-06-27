@@ -11,7 +11,11 @@ import de.klinikum.domain.Note;
 import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.exceptions.TripleStoreException;
-
+/**
+ * 
+ * @author Andreas Schillinger, Carsten Meiser, Matthias Schwarzenbach
+ *
+ */
 public interface NoteService {
     /**
      * Creates a new Note for a patient.

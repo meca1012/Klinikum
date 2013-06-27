@@ -8,18 +8,14 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.Properties;
 
-import javax.ws.rs.core.Response;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import de.klinikum.lucene.LuceneServiceImpl;
 
 /**
  * 
  * PropertyLoader.java Purpose: Reads Configuration -File for getting Sesamestorage Configuration
  * 
- * @author Spironto Team 1
+ * @author Constantin Treiber
  * @version 1.0 08/06/13
  */
 
@@ -35,6 +31,7 @@ public class PropertyLoader {
     private final String english = "en";
     private final String german = "de";
     private static final Logger LOGGER = LoggerFactory.getLogger(PropertyLoader.class);
+
     /**
      * Constructor and Properties() initialization
      */
@@ -48,9 +45,10 @@ public class PropertyLoader {
         this.props.load(in);
         return props;
     }
-    
+
     /**
      * Loads the Property-Filename depending on configuration
+     * 
      * @return String with filename
      */
     public String getLanguageFileName() {
@@ -73,15 +71,16 @@ public class PropertyLoader {
         }
         return english + conceptConfigFile;
     }
+
     /**
      * Changes LanguageSettings via Rest
-     * @param language Language Short String
+     * 
+     * @param language
+     *            Language Short String
      * @return Boolean returns true if language changed / false if not
      */
-    public boolean changeLanguageSetting(String language)
-    {
-        if(language.equals(english) || language.equals(german))
-        {
+    public boolean changeLanguageSetting(String language) {
+        if (language.equals(english) || language.equals(german)) {
             try {
                 this.in = getClass().getResourceAsStream(propPackage + sesameConfigFile);
                 this.props.load(in);
@@ -90,21 +89,20 @@ public class PropertyLoader {
                 URL resourceUrl = getClass().getResource(propPackage + sesameConfigFile);
                 File file = new File(resourceUrl.toURI());
                 this.out = new FileOutputStream(file);
-                
+
                 props.setProperty(sesameLanguageSetting, language);
                 props.store(out, null);
                 out.close();
                 LOGGER.info("Language was changed to " + language);
                 return true;
-             }
-           catch(Exception e)
-           {
-               LOGGER.warn("Language NOT changed");
-               return false;
-           }
+            }
+            catch (Exception e) {
+                LOGGER.warn("Language NOT changed");
+                return false;
+            }
         }
-            
+
         return false;
-        
+
     }
 }

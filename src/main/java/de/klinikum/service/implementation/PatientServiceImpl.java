@@ -46,7 +46,11 @@ import de.klinikum.helper.DateUtil;
 import de.klinikum.persistence.SesameTripleStore;
 import de.klinikum.service.interfaces.ConceptService;
 import de.klinikum.service.interfaces.PatientService;
-
+/**
+ * 
+ * @author Andreas Schillinger, Carsten Meiser, Constantin Treiber, Ivan Tepeluk, Matthias Schwarzenbach
+ *
+ */
 @Named
 public class PatientServiceImpl implements PatientService {
 

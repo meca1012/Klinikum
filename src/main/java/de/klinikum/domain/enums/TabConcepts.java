@@ -7,6 +7,11 @@ import org.slf4j.LoggerFactory;
 
 import de.klinikum.helper.PropertyLoader;
 
+/**
+ * 
+ * @author Carsten Meiser
+ *
+ */
 public enum TabConcepts {
 	
     COURSEOFDISEASE("Course Of Disease"),
