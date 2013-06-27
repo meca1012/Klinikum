@@ -61,7 +61,7 @@ public class ConceptServiceTest {
     private Patient patient;
 
     /**
-         */
+     */
     @Deployment
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class).addClass(ConceptServiceImpl.class)
@@ -80,29 +80,16 @@ public class ConceptServiceTest {
         this.patient.setAddress(address);
         this.patient = this.patientService.createPatientRDF(this.patient);
     }
-
-    private Patient generateNewPatientWithAddress() {
-        Patient patient = new Patient();
-        patient.setFirstName("Alice");
-        patient.setLastName("Smith");
-        patient.setDateOfBirth(new DateTime());
-        patient.setPatientNumber(String.valueOf(this.generator.nextInt()));
-        Address address = new Address(null, "Musterstr.", "1", "Musterstadt", "76123", "D", "110");
-        patient.setAddress(address);
-        return patient;
-    }
  
     @Test
     public void createConcept() throws TripleStoreException, IOException {
-        Patient patient = this.generateNewPatientWithAddress();
-        patient = this.patientService.createPatientRDF(patient);
         Concept newConcept = new Concept();
         newConcept.setLabel("Neues TestConcept");
-        newConcept.setPatientUri(patient.getUri());
+        newConcept.setPatientUri(this.patient.getUri());
         newConcept = this.conceptService.createConcept(newConcept);
         
         assertNotNull(newConcept.getUri());
-        assertTrue(this.tripleStore.repositoryHasStatement(patient.getUri(), PATIENT_HAS_CONCEPT.toString(), newConcept.getUri()));
+        assertTrue(this.tripleStore.repositoryHasStatement(this.patient.getUri(), PATIENT_HAS_CONCEPT.toString(), newConcept.getUri()));
     }
     
     @Test
@@ -113,6 +100,7 @@ public class ConceptServiceTest {
         concept = this.conceptService.createConcept(concept);
         
         Concept foundConcept = this.conceptService.getConceptByUri(concept.getUri());
+        assertNotNull(foundConcept);
         assertEquals(foundConcept, concept);
     }
     
@@ -124,10 +112,9 @@ public class ConceptServiceTest {
      */
     @Test
     public void getTabConcepts() throws IOException, SpirontoException {
-        Patient patient = this.generateNewPatientWithAddress();
-        patient = this.patientService.createPatientRDF(patient);
+
         List<Concept> tabConcepts = new ArrayList<Concept>();
-        tabConcepts = this.conceptService.getTabConcepts(patient);
+        tabConcepts = this.conceptService.getTabConcepts(this.patient);
        
         assertNotNull(tabConcepts);
         for(Concept concept : tabConcepts){
@@ -137,16 +124,15 @@ public class ConceptServiceTest {
 
     @Test
     public void connectSingleConcept() throws TripleStoreException, IOException {
-        Patient patient = this.generateNewPatientWithAddress();
-        patient = this.patientService.createPatientRDF(patient);
+
         Concept concept1 = new Concept();
         concept1.setLabel("Concept 1");
-        concept1.setPatientUri(patient.getUri());
+        concept1.setPatientUri(this.patient.getUri());
         concept1 = this.conceptService.createConcept(concept1);
         
         Concept concept2 = new Concept();
         concept2.setLabel("Concept 2");
-        concept2.setPatientUri(patient.getUri());
+        concept2.setPatientUri(this.patient.getUri());
         concept2 = this.conceptService.createConcept(concept2);
         
         this.conceptService.connectSingleConcept(concept1, concept2);        
@@ -155,11 +141,10 @@ public class ConceptServiceTest {
 
     @Test
     public void addTabConcept() throws TripleStoreException, IOException {
-        Patient patient = this.generateNewPatientWithAddress();
-        patient = this.patientService.createPatientRDF(patient);
+     
         Concept tabConcept = new Concept();
         tabConcept.setLabel("Neues TabConcept");
-        tabConcept.setPatientUri(patient.getUri());
+        tabConcept.setPatientUri(this.patient.getUri());
         tabConcept = this.conceptService.createTabConcept(tabConcept);
         
         assertNotNull(tabConcept);
@@ -187,7 +172,7 @@ public class ConceptServiceTest {
    
      Concept newConcept = new Concept();
      newConcept.setLabel("Neues TestConcept");
-     newConcept.setPatientUri(patient.getUri());
+     newConcept.setPatientUri(this.patient.getUri());
      newConcept = this.conceptService.createConcept(newConcept);
      newConcept.setLabel("Neuer Conceptname :-)");
      Concept updateConcept = this.conceptService.updateConcept(newConcept);
@@ -226,7 +211,7 @@ public class ConceptServiceTest {
     }
 
     public Patient getPatient() {
-        return patient;
+        return this.patient;
     }
 
     public void setPatient(Patient patient) {
