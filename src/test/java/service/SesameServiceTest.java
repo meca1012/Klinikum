@@ -56,6 +56,10 @@ public class SesameServiceTest {
     @Inject
     PatientService patientService;
 
+    /**
+     * Generating of new Patients for testing
+     * @return
+     */
     private Patient generateNewPatientWithAddress() {
         Patient patient = new Patient();
         patient.setFirstName("Alice");
@@ -67,6 +71,10 @@ public class SesameServiceTest {
         return patient;
     }
 
+    /**
+     * Loading classes to Arquillian
+     * @return
+     */
     @Deployment
     public static JavaArchive createDeployment() {
 
@@ -91,16 +99,12 @@ public class SesameServiceTest {
 
         if (languangeChanged) {
             this.propertyLoader = new PropertyLoader();
-
             Properties propFile = propertyLoader.load(CONFIGNAME);
             String languageFromProperty = propFile.getProperty(CONFIGLANGUAGE);
-
             Assert.assertEquals(ENGLISH, languageFromProperty);
-
         }
 
         languangeChanged = this.sesameService.changeLanguageSetting(GERMAN);
-
         Assert.assertEquals(true, languangeChanged);
 
         if (languangeChanged) {
@@ -110,11 +114,14 @@ public class SesameServiceTest {
             String languageFromProperty = propFile.getProperty(CONFIGLANGUAGE);
 
             Assert.assertEquals(GERMAN, languageFromProperty);
-
         }
 
     }
-
+    
+    /**
+     * Testing direct create and use of SPARQL Query
+     * @throws Exception
+     */
     @Test
     public void executeSPARQLQueryTest() throws Exception {
         Patient patient = this.generateNewPatientWithAddress();
