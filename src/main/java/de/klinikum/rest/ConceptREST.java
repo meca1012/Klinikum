@@ -16,8 +16,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.openrdf.model.util.ModelException;
 import org.openrdf.repository.RepositoryException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import de.klinikum.domain.Concept;
 import de.klinikum.domain.Patient;
@@ -38,8 +36,6 @@ import de.klinikum.service.interfaces.ConceptService;
 @Consumes
 @Stateless
 public class ConceptREST {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ConceptREST.class);
 
     // CDI of ConceptService.class
     @Inject

@@ -59,7 +59,7 @@ public class NoteServiceTest {
     private Patient patient;
 
     @Before
-    public void createNewPatientWithAddress() throws TripleStoreException {
+    public void createNewPatientWithAddress() throws Exception {
         Patient patient = new Patient();
         patient.setFirstName("Alice");
         patient.setLastName("Smith");

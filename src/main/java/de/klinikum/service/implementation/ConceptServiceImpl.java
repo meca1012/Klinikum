@@ -33,10 +33,11 @@ import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.exceptions.TripleStoreException;
 import de.klinikum.persistence.SesameTripleStore;
 import de.klinikum.service.interfaces.ConceptService;
+
 /**
  * 
  * @author Andreas Schillinger, Carsten Meiser
- *
+ * 
  */
 @Named
 public class ConceptServiceImpl implements ConceptService {
@@ -47,7 +48,7 @@ public class ConceptServiceImpl implements ConceptService {
     SesameTripleStore tripleStore;
 
     @Override
-    public List<Concept> getTabConcepts(Patient patient) throws SpirontoException, IOException {
+    public List<Concept> getTabConcepts(Patient patient) throws SpirontoException, IOException, TripleStoreException {
 
         if (patient == null) {
             throw new TripleStoreException("Patient is null!");
@@ -152,7 +153,8 @@ public class ConceptServiceImpl implements ConceptService {
     }
 
     @Override
-    public List<Concept> getDirectConnected(Concept concept, boolean onlyUris) throws SpirontoException, IOException {
+    public List<Concept> getDirectConnected(Concept concept, boolean onlyUris) throws SpirontoException, IOException,
+            TripleStoreException {
 
         if (concept == null) {
             throw new TripleStoreException("Concept is null!");
@@ -213,7 +215,8 @@ public class ConceptServiceImpl implements ConceptService {
     }
 
     @Override
-    public List<Concept> findAllConceptsOfPatient(Patient patient) throws SpirontoException, IOException {
+    public List<Concept> findAllConceptsOfPatient(Patient patient) throws SpirontoException, IOException,
+            TripleStoreException {
 
         if (patient == null) {
             throw new TripleStoreException("Patient is null!");
@@ -247,7 +250,7 @@ public class ConceptServiceImpl implements ConceptService {
 
     @Override
     public List<Concept> findConceptsOfTabConcept(Concept tabConcept) throws RepositoryException, IOException,
-            ModelException, SpirontoException {
+            ModelException, SpirontoException, TripleStoreException {
 
         if (tabConcept == null) {
             throw new TripleStoreException("TabConcept is null!");
@@ -272,7 +275,7 @@ public class ConceptServiceImpl implements ConceptService {
 
     @Override
     public List<Concept> getConnected(String conceptUri, List<Concept> connected, boolean onlyUris)
-            throws RepositoryException, IOException, ModelException, SpirontoException {
+            throws RepositoryException, IOException, ModelException, SpirontoException, TripleStoreException {
 
         Model statementList;
         try {
@@ -300,7 +303,7 @@ public class ConceptServiceImpl implements ConceptService {
     }
 
     @Override
-    public Concept getConceptByUri(String conceptUri) throws SpirontoException {
+    public Concept getConceptByUri(String conceptUri) throws SpirontoException, TripleStoreException {
 
         if (conceptUri.isEmpty()) {
             throw new TripleStoreException("Concept uri is empty!");
@@ -336,7 +339,7 @@ public class ConceptServiceImpl implements ConceptService {
 
     @Override
     public List<Concept> getConnectedConceptUris(Concept concept) throws RepositoryException, ModelException,
-            IOException, SpirontoException {
+            IOException, SpirontoException, TripleStoreException {
 
         if (concept == null) {
             throw new TripleStoreException("Concept is null!");
@@ -357,7 +360,7 @@ public class ConceptServiceImpl implements ConceptService {
 
     @Override
     public Concept updateConcept(Concept concept) throws SpirontoException, IOException, RepositoryException,
-            ModelException {
+            ModelException, TripleStoreException {
 
         if (concept == null) {
             throw new TripleStoreException("Concept is null!");

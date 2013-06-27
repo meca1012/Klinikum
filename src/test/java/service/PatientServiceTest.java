@@ -3,7 +3,6 @@ package service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
@@ -18,11 +17,9 @@ import org.joda.time.DateTime;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openrdf.repository.RepositoryException;
 
 import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
-import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.exceptions.TripleStoreException;
 import de.klinikum.persistence.SesameTripleStore;
 import de.klinikum.service.implementation.ConceptServiceImpl;
@@ -63,7 +60,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    public void createPatientRDFTest() throws TripleStoreException {
+    public void createPatientRDFTest() throws Exception {
         Patient patient = this.generateNewPatientWithAddress();
         Patient returnPatient = this.patientService.createPatientRDF(patient);
 
@@ -71,7 +68,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    public void getPatientByUriTest() throws TripleStoreException {
+    public void getPatientByUriTest() throws Exception {
         Patient patient = this.generateNewPatientWithAddress();
         patient = this.patientService.createPatientRDF(patient);
 
@@ -81,7 +78,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    public void searchPatientSPARQLTest() throws SpirontoException {
+    public void searchPatientSPARQLTest() throws Exception {
         Patient patient = this.generateNewPatientWithAddress();
         patient = this.patientService.createPatientRDF(patient);
 
@@ -91,7 +88,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    public void updatePatientRDFTest() throws IOException, RepositoryException, TripleStoreException {
+    public void updatePatientRDFTest() throws Exception {
 
         // Create a new patient
         Patient patient = new Patient();
@@ -116,7 +113,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    public void getAddressByUriTest() throws TripleStoreException {
+    public void getAddressByUriTest() throws Exception {
         Patient patient = this.generateNewPatientWithAddress();
         patient = this.patientService.createPatientRDF(patient);
         Address returnAddress = patient.getAddress();
@@ -131,7 +128,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    public void getPatientByPatientNumberTest() throws TripleStoreException {
+    public void getPatientByPatientNumberTest() throws Exception {
         Patient patient = this.generateNewPatientWithAddress();
         patient = this.patientService.createPatientRDF(patient);
         String patientNumber = patient.getPatientNumber();

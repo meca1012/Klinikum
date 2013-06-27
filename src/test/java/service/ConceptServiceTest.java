@@ -6,7 +6,6 @@ import static de.klinikum.persistence.NameSpaces.PATIENT_HAS_CONCEPT;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -27,8 +26,6 @@ import org.openrdf.model.vocabulary.RDF;
 import de.klinikum.domain.Address;
 import de.klinikum.domain.Concept;
 import de.klinikum.domain.Patient;
-import de.klinikum.exceptions.SpirontoException;
-import de.klinikum.exceptions.TripleStoreException;
 import de.klinikum.persistence.SesameTripleStore;
 import de.klinikum.service.implementation.ConceptServiceImpl;
 import de.klinikum.service.implementation.PatientServiceImpl;
@@ -76,7 +73,7 @@ public class ConceptServiceTest {
 
     // Get the standard tabConcepts
     @Test
-    public void getTabConcepts() throws IOException, SpirontoException {
+    public void getTabConcepts() throws Exception {
         Patient patient = this.generateNewPatientWithAddress();
         patient = this.patientService.createPatientRDF(patient);
         List<Concept> tabConcepts = new ArrayList<Concept>();
@@ -86,7 +83,7 @@ public class ConceptServiceTest {
     }
 
     @Test
-    public void createConcept() throws TripleStoreException, IOException {
+    public void createConcept() throws Exception {
         Patient patient = this.generateNewPatientWithAddress();
         patient = this.patientService.createPatientRDF(patient);
         Concept newConcept = new Concept();
@@ -99,7 +96,7 @@ public class ConceptServiceTest {
     }
 
     @Test
-    public void connectSingleConcept() throws TripleStoreException, IOException {
+    public void connectSingleConcept() throws Exception {
         Patient patient = this.generateNewPatientWithAddress();
         patient = this.patientService.createPatientRDF(patient);
         Concept concept1 = new Concept();
@@ -118,7 +115,7 @@ public class ConceptServiceTest {
     }
 
     @Test
-    public void addTabConcept() throws TripleStoreException, IOException {
+    public void addTabConcept() throws Exception {
         Patient patient = this.generateNewPatientWithAddress();
         patient = this.patientService.createPatientRDF(patient);
         Concept tabConcept = new Concept();
