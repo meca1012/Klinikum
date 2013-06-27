@@ -11,18 +11,23 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * 
  * @author Carsten Meiser, Matthias Schwarzenbach
  * 
- *         This test was implemented to find mistakes in XML resources of HSKA-Team2
+ *         This test was implemented to find mistakes in XML resources which are incoming via rest.
+ *         The tests are @Ignored, because you can't run them while building because the server
+ *         doesn't have the resources yet.
+ *         
  * 
  */
 public class RestTest {
 
     @Test
+    @Ignore
     public void testRestInfo() throws ClientProtocolException, IOException {
 
         System.out.println("testRestInfo");
@@ -45,6 +50,7 @@ public class RestTest {
     }
 
     @Test
+    @Ignore
     public void testCreatePatient() throws ClientProtocolException, IOException {
 
         System.out.println("testCreatePatient");
@@ -73,6 +79,7 @@ public class RestTest {
     }
 
     @Test
+    @Ignore
     public void testAddConceptToPatient() throws ClientProtocolException, IOException {
 
         System.out.println("testAddConceptToPatient");
@@ -101,6 +108,7 @@ public class RestTest {
     }
 
     @Test
+    @Ignore
     public void testGetTabConcepts() throws ClientProtocolException, IOException {
 
         System.out.println("testGetTabConcepts");
