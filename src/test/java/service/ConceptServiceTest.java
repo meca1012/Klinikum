@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openrdf.model.util.ModelException;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.repository.RepositoryException;
 
@@ -177,7 +178,20 @@ public class ConceptServiceTest {
 
     @Test
     @Ignore
-    public void findConceptsOfTabConcept() {
+    public void findConceptsOfTabConcept() throws IOException, SpirontoException, RepositoryException, ModelException {
+        Concept firstTabConcept = this.conceptService.getTabConcepts(this.patient).get(0);
+        List<Concept> concepts = this.conceptService.findConceptsOfTabConcept(firstTabConcept);
+        assertNotNull(concepts);
+        for (Concept c : concepts) {
+            assertTrue(this.tripleStore.repositoryHasStatement(c.getUri(), RDF.TYPE.toString(), CONCEPT_TYPE.toString()));
+            boolean one = this.tripleStore.repositoryHasStatement(c.getUri(), CONCEPT_LINKED_TO.toString(), firstTabConcept.getUri());
+            boolean two = this.tripleStore.repositoryHasStatement(firstTabConcept.getUri(), CONCEPT_LINKED_TO.toString(), c.getUri());
+            boolean isConnected = false;
+            if (one || two) {
+                isConnected = true;
+            }
+            assertTrue(isConnected);
+        }
     }
 
     @Test
@@ -192,17 +206,36 @@ public class ConceptServiceTest {
 
     @Test
     @Ignore
-    public void isTabConcept() {
+    public void isTabConcept() throws TripleStoreException, IOException, RepositoryException {
+        Concept concept = new Concept();
+        concept.setLabel("New TabConcept");
+        concept.setPatientUri(this.patient.getUri());
+        concept = this.conceptService.createTabConcept(concept);
+        
+        assertTrue(this.conceptService.isTabConcept(concept));
     }
 
     @Test
     @Ignore
-    public void conceptExists() {
+    public void conceptExists() throws TripleStoreException, IOException {
+        Concept concept = new Concept();
+        concept.setLabel("New Concept");
+        concept.setPatientUri(this.patient.getUri());
+        concept = this.conceptService.createConcept(concept);
+        
+        assertTrue(this.conceptService.conceptExists(concept.getUri()));
     }
 
     @Test
     @Ignore
-    public void getConnectedConceptUris(Concept concept) {
+    public void getConnectedConceptUris() throws IOException, SpirontoException, RepositoryException, ModelException {
+        Concept concept = this.conceptService.getTabConcepts(this.patient).get(0);
+        List<Concept> connected = this.conceptService.getConnectedConceptUris(concept);
+        assertNotNull(connected);
+        for (Concept c : connected) {
+            assertTrue(this.conceptService.conceptExists(c.getUri()));
+        }
+        
     }
 
     public Patient getPatient() {
