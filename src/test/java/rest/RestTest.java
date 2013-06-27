@@ -13,6 +13,11 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.junit.Test;
 
+/**
+ * 
+ * @author Carsten Meiser
+ *
+ */
 public class RestTest {
 
 	@Test

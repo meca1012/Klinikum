@@ -33,7 +33,7 @@ import de.klinikum.domain.Patient;
 import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.exceptions.TripleStoreException;
 import de.klinikum.helper.DateUtil;
-import de.klinikum.lucene.LuceneServiceImpl;
+import de.klinikum.lucene.LuceneService;
 import de.klinikum.persistence.SesameTripleStore;
 import de.klinikum.service.interfaces.ConceptService;
 import de.klinikum.service.interfaces.NoteService;
@@ -50,7 +50,7 @@ public class NoteServiceImpl implements NoteService {
     ConceptService conceptService;
 
     @Inject
-    LuceneServiceImpl luceneService;
+    LuceneService luceneService;
 
     @Override
     public Note createNote(Note note) throws IOException, URISyntaxException, TripleStoreException {
