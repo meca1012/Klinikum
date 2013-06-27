@@ -17,7 +17,7 @@ import org.junit.Test;
  * 
  * @author Carsten Meiser, Matthias Schwarzenbach
  * 
- *         This test was written to find mistakes in XML resources of HSKA-Team2
+ *         This test was implemented to find mistakes in XML resources of HSKA-Team2
  * 
  */
 public class RestTest {
