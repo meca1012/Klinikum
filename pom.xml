@@ -4,8 +4,70 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.klinikumlmu.server</groupId>
 	<artifactId>KlinikumServer</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>RC1</version>
 	<name>KlinikumServer</name>
+	<developers>
+		<developer>
+			<id>scan1029</id>
+			<name>Andreas Schillinger</name>
+			<email>scan1029@hs-karlsruhe.de</email>
+			<url>http://www.iwi.hs-karlsruhe.de</url>
+			<organization>Hochschule Karlsruhe</organization>
+			<organizationUrl>http://www.iwi.hs-karlsruhe.de</organizationUrl>
+			<roles>
+				<role>Student</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>scma1064</id>
+			<name>Matthias Schwarzenbach</name>
+			<email>scma1064@hs-karlsruhe.de</email>
+			<url>http://www.iwi.hs-karlsruhe.de</url>
+			<organization>Hochschule Karlsruhe</organization>
+			<organizationUrl>http://www.iwi.hs-karlsruhe.de</organizationUrl>
+			<roles>
+				<role>Student</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>trco1011</id>
+			<name>Constantin Treiber</name>
+			<email>trco1011@hs-karlsruhe.de</email>
+			<url>http://www.iwi.hs-karlsruhe.de</url>
+			<organization>Hochschule Karlsruhe</organization>
+			<organizationUrl>http://www.iwi.hs-karlsruhe.de</organizationUrl>
+			<roles>
+				<role>Student</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>meca1012</id>
+			<name>Carsten Meiser</name>
+			<email>meca1012@hs-karlsruhe.de</email>
+			<url>http://www.iwi.hs-karlsruhe.de</url>
+			<organization>Hochschule Karlsruhe</organization>
+			<organizationUrl>http://www.iwi.hs-karlsruhe.de</organizationUrl>
+			<roles>
+				<role>Student</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>teiv1011</id>
+			<name>Ivan Tepeluk</name>
+			<email>teiv1011@hs-karlsruhe.de</email>
+			<url>http://www.iwi.hs-karlsruhe.de</url>
+			<organization>Hochschule Karlsruhe</organization>
+			<organizationUrl>http://www.iwi.hs-karlsruhe.de</organizationUrl>
+			<roles>
+				<role>Student</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
 
 	<properties>
 		<sesame.version>2.7.0</sesame.version>
