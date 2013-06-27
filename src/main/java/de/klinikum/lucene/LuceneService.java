@@ -7,51 +7,57 @@ import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import de.klinikum.domain.LuceneSearchRequest;
 import de.klinikum.domain.Note;
 
-/**
- * 
- * LuceneServiceImpl.java 
- * Purpose: Lucene Textsearch -> Supports a search through all indexed elements
- * Stores Index to Path defined by lucene.propertiesstores 
- * /de/klinikum/lucene/index in deployed filestructure
- * 
- * @author Constantin Treiber
- * @version 1.0 08/06/13
- */
-
 public interface LuceneService {
 
     /**
-     * initialize Writer for Lucene - Document / Indexfile writing;
+     * Purpose: Initializes Index-Writer in OpenMode Open Index-Directory Sets StandardAnalyser for Lucene-Version 4.3
+     * Constructs indexWriter with given configuration
      * 
      * @param mode
-     *            /Create/CreateOrRead/Read
+     *            OpenMode Configuration / Read / Write / ReadWrite
      * @throws Exception
+     *             if index opening fails
      */
     public abstract void initalizeWriter(OpenMode mode) throws Exception;
 
     /**
-     * Purpose -> Mapping from Note to Doc and Storing to Index
+     * Purpose: Stores note to Lucene-Index. Creates searchable Lucene-Document from Note
      * 
+     * @param   note
+     *              Consumes Note to store
+     * @return  boolean
+     *               Return boolean true -> if stored / false -> if note could not been stored
      * @throws Exception
-     * 
+     *              Throwed if document can not be added to the index
      */
     public abstract boolean storeNote(Note note) throws Exception;
 
     /**
+     * Purpose: Deletes note from Lucene-Index. Uses uri for identification
      * 
-     * @param note
-     *            -> Consumes Note.class Purpose: Delete Notes from Index
-     * @return true or false depending on delete- state
+     * @param Cosumes
+     *            Note to delete
+     *            
+     * @return boolean
+     *          Return boolean true -> if deleted / false -> if note could not been deleted
+     * 
      * @throws Exception
+     *           Throwed if index not been initialized 
      */
     public abstract boolean deleteNote(Note note) throws Exception;
 
     /**
+     * Purpose: Searches for Notes in Lucene-Index Opens Index Build searchQuery from LuceneSearchRequest-Object Fires
+     * Query -> Max results is cut to 10 Items per search Stores Note-URI to returnUriList
      * 
-     * @param searchString
-     *            Text that will be searched in index
-     * @return List of URI which texts includes searchString
+     * @param request
+     *              LuceneSearchRequest with includes patientUri searchString
+     *            
+     * @return List<String>
+     *              Return List of uri found by Lucene
+     * 
      * @throws Exception
+     *             Throwed if index not been initialized 
      */
     public abstract List<String> searchNotes(LuceneSearchRequest request) throws Exception;
 
