@@ -42,6 +42,7 @@ public class LuceneServiceTest {
     private final static String PATIENTURI = "http://spironto.de/spironto#patient-gen11";;
     private final static String NOTEURI_1 = "http://spironto.de/spironto#note-gen1";
     private final static String NOTEURI_2 = "http://spironto.de/spironto#note-gen2";
+    private final static String NOTEURI_3 = "http://spironto.de/spironto#note-gen3";
     private final static String NOTETITLE = "endless important";
     private final static String NOTETEXT = "This is a wonderfull endless text about the most important patient N°11";
     private final static int NOTEPRIO = 1;
@@ -88,7 +89,7 @@ public class LuceneServiceTest {
     
         
     @Test 
-    public void storeNote() throws Exception
+    public void luceneStoreNoteTest() throws Exception
     {
         boolean stored = this.luceneService.storeNote(this.note);     
         boolean found = false;
@@ -112,7 +113,7 @@ public class LuceneServiceTest {
     }
     
     @Test
-    public void deleteNote() throws Exception
+    public void luceneDeleteNoteTest() throws Exception
     {
         //Making Sure that NOTEURI is just once in index
         this.note.setUri(NOTEURI_2);
@@ -136,6 +137,33 @@ public class LuceneServiceTest {
             Assert.assertEquals(false, found);
         }
        
+    }
+    
+    @Test
+    public void luceneSearchTest() throws Exception {
+        {
+            this.note.setUri(NOTEURI_3);
+            boolean stored = this.luceneService.storeNote(this.note);     
+            boolean found = false;
+            
+            Assert.assertEquals(true, stored);
+            
+            if(stored)
+            {
+                List<String> returnUriList = this.luceneService.searchNotes(this.request);
+                for(String uri : returnUriList)
+                {
+                     if(uri.equals(NOTEURI_3))
+                     {
+                         found = true;
+                     }
+                }
+                
+                Assert.assertEquals(true, found);
+            }
+            
+        }
+        
     }
         
 }

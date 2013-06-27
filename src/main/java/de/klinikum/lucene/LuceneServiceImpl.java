@@ -35,8 +35,8 @@ import de.klinikum.helper.PropertyLoader;
 
 /**
  * 
- * LuceneServiceImpl.java Purpose: Lucene-Search -> Supports a search through all indexed elements. 
- * Stores Index to Path defined by lucene.properties. 
+ * LuceneServiceImpl.java Purpose: Lucene-Search -> Supports a search through all indexed elements. Stores Index to Path
+ * defined by lucene.properties.
  * 
  * @author Constantin Treiber
  * @version 2.0 27/06/13
@@ -96,7 +96,9 @@ public class LuceneServiceImpl implements LuceneService {
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see de.klinikum.lucene.LuceneService#initalizeWriter(org.apache.lucene.index.IndexWriterConfig.OpenMode)
      */
     @Override
@@ -123,7 +125,9 @@ public class LuceneServiceImpl implements LuceneService {
         this.indexWriter.close();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see de.klinikum.lucene.LuceneService#storeNote(de.klinikum.domain.Note)
      */
     @Override
@@ -162,7 +166,9 @@ public class LuceneServiceImpl implements LuceneService {
         return true;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see de.klinikum.lucene.LuceneService#deleteNote(de.klinikum.domain.Note)
      */
     @Override
@@ -197,20 +203,24 @@ public class LuceneServiceImpl implements LuceneService {
         indexSearcher.search(query, collector);
 
         ScoreDoc[] hits = collector.topDocs().scoreDocs;
-        int docId = hits[0].doc;
-        Document d = indexSearcher.doc(docId);
-        String URI = d.get(URINOTE);
+        if (hits.length > 0) {
+            int docId = hits[0].doc;
+            Document document = indexSearcher.doc(docId);
+            String URI = document.get(URINOTE);
 
-        if (URI == note.getUri()) {
+            if (URI == note.getUri()) {
 
-            return false;
+                return false;
+            }
+            LOGGER.info("Note '" + note.getUri() + " deleted");
         }
-        LOGGER.info("Note '" + note.getUri() + " deleted");
         return true;
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see de.klinikum.lucene.LuceneService#searchNotes(de.klinikum.domain.LuceneSearchRequest)
      */
     @Override
