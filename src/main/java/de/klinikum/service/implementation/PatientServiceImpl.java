@@ -64,8 +64,9 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public Patient getPatientByUri(String patientUri) throws TripleStoreException {
-        try {
-            Patient returnPatient = new Patient();
+        
+        Patient returnPatient = new Patient();
+        try {            
             URI patientURI = this.tripleStore.getValueFactory().createURI(patientUri.toString());
             String firstName = this.tripleStore.getObjectString(patientURI.toString(),
                     PATIENT_HAS_FIRST_NAME.toString());
@@ -86,28 +87,29 @@ public class PatientServiceImpl implements PatientService {
             returnPatient.setFirstName(firstName);
             returnPatient.setLastName(lastName);
             returnPatient.setDateOfBirth(dateOfBirth);
-            return returnPatient;
-
+            
+            if (returnPatient.getUri() == null) {
+                throw new TripleStoreException("Patient with the uri " + patientUri + " was not found!");
+            }
         }
         catch (RepositoryException e) {
             e.printStackTrace();
-            throw new TripleStoreException(e);
         }
         catch (IOException e) {
             e.printStackTrace();
-            throw new TripleStoreException(e);
         }
         catch (Exception e) {
             e.printStackTrace();
-            throw new TripleStoreException(e);
         }
+        return returnPatient;
     }
 
     @Override
     public Patient getPatientByPatientNumber(String patientNumber) throws TripleStoreException {
+        
+        Patient patientToReturn = new Patient();
+        
         try {
-            Patient patientToReturn = new Patient();
-
             String sparqlQuery = "SELECT DISTINCT ?Uri WHERE {";
 
             sparqlQuery += "?Uri <" + PATIENT_HAS_PATIENT_NUMBER + ">\"" + patientNumber + "\"";
@@ -115,19 +117,24 @@ public class PatientServiceImpl implements PatientService {
             sparqlQuery += "}";
 
             Set<HashMap<String, Value>> result = this.tripleStore.executeSelectSPARQLQuery(sparqlQuery);
+            
+            if (result != null) {
+                if (result.size() > 1) {
+                    throw new TripleStoreException("Multiple patients found with same patient number!");
+                }
+            } else {
+                throw new TripleStoreException("No patient found with the patient number " + patientNumber);
+            }
 
             for (HashMap<String, Value> item : result) {
                 String patientUri = item.get("Uri").stringValue();
                 patientToReturn = getPatientByUri(patientUri);
             }
-
-            return patientToReturn;
-
         }
         catch (Exception e) {
             e.printStackTrace();
-            throw new TripleStoreException(e);
-        }
+        }        
+        return patientToReturn;
     }
 
     @Override
@@ -135,7 +142,7 @@ public class PatientServiceImpl implements PatientService {
 
         Address addressToReturn = new Address();
         try {
-            URI addressURI = this.tripleStore.getValueFactory().createURI(address.getUri().toString());
+            URI addressURI = this.tripleStore.getValueFactory().createURI(address.getUri());
             String addressStreet = this.tripleStore.getObjectString(addressURI.toString(),
                     ADDRESS_HAS_ADDRESS_STREET.toString());
             String addressStreetNumber = this.tripleStore.getObjectString(addressURI.toString(),
@@ -154,26 +161,22 @@ public class PatientServiceImpl implements PatientService {
             addressToReturn.setCity(addressCity);
             addressToReturn.setZip(addressZip);
             addressToReturn.setCountry(addressCountry);
-            addressToReturn.setPhone(addressPhone);
-            return addressToReturn;
-
+            addressToReturn.setPhone(addressPhone);            
         }
         catch (RepositoryException e) {
             e.printStackTrace();
-            throw new TripleStoreException(e);
         }
         catch (IOException e) {
             e.printStackTrace();
-            throw new TripleStoreException(e);
         }
         catch (Exception e) {
             e.printStackTrace();
-            throw new TripleStoreException(e);
         }
+        return addressToReturn;
     }
 
     @Override
-    public Patient createPatientRDF(Patient patient) throws TripleStoreException {
+    public Patient createPatientRDF(Patient patient) throws Exception, TripleStoreException {
         try {
             if (getPatientByPatientNumber(patient.getPatientNumber()) == null) {
                 throw new TripleStoreException("Patientnumber " + patient.getPatientNumber() + " already exists!");
@@ -205,22 +208,20 @@ public class PatientServiceImpl implements PatientService {
                         .getUri());
             }
             this.createStandardConcepts(patient);
-
-            return patient;
-
         }
         catch (IOException e) {
             e.printStackTrace();
-            throw new TripleStoreException(e);
+            throw new Exception(e);
         }
         catch (Exception e) {
             e.printStackTrace();
-            throw new TripleStoreException(e);
+            throw new Exception(e);
         }
+        return patient;
     }
 
     @Override
-    public Address createAddressRDF(Address address) throws TripleStoreException {
+    public Address createAddressRDF(Address address) throws Exception, TripleStoreException {
         try {
             URI addressUri = this.tripleStore.getUniqueURI(ADDRESS_TYPE.toString());
 
@@ -246,11 +247,11 @@ public class PatientServiceImpl implements PatientService {
         }
         catch (IOException e) {
             e.printStackTrace();
-            throw new TripleStoreException(e);
+            throw new Exception(e);
         }
         catch (Exception e) {
             e.printStackTrace();
-            throw new TripleStoreException(e);
+            throw new Exception(e);
         }
     }
 
@@ -316,10 +317,10 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public boolean updateAddressRDF(Address address) throws IOException, RepositoryException, TripleStoreException {
-
+    public boolean updateAddressRDF(Address address) throws IOException, RepositoryException, TripleStoreException {        
+        
         if (address.getUri() == null) {
-            return false;
+            throw new TripleStoreException("Address uri is null!");
         }
 
         Address existingAddress = getAddressByUri(address);
@@ -384,7 +385,7 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public List<Patient> searchPatientSPARQL(Patient patient) throws SpirontoException {
+    public List<Patient> searchPatientSPARQL(Patient patient) throws SpirontoException, TripleStoreException {
         List<Patient> returnPatientList = new ArrayList<Patient>();
         String sparqlQuery = "SELECT ?Uri WHERE {";
 

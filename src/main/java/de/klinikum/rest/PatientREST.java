@@ -19,8 +19,6 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.openrdf.repository.RepositoryException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
@@ -40,10 +38,7 @@ import de.klinikum.service.interfaces.PatientService;
 @Consumes
 @Stateless
 public class PatientREST {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PatientREST.class);
-
-    // CDI for PatientServiceClass -> TODO: Change to Interface
+    
     @Inject
     PatientService patientService;
 
@@ -79,9 +74,7 @@ public class PatientREST {
      * 
      * @param patientNumber
      *            -> Consumes an StringnObject from GUI- side
-     * @return Returns Patient search by PatientNumber Purpose: Main Searched used by Careteam. Patientnumber is set
-     *         from # CareTeam and should be the same as in the Patient- Documents from the Hospital or be different in
-     *         # case of anoymous SpirontoOPatient and hospital documentation
+     * @return Returns the found patient
      * @throws SpirontoException
      */
     @Path("/getPatientByPatientNumber/{patientNumber}")

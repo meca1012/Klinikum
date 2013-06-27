@@ -1,8 +1,8 @@
 package service;
 
-import static de.klinikum.persistence.NameSpaces.GUI_TAB_TYPE;
 import static de.klinikum.persistence.NameSpaces.CONCEPT_LINKED_TO;
 import static de.klinikum.persistence.NameSpaces.CONCEPT_TYPE;
+import static de.klinikum.persistence.NameSpaces.GUI_TAB_TYPE;
 import static de.klinikum.persistence.NameSpaces.PATIENT_HAS_CONCEPT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -70,7 +70,7 @@ public class ConceptServiceTest {
     }
     
     @Before
-    public void createPatient() throws TripleStoreException{
+    public void createPatient() throws Exception{
         this.patient = new Patient();
         this.patient.setFirstName("Anke");
         this.patient.setLastName("Musterfrau");
@@ -82,7 +82,7 @@ public class ConceptServiceTest {
     }
  
     @Test
-    public void createConcept() throws TripleStoreException, IOException {
+    public void createConcept() throws Exception {
         Concept newConcept = new Concept();
         newConcept.setLabel("Neues TestConcept");
         newConcept.setPatientUri(this.patient.getUri());
@@ -106,13 +106,10 @@ public class ConceptServiceTest {
     
     /**
      * Get the standard tabConcepts
-     * 
-     * @throws IOException
-     * @throws SpirontoException
+     * @throws Exception 
      */
     @Test
-    public void getTabConcepts() throws IOException, SpirontoException {
-
+    public void getTabConcepts() throws Exception {
         List<Concept> tabConcepts = new ArrayList<Concept>();
         tabConcepts = this.conceptService.getTabConcepts(this.patient);
        
@@ -123,8 +120,7 @@ public class ConceptServiceTest {
     }
 
     @Test
-    public void connectSingleConcept() throws TripleStoreException, IOException {
-
+    public void connectSingleConcept() throws Exception {
         Concept concept1 = new Concept();
         concept1.setLabel("Concept 1");
         concept1.setPatientUri(this.patient.getUri());
@@ -141,7 +137,6 @@ public class ConceptServiceTest {
 
     @Test
     public void addTabConcept() throws TripleStoreException, IOException {
-     
         Concept tabConcept = new Concept();
         tabConcept.setLabel("Neues TabConcept");
         tabConcept.setPatientUri(this.patient.getUri());
