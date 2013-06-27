@@ -107,7 +107,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public Patient getPatientByPatientNumber(String patientNumber) throws SpirontoException {
 
-        Patient patientToReturn = new Patient();
+        List<Patient> patientToReturn = new ArrayList<Patient>();
 
         String sparqlQuery = "SELECT DISTINCT ?Uri WHERE {";
 
@@ -117,21 +117,22 @@ public class PatientServiceImpl implements PatientService {
 
         Set<HashMap<String, Value>> result = this.tripleStore.executeSelectSPARQLQuery(sparqlQuery);
 
-        if (result != null) {
-            if (result.size() > 1) {
-                throw new TripleStoreException("Multiple patients found with same patient number!");
-            }
-        }
-        else {
-            throw new TripleStoreException("No patient found with the patient number " + patientNumber);
-        }
-
         for (HashMap<String, Value> item : result) {
+            Patient patient = new Patient();
             String patientUri = item.get("Uri").stringValue();
-            patientToReturn = getPatientByUri(patientUri);
+            patient = getPatientByUri(patientUri);
+            patientToReturn.add(patient);
+        }
+        if (patientToReturn.size() > 1) {
+            throw new TripleStoreException("Multiple patients with the patient number " + patientNumber + " were found!");
         }
 
-        return patientToReturn;
+        if (!patientToReturn.isEmpty()) {
+            return patientToReturn.get(0);
+        } else {
+            return null;
+        }
+        
     }
 
     @Override
