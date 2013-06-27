@@ -1,8 +1,8 @@
 package service;
 
 import static de.klinikum.persistence.NameSpaces.GUI_TAB_TYPE;
-import static de.klinikum.persistence.NameSpaces.ONTOLOGIE_CONCEPT_LINKED_TO;
-import static de.klinikum.persistence.NameSpaces.ONTOLOGIE_CONCEPT_TYPE;
+import static de.klinikum.persistence.NameSpaces.CONCEPT_LINKED_TO;
+import static de.klinikum.persistence.NameSpaces.CONCEPT_TYPE;
 import static de.klinikum.persistence.NameSpaces.PATIENT_HAS_CONCEPT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -150,7 +150,7 @@ public class ConceptServiceTest {
         concept2 = this.conceptService.createConcept(concept2);
         
         this.conceptService.connectSingleConcept(concept1, concept2);        
-        assertTrue(this.tripleStore.repositoryHasStatement(concept1.getUri(), ONTOLOGIE_CONCEPT_LINKED_TO.toString(), concept2.getUri()));      
+        assertTrue(this.tripleStore.repositoryHasStatement(concept1.getUri(), CONCEPT_LINKED_TO.toString(), concept2.getUri()));      
     }
 
     @Test
@@ -178,7 +178,7 @@ public class ConceptServiceTest {
         
         assertNotNull(concepts);
         for(Concept concept : concepts){
-            assertTrue(this.tripleStore.repositoryHasStatement(concept.getUri(), RDF.TYPE.toString(), ONTOLOGIE_CONCEPT_TYPE.toString()));         
+            assertTrue(this.tripleStore.repositoryHasStatement(concept.getUri(), RDF.TYPE.toString(), CONCEPT_TYPE.toString()));         
         }       
     }
     

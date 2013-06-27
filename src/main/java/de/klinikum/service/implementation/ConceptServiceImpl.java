@@ -2,9 +2,9 @@ package de.klinikum.service.implementation;
 
 import static de.klinikum.persistence.NameSpaces.CONCEPT_IS_EDITABLE;
 import static de.klinikum.persistence.NameSpaces.GUI_TAB_TYPE;
-import static de.klinikum.persistence.NameSpaces.ONTOLOGIE_CONCEPT_HAS_LABEL;
-import static de.klinikum.persistence.NameSpaces.ONTOLOGIE_CONCEPT_LINKED_TO;
-import static de.klinikum.persistence.NameSpaces.ONTOLOGIE_CONCEPT_TYPE;
+import static de.klinikum.persistence.NameSpaces.CONCEPT_HAS_LABEL;
+import static de.klinikum.persistence.NameSpaces.CONCEPT_LINKED_TO;
+import static de.klinikum.persistence.NameSpaces.CONCEPT_TYPE;
 import static de.klinikum.persistence.NameSpaces.PATIENT_HAS_CONCEPT;
 import static de.klinikum.persistence.NameSpaces.PATIENT_TYPE;
 
@@ -93,15 +93,15 @@ public class ConceptServiceImpl implements ConceptService {
         }
 
         // Concept anlegen
-        URI conceptUri = this.tripleStore.getUniqueURI(ONTOLOGIE_CONCEPT_TYPE.toString());
+        URI conceptUri = this.tripleStore.getUniqueURI(CONCEPT_TYPE.toString());
 
         concept.setUri(conceptUri.toString());
 
-        this.tripleStore.addTriple(conceptUri.toString(), RDF.TYPE.toString(), ONTOLOGIE_CONCEPT_TYPE.toString());
+        this.tripleStore.addTriple(conceptUri.toString(), RDF.TYPE.toString(), CONCEPT_TYPE.toString());
 
         this.tripleStore.addTriple(concept.getPatientUri(), PATIENT_HAS_CONCEPT.toString(), conceptUri.toString());
 
-        this.tripleStore.addTripleWithStringLiteral(conceptUri.toString(), ONTOLOGIE_CONCEPT_HAS_LABEL.toString(),
+        this.tripleStore.addTripleWithStringLiteral(conceptUri.toString(), CONCEPT_HAS_LABEL.toString(),
                 concept.getLabel());
 
         this.tripleStore.addTripleWithBooleanLiteral(conceptUri.toString(), CONCEPT_IS_EDITABLE.toString(),
@@ -125,10 +125,10 @@ public class ConceptServiceImpl implements ConceptService {
             throw new TripleStoreException("The concept with the uri \"" + to.getUri() + "\" does not exist");
         }
 
-        if (this.tripleStore.repositoryHasStatement(from.getUri(), ONTOLOGIE_CONCEPT_LINKED_TO.toString(), to.getUri())) {
+        if (this.tripleStore.repositoryHasStatement(from.getUri(), CONCEPT_LINKED_TO.toString(), to.getUri())) {
             return;
         }
-        this.tripleStore.addTriple(from.getUri(), ONTOLOGIE_CONCEPT_LINKED_TO.toString(), to.getUri());
+        this.tripleStore.addTriple(from.getUri(), CONCEPT_LINKED_TO.toString(), to.getUri());
     }
 
     @Override
@@ -170,7 +170,7 @@ public class ConceptServiceImpl implements ConceptService {
         Model statementList;
 
         try {
-            statementList = this.tripleStore.getStatementList(concept.getUri(), ONTOLOGIE_CONCEPT_LINKED_TO.toString(),
+            statementList = this.tripleStore.getStatementList(concept.getUri(), CONCEPT_LINKED_TO.toString(),
                     null);
             for (Statement conceptStatement : statementList) {
                 if (onlyUris) {
@@ -184,7 +184,7 @@ public class ConceptServiceImpl implements ConceptService {
                     connectedConcepts.add(conceptToAdd);
                 }
             }
-            statementList = this.tripleStore.getStatementList(null, ONTOLOGIE_CONCEPT_LINKED_TO.toString(),
+            statementList = this.tripleStore.getStatementList(null, CONCEPT_LINKED_TO.toString(),
                     concept.getUri());
             for (Statement conceptStatement : statementList) {
                 if (onlyUris) {
@@ -276,7 +276,7 @@ public class ConceptServiceImpl implements ConceptService {
 
         Model statementList;
         try {
-            statementList = this.tripleStore.getStatementList(conceptUri, ONTOLOGIE_CONCEPT_LINKED_TO.toString(), null);
+            statementList = this.tripleStore.getStatementList(conceptUri, CONCEPT_LINKED_TO.toString(), null);
             if (statementList.size() > 1) {
                 for (Statement conceptStatement : statementList) {
                     this.getConnected(conceptStatement.getObject().stringValue(), connected, onlyUris);
@@ -310,7 +310,7 @@ public class ConceptServiceImpl implements ConceptService {
         conceptToReturn.setUri(conceptUri);
 
         String sparqlQuery = "SELECT ?Label ?patientUri ?editable WHERE {";
-        sparqlQuery += "<" + conceptUri + "> <" + ONTOLOGIE_CONCEPT_HAS_LABEL + "> ?Label . ";
+        sparqlQuery += "<" + conceptUri + "> <" + CONCEPT_HAS_LABEL + "> ?Label . ";
         sparqlQuery += "<" + conceptUri + "> <" + CONCEPT_IS_EDITABLE + "> ?editable . ";
         sparqlQuery += "?patientUri <" + PATIENT_HAS_CONCEPT + "> <" + conceptUri + ">}";
         Set<HashMap<String, Value>> queryResult = this.tripleStore.executeSelectSPARQLQuery(sparqlQuery);
@@ -375,8 +375,8 @@ public class ConceptServiceImpl implements ConceptService {
 
         if (concept.getLabel() != null) {
             if (!concept.getLabel().equals(existingConcept.getLabel())) {
-                this.tripleStore.removeTriples(existingConcept.getUri(), ONTOLOGIE_CONCEPT_HAS_LABEL.toString(), null);
-                this.tripleStore.addTripleWithStringLiteral(concept.getUri(), ONTOLOGIE_CONCEPT_HAS_LABEL.toString(),
+                this.tripleStore.removeTriples(existingConcept.getUri(), CONCEPT_HAS_LABEL.toString(), null);
+                this.tripleStore.addTripleWithStringLiteral(concept.getUri(), CONCEPT_HAS_LABEL.toString(),
                         concept.getLabel());
             }
         }
@@ -389,19 +389,19 @@ public class ConceptServiceImpl implements ConceptService {
                 for (Concept ec : existingConcept.getConnectedConcepts()) {
 
                     if (this.tripleStore.repositoryHasStatement(existingConcept.getUri(),
-                            ONTOLOGIE_CONCEPT_LINKED_TO.toString(), ec.getUri())) {
+                            CONCEPT_LINKED_TO.toString(), ec.getUri())) {
                         this.tripleStore.removeTriples(existingConcept.getUri(),
-                                ONTOLOGIE_CONCEPT_LINKED_TO.toString(), ec.getUri());
+                                CONCEPT_LINKED_TO.toString(), ec.getUri());
                     }
                     else {
-                        this.tripleStore.removeTriples(ec.getUri(), ONTOLOGIE_CONCEPT_LINKED_TO.toString(),
+                        this.tripleStore.removeTriples(ec.getUri(), CONCEPT_LINKED_TO.toString(),
                                 existingConcept.getUri());
                     }
                 }
             }
 
             for (Concept c : concept.getConnectedConcepts()) {
-                this.tripleStore.addTriple(concept.getUri(), ONTOLOGIE_CONCEPT_LINKED_TO.toString(), c.getUri());
+                this.tripleStore.addTriple(concept.getUri(), CONCEPT_LINKED_TO.toString(), c.getUri());
             }
         }
         return concept;
@@ -410,7 +410,7 @@ public class ConceptServiceImpl implements ConceptService {
     @Override
     public boolean conceptExists(String conceptUri) throws IOException {
         return this.tripleStore.repositoryHasStatement(conceptUri, RDF.TYPE.toString(),
-                ONTOLOGIE_CONCEPT_TYPE.toString());
+                CONCEPT_TYPE.toString());
     }
 
     @Override
