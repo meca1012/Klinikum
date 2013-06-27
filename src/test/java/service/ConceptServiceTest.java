@@ -1,11 +1,14 @@
 package service;
 
+import static de.klinikum.persistence.NameSpaces.CONCEPT_LINKED_TO;
+import static de.klinikum.persistence.NameSpaces.CONCEPT_TYPE;
 import static de.klinikum.persistence.NameSpaces.GUI_TAB_TYPE;
-import static de.klinikum.persistence.NameSpaces.ONTOLOGIE_CONCEPT_LINKED_TO;
 import static de.klinikum.persistence.NameSpaces.PATIENT_HAS_CONCEPT;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -18,14 +21,17 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.joda.time.DateTime;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.repository.RepositoryException;
 
 import de.klinikum.domain.Address;
 import de.klinikum.domain.Concept;
 import de.klinikum.domain.Patient;
+import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.persistence.SesameTripleStore;
 import de.klinikum.service.implementation.ConceptServiceImpl;
 import de.klinikum.service.implementation.PatientServiceImpl;
@@ -50,6 +56,8 @@ public class ConceptServiceTest {
     SesameTripleStore tripleStore;
     
     Random generator = new Random(System.currentTimeMillis());
+    
+    private Patient patient;
 
     /**
          */
@@ -58,6 +66,18 @@ public class ConceptServiceTest {
         return ShrinkWrap.create(JavaArchive.class).addClass(ConceptServiceImpl.class)
                 .addClass(PatientServiceImpl.class).addClass(SesameTripleStore.class)
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+    }
+    
+    @Before
+    public void createPatient() throws Exception{
+        this.patient = new Patient();
+        this.patient.setFirstName("Anke");
+        this.patient.setLastName("Musterfrau");
+        this.patient.setDateOfBirth(new DateTime());
+        this.patient.setPatientNumber(String.valueOf(this.generator.nextInt()));
+        Address address = new Address(null, "Musterstr.", "1", "Musterstadt", "76123", "D", "110");
+        this.patient.setAddress(address);
+        this.patient = this.patientService.createPatientRDF(this.patient);
     }
 
     private Patient generateNewPatientWithAddress() {
@@ -70,18 +90,7 @@ public class ConceptServiceTest {
         patient.setAddress(address);
         return patient;
     }
-
-    // Get the standard tabConcepts
-    @Test
-    public void getTabConcepts() throws Exception {
-        Patient patient = this.generateNewPatientWithAddress();
-        patient = this.patientService.createPatientRDF(patient);
-        List<Concept> tabConcepts = new ArrayList<Concept>();
-        tabConcepts = this.conceptService.getTabConcepts(patient);
-
-        assertNotNull(tabConcepts);
-    }
-
+ 
     @Test
     public void createConcept() throws Exception {
         Patient patient = this.generateNewPatientWithAddress();
@@ -91,8 +100,36 @@ public class ConceptServiceTest {
         newConcept.setPatientUri(patient.getUri());
         newConcept = this.conceptService.createConcept(newConcept);
         
-        assertTrue(this.tripleStore.repositoryHasStatement(patient.getUri(), PATIENT_HAS_CONCEPT.toString(), newConcept.getUri()));
         assertNotNull(newConcept.getUri());
+        assertTrue(this.tripleStore.repositoryHasStatement(patient.getUri(), PATIENT_HAS_CONCEPT.toString(), newConcept.getUri()));
+    }
+    
+    @Test
+    public void getConceptByUri() throws IOException, RepositoryException, SpirontoException {
+        Concept concept = new Concept();
+        concept.setLabel("Neues TabConcept");
+        concept.setPatientUri(this.patient.getUri());
+        concept = this.conceptService.createConcept(concept);
+        
+        Concept foundConcept = this.conceptService.getConceptByUri(concept.getUri());
+        assertEquals(foundConcept, concept);
+    }
+    
+    /**
+     * Get the standard tabConcepts
+     * @throws Exception 
+     */
+    @Test
+    public void getTabConcepts() throws Exception {
+        Patient patient = this.generateNewPatientWithAddress();
+        patient = this.patientService.createPatientRDF(patient);
+        List<Concept> tabConcepts = new ArrayList<Concept>();
+        tabConcepts = this.conceptService.getTabConcepts(patient);
+       
+        assertNotNull(tabConcepts);
+        for(Concept concept : tabConcepts){
+            assertTrue(this.tripleStore.repositoryHasStatement(concept.getUri(), RDF.TYPE.toString(), GUI_TAB_TYPE.toString()));         
+        }             
     }
 
     @Test
@@ -109,9 +146,8 @@ public class ConceptServiceTest {
         concept2.setPatientUri(patient.getUri());
         concept2 = this.conceptService.createConcept(concept2);
         
-        this.conceptService.connectSingleConcept(concept1, concept2);
-        
-        assertTrue(this.tripleStore.repositoryHasStatement(concept1.getUri(), ONTOLOGIE_CONCEPT_LINKED_TO.toString(), concept2.getUri()));      
+        this.conceptService.connectSingleConcept(concept1, concept2);        
+        assertTrue(this.tripleStore.repositoryHasStatement(concept1.getUri(), CONCEPT_LINKED_TO.toString(), concept2.getUri()));      
     }
 
     @Test
@@ -123,6 +159,7 @@ public class ConceptServiceTest {
         tabConcept.setPatientUri(patient.getUri());
         tabConcept = this.conceptService.createTabConcept(tabConcept);
         
+        assertNotNull(tabConcept);
         assertTrue(this.tripleStore.repositoryHasStatement(tabConcept.getUri(), RDF.TYPE.toString(), GUI_TAB_TYPE.toString()));      
     }
 
@@ -132,8 +169,27 @@ public class ConceptServiceTest {
     }
 
     @Test
-    @Ignore
-    public void findAllConceptsOfPatient() {
+    public void findAllConceptsOfPatient() throws IOException, SpirontoException {
+        
+        List<Concept> concepts = this.conceptService.findAllConceptsOfPatient(this.patient);
+        
+        assertNotNull(concepts);
+        for(Concept concept : concepts){
+            assertTrue(this.tripleStore.repositoryHasStatement(concept.getUri(), RDF.TYPE.toString(), CONCEPT_TYPE.toString()));         
+        }       
+    }
+    
+    @Test
+    public void updateConcept(Concept concept) throws RepositoryException, SpirontoException, IOException {
+   
+     Concept newConcept = new Concept();
+     newConcept.setLabel("Neues TestConcept");
+     newConcept.setPatientUri(patient.getUri());
+     newConcept = this.conceptService.createConcept(newConcept);
+     newConcept.setLabel("Neuer Conceptname :-)");
+     Concept updateConcept = this.conceptService.updateConcept(newConcept);
+     
+     assertEquals(updateConcept, newConcept);
     }
 
     @Test
@@ -144,11 +200,6 @@ public class ConceptServiceTest {
     @Test
     @Ignore
     public void getConnected() {
-    }
-
-    @Test
-    @Ignore
-    public void getConceptByUri() {
     }
 
     @Test
@@ -171,9 +222,12 @@ public class ConceptServiceTest {
     public void getConnectedConceptUris(Concept concept) {
     }
 
-    @Test
-    @Ignore
-    public void updateConcept(Concept concept) {
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 
 }
