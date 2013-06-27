@@ -1,6 +1,5 @@
 package service;
 
-import static de.klinikum.persistence.NameSpaces.PATIENT_TYPE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -20,7 +19,6 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openrdf.model.vocabulary.RDF;
 
 import de.klinikum.domain.Address;
 import de.klinikum.domain.Patient;
@@ -40,12 +38,12 @@ public class PatientServiceTest {
     @Inject
     PatientService patientService;
 
-    Random generator = new Random(System.currentTimeMillis());
+    private Random generator = new Random(System.currentTimeMillis());
 
     private Patient patient;
 
     @Before
-    public void createPatient() throws Exception {
+    public void createNewPatientWithAddress() throws Exception {
         this.patient = new Patient();
         this.patient.setFirstName("Anke");
         this.patient.setLastName("Musterfrau");
