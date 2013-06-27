@@ -192,6 +192,8 @@ public class LuceneServiceImpl implements LuceneService {
 
         // Searching for deleted document -> Consistency check
         TopScoreDocCollector collector = TopScoreDocCollector.create(1, true);
+        this.indexReader = DirectoryReader.open(FSDirectory.open(new File(getIndexPath())));
+        this.indexSearcher = new IndexSearcher(indexReader);
         indexSearcher.search(query, collector);
 
         ScoreDoc[] hits = collector.topDocs().scoreDocs;
