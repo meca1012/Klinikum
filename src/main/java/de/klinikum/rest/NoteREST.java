@@ -33,7 +33,7 @@ import de.klinikum.service.interfaces.NoteService;
  * For Sesame Ontologie notes
  * Stores CareTeams documentation
  * 
- * @author  Spironto Team 1
+ * @author  Carsten Meiser, Andreas Schillinger, Matthias Schwarzenbach
  * @version 1.0 08/06/13
  */
 @Path("/note")
@@ -198,7 +198,6 @@ public class NoteREST {
     @POST
     @Produces(MediaType.APPLICATION_XML)
     public Note addConceptToNote(Note note) throws IOException, SpirontoException, RepositoryException {
-    	
          
         try {
         if (note.getConcepts() != null) {

@@ -1,7 +1,6 @@
 package de.klinikum.rest;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -23,7 +22,7 @@ import de.klinikum.service.interfaces.SesameService;
  * 
  * ServerInfoREST.java Purpose: REST- Connection- Points for ServerInfos Return Info if Webservice is running
  * 
- * @author Spironto Team 1
+ * @author Carsten Meiser, Constantin Treiber
  * @version 1.0 08/06/13
  */
 

@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Set;
 
-import javax.ws.rs.core.Response;
-
 import org.openrdf.model.Value;
 
 import de.klinikum.exceptions.SpirontoException;
-
+/**
+ * 
+ * @author Constantin Treiber, Ivan Tepeluk, Carsten Meiser
+ *
+ */
 public interface SesameService {
     /**
      * Execute a SELECT SPARQL query.

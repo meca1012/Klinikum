@@ -12,7 +12,7 @@ import org.joda.time.format.ISODateTimeFormat;
  *  Uses yoda DateTime.
  *  Returned format dd-MM-yyyy HH:mm:ss
  * 
- * @author Spironto Team 1
+ * @author Constantin Treiber, Andreas Schillinger
  *
  */
 public class XmlDateTimeAdapter extends XmlAdapter<String, DateTime> {

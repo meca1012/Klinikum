@@ -32,7 +32,7 @@ import de.klinikum.service.interfaces.PatientService;
  * 
  * PatientRest.java Purpose: REST- Connection- Points for UI Main Task is to deliver Patientdata from SesameStore
  * 
- * @author Spironto Team 1
+ * @author Carsten Meiser, Andreas Schillnger, Constantin Treiber, Matthias Schwarzenbach, Ivan Tepeluk
  * @version 1.0 08/06/13
  */
 @Path("/patient")

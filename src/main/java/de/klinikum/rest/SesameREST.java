@@ -27,7 +27,7 @@ import de.klinikum.service.interfaces.SesameService;
  * Purpose: REST- Connection- Points for UI
  * Supports direct SPARQL Queries
  * 
- * @author  Spironto Team 1
+ * @author  Constantin Treiber, Andreas Schillinger, Ivan Tepeluk, Carsten Meiser
  * @version 1.0 08/06/13
  */
 

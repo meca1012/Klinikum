@@ -37,7 +37,11 @@ import de.klinikum.lucene.LuceneService;
 import de.klinikum.persistence.SesameTripleStore;
 import de.klinikum.service.interfaces.ConceptService;
 import de.klinikum.service.interfaces.NoteService;
-
+/**
+ * 
+ * @author Andreas Schillinger, Carsten Meiser, Matthias Schwarzenbach
+ *
+ */
 @Named
 public class NoteServiceImpl implements NoteService {
 

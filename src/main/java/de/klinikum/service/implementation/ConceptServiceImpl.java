@@ -33,7 +33,11 @@ import de.klinikum.exceptions.SpirontoException;
 import de.klinikum.exceptions.TripleStoreException;
 import de.klinikum.persistence.SesameTripleStore;
 import de.klinikum.service.interfaces.ConceptService;
-
+/**
+ * 
+ * @author Andreas Schillinger, Carsten Meiser
+ *
+ */
 @Named
 public class ConceptServiceImpl implements ConceptService {
 

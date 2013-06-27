@@ -4,7 +4,7 @@ package de.klinikum.persistence;
  * 
  * NameSpace.java Purpose: Sesame URI Namespaces for identifying relationships betwween concepts
  * 
- * @author Spironto Team 1
+ * @author Andreas Schillinger, Constantin Treiber, Carsten Meiser
  * @version 1.0 08/06/13
  */
 

@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  * 
  * PropertyLoader.java Purpose: Reads Configuration -File for getting Sesamestorage Configuration
  * 
- * @author Spironto Team 1
+ * @author Constantin Treiber
  * @version 1.0 08/06/13
  */
 

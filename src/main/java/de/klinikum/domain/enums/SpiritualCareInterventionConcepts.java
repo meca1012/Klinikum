@@ -6,7 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.klinikum.helper.PropertyLoader;
-
+/**
+ * 
+ * @author Carsten Meiser
+ *
+ */
 public enum SpiritualCareInterventionConcepts {
 
     SILENCE("meaningful silence"), 

@@ -1,10 +1,10 @@
 package service;
 
-import static org.junit.Assert.*;
-
+import static de.klinikum.persistence.NameSpaces.GUI_TAB_TYPE;
 import static de.klinikum.persistence.NameSpaces.ONTOLOGIE_CONCEPT_LINKED_TO;
 import static de.klinikum.persistence.NameSpaces.PATIENT_HAS_CONCEPT;
-import static de.klinikum.persistence.NameSpaces.GUI_TAB_TYPE;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ import de.klinikum.service.interfaces.PatientService;
 
 /**
  * 
- * @author Carsten Meiser
+ * @author Carsten Meiser, Ivan Tepeluk, Andreas Schillinger
  *
  */
 @RunWith(Arquillian.class)

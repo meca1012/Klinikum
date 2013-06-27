@@ -51,7 +51,7 @@ import de.klinikum.helper.PropertyLoader;
  * Implementation of Reading, Creating and Deleting Data as Triples, as well execute SPARQL Querys. Store Configuration
  * comes with the configuration file in properties package. Implementation for Sesame 2.7.0
  * 
- * @author Spironto Team 1, FZI - Information Process Engineering
+ * @author FZI - Information Process Engineering, Andreas Schillinger, Constantin Treiber
  * @version 1.0 08/06/13
  */
 
