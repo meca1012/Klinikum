@@ -11,6 +11,11 @@ import de.klinikum.domain.Concept;
 import de.klinikum.domain.Patient;
 import de.klinikum.domain.enums.TabConcepts;
 
+/**
+ * 
+ * @author Carsten Meiser
+ *
+ */
 @RunWith(Arquillian.class)
 public class EnumTest {
 

@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -38,131 +37,129 @@ import de.klinikum.service.interfaces.ConceptService;
 import de.klinikum.service.interfaces.NoteService;
 import de.klinikum.service.interfaces.PatientService;
 
+/**
+ * 
+ * @author Carsten Meiser
+ * 
+ */
 @RunWith(Arquillian.class)
 public class NoteServiceTest {
 
-	@Inject
-	NoteService noteService;
+    @Inject
+    NoteService noteService;
 
-	@Inject
-	PatientService patientService;
-	
-	@Inject
-	ConceptService conceptService;
+    @Inject
+    PatientService patientService;
 
-	private Random generator = new Random(System.currentTimeMillis());
+    @Inject
+    ConceptService conceptService;
 
-	private Patient patient;
+    private Random generator = new Random(System.currentTimeMillis());
 
-	@Before
-	public void createNewPatientWithAddress() throws TripleStoreException {
-		Patient patient = new Patient();
-		patient.setFirstName("Alice");
-		patient.setLastName("Smith");
-		patient.setDateOfBirth(new DateTime());
-		patient.setPatientNumber(String.valueOf(this.generator.nextInt()));
-		Address address = new Address(null, "Musterstr.", "1", "Musterstadt",
-				"76123", "D", "110");
-		patient.setAddress(address);
-		patient = this.patientService.createPatientRDF(patient);
-		this.setPatient(patient);
-	}
-	
-	/**
+    private Patient patient;
+
+    @Before
+    public void createNewPatientWithAddress() throws TripleStoreException {
+        Patient patient = new Patient();
+        patient.setFirstName("Alice");
+        patient.setLastName("Smith");
+        patient.setDateOfBirth(new DateTime());
+        patient.setPatientNumber(String.valueOf(this.generator.nextInt()));
+        Address address = new Address(null, "Musterstr.", "1", "Musterstadt", "76123", "D", "110");
+        patient.setAddress(address);
+        patient = this.patientService.createPatientRDF(patient);
+        this.setPatient(patient);
+    }
+
+    /**
 	 */
-	@Deployment
-	public static JavaArchive createDeployment() {
-		return ShrinkWrap.create(JavaArchive.class)
-				.addClass(PatientServiceImpl.class)
-				.addClass(ConceptServiceImpl.class)
-				.addClass(NoteServiceImpl.class)
-				.addClass(LuceneServiceImpl.class)
-				.addClass(SesameTripleStore.class)
-				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-	}
+    @Deployment
+    public static JavaArchive createDeployment() {
+        return ShrinkWrap.create(JavaArchive.class).addClass(PatientServiceImpl.class)
+                .addClass(ConceptServiceImpl.class).addClass(NoteServiceImpl.class).addClass(LuceneServiceImpl.class)
+                .addClass(SesameTripleStore.class).addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+    }
 
-	@Test
-	public void createNoteTest() throws IOException, URISyntaxException, TripleStoreException {
-		Note note = new Note();
-		String patientUri = this.patient.getUri();
-		note.setPatientUri(patientUri);
-		note.setPriority(3);
-		note.setTitle("Hier koennte Ihr Titel stehen:");
-		note.setText("Das ist eine Notiz");
-		note = this.noteService.createNote(note);
+    @Test
+    public void createNoteTest() throws IOException, URISyntaxException, TripleStoreException {
+        Note note = new Note();
+        String patientUri = this.patient.getUri();
+        note.setPatientUri(patientUri);
+        note.setPriority(3);
+        note.setTitle("Hier koennte Ihr Titel stehen:");
+        note.setText("Das ist eine Notiz");
+        note = this.noteService.createNote(note);
 
-		assertNotNull(note);
-	};
+        assertNotNull(note);
+    }
 
-	@Test
-	public void addConceptToNote() throws IOException, URISyntaxException,
-			RepositoryException, SpirontoException {
-		Note note = new Note();
-		String patientUri = this.patient.getUri();
-		note.setPatientUri(patientUri);
-		note.setPriority(3);
-		note.setTitle("Hier koennte Ihr Titel stehen:");
-		note.setText("Das ist eine Notiz");
-		note = this.noteService.createNote(note);
+    @Test
+    public void addConceptToNote() throws IOException, URISyntaxException, RepositoryException, SpirontoException {
+        Note note = new Note();
+        String patientUri = this.patient.getUri();
+        note.setPatientUri(patientUri);
+        note.setPriority(3);
+        note.setTitle("Hier koennte Ihr Titel stehen:");
+        note.setText("Das ist eine Notiz");
+        note = this.noteService.createNote(note);
 
-		Concept concept = new Concept();
-		concept.setEditable(true);
-		concept.setLabel("Ein neues Concept");
-		concept.setPatientUri(patientUri);
-		
-		concept = this.conceptService.createConcept(concept);
+        Concept concept = new Concept();
+        concept.setEditable(true);
+        concept.setLabel("Ein neues Concept");
+        concept.setPatientUri(patientUri);
 
-		this.noteService.addConceptToNote(note, concept);
+        concept = this.conceptService.createConcept(concept);
 
-		Note returnNote = this.noteService.getConceptsToNote(note);
-		List<Concept> returnedConcepts = returnNote.getConcepts();
+        this.noteService.addConceptToNote(note, concept);
 
-		assertNotNull(returnedConcepts);
-	};
+        Note returnNote = this.noteService.getConceptsToNote(note);
+        List<Concept> returnedConcepts = returnNote.getConcepts();
 
-	@Test
-	public void getNoteByUriTest() throws IOException, URISyntaxException,
-			RepositoryException, SpirontoException {
-		Note note = new Note();
-		String patientUri = this.patient.getUri();
-		note.setPatientUri(patientUri);
-		note.setPriority(3);
-		note.setTitle("Hier koennte ein weiterer Titel stehen:");
-		note.setText("Das ist eine weitere Notiz");
-		note = this.noteService.createNote(note);
-		Note returnedNote = this.noteService.getNoteByUri(note.getUri());
+        assertNotNull(returnedConcepts);
+    }
 
-		assertNotNull(returnedNote.getUri());
-	};
+    @Test
+    public void getNoteByUriTest() throws IOException, URISyntaxException, RepositoryException, SpirontoException {
+        Note note = new Note();
+        String patientUri = this.patient.getUri();
+        note.setPatientUri(patientUri);
+        note.setPriority(3);
+        note.setTitle("Hier koennte ein weiterer Titel stehen:");
+        note.setText("Das ist eine weitere Notiz");
+        note = this.noteService.createNote(note);
+        Note returnedNote = this.noteService.getNoteByUri(note.getUri());
 
-	@Test
-	@Ignore
-	public void getConceptsToNoteTest() {
-		// tested in addConceptToNote
-	};
+        assertNotNull(returnedNote.getUri());
+    }
 
-	@Test
-	public void updateNoteTest() throws IOException, URISyntaxException, SpirontoException {
-		Note note = new Note();
-		String patientUri = this.patient.getUri();
-		note.setPatientUri(patientUri);
-		note.setPriority(3);
-		note.setTitle("Hier koennte Ihr Titel stehen:");
-		note.setText("Das ist eine Notiz");
-		note = this.noteService.createNote(note);
-		
-		note.setText("Neuer Text");
-		Note updatedNote = this.noteService.updateNote(note);
-		
-		assertEquals(updatedNote.getText(), note.getText());
-	};
+    @Test
+    @Ignore
+    public void getConceptsToNoteTest() {
+        // tested in addConceptToNote
+    }
 
-	public Patient getPatient() {
-		return patient;
-	}
+    @Test
+    public void updateNoteTest() throws IOException, URISyntaxException, SpirontoException {
+        Note note = new Note();
+        String patientUri = this.patient.getUri();
+        note.setPatientUri(patientUri);
+        note.setPriority(3);
+        note.setTitle("Hier koennte Ihr Titel stehen:");
+        note.setText("Das ist eine Notiz");
+        note = this.noteService.createNote(note);
 
-	public void setPatient(Patient patient) {
-		this.patient = patient;
-	}
+        note.setText("Neuer Text");
+        Note updatedNote = this.noteService.updateNote(note);
+
+        assertEquals(updatedNote.getText(), note.getText());
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
 
 }
