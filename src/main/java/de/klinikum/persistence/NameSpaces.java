@@ -31,7 +31,7 @@ public enum NameSpaces {
     ADDRESS_HAS_ADDRESS_STREET_NUMBER("http://spironto.de/spironto#has-address-street-number"),
     ADDRESS_HAS_ADDRESS_ZIP("http://spironto.de/spironto#has-address-zip"),
     ADDRESS_HAS_ADDRESS_CITY("http://spironto.de/spironto#has-address-city"),
-    ADDRESS_IN_COUNTRY("http://spironto.de/spironto#has-laddress-country"),
+    ADDRESS_IN_COUNTRY("http://spironto.de/spironto#has-address-country"),
     ADDRESS_HAS_PHONENUMBER("http://spironto.de/spironto#has-phonenumber"),
 
     // ------------------------END RDF PATIENT CORE DATA------------------------------
