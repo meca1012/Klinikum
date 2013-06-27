@@ -18,7 +18,7 @@ public class LuceneSearchRequest implements Serializable {
      * Purpose: DomainObject to exchange request RestConnectionPoint
      * for searching through the LuceneIndex
      * 
-     * @author Spironto Team 1
+     * @author Constantin Treiber
      * @version 1.0 20/06/13
      */
 

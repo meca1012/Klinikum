@@ -65,13 +65,19 @@ public class ServerInfoREST {
     @Produces(MediaType.APPLICATION_XML)
     public Response changeLanguageSetting(@PathParam("language") String language) throws IOException {
         try {
-            this.SesameService.changeLanguageSetting(language);
+            if(this.SesameService.changeLanguageSetting(language))
+                {
+                return Response.status(Response.Status.OK).build();
+                }
+            else
+            {
+                return Response.status(Response.Status.NOT_MODIFIED).build();
+            }
+               
         }
         catch (IOException e) {
             e.printStackTrace();
             return Response.status(Response.Status.NOT_MODIFIED).build();
         }
-
-        return Response.status(Response.Status.OK).build();
     }
 }
