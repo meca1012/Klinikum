@@ -81,9 +81,10 @@ public interface NoteService {
      * @return
      * @throws SpirontoException
      * @throws IOException
+     * @throws Exception 
      */
 
-    Note updateNote(Note note) throws SpirontoException, IOException;
+    Note updateNote(Note note) throws SpirontoException, IOException, Exception;
 
     /**
      * Checks whether a note exists.

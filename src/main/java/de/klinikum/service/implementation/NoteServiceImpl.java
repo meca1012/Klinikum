@@ -36,10 +36,11 @@ import de.klinikum.lucene.LuceneService;
 import de.klinikum.persistence.SesameTripleStore;
 import de.klinikum.service.interfaces.ConceptService;
 import de.klinikum.service.interfaces.NoteService;
+
 /**
  * 
  * @author Andreas Schillinger, Carsten Meiser, Matthias Schwarzenbach
- *
+ * 
  */
 @Named
 public class NoteServiceImpl implements NoteService {
@@ -80,7 +81,7 @@ public class NoteServiceImpl implements NoteService {
         this.tripleStore.addTripleWithStringLiteral(noteUri.toString(), NOTE_HAS_TEXT.toString(), note.getText());
         this.tripleStore.addTripleWithStringLiteral(noteUri.toString(), NOTE_HAS_TITLE.toString(), note.getTitle());
         this.tripleStore.setValue(noteUri.toString(), NOTE_HAS_PRIORITY.toString(), note.getPriority());
-        
+
         luceneService.storeNote(note);
 
         return note;
@@ -208,7 +209,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public Note updateNote(Note note) throws SpirontoException, IOException, TripleStoreException {
+    public Note updateNote(Note note) throws Exception {
 
         if (note == null) {
             throw new TripleStoreException("Note is null!");
@@ -254,6 +255,8 @@ public class NoteServiceImpl implements NoteService {
                 this.tripleStore.addTriple(note.getUri(), NOTE_POINTS_TO_CONCEPT.toString(), c.getUri());
             }
         }
+        this.luceneService.updateNote(note);
+
         return note;
     }
 

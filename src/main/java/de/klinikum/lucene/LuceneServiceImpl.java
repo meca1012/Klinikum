@@ -258,4 +258,17 @@ public class LuceneServiceImpl implements LuceneService {
         }
         return returnUriList;
     }
+
+    @Override
+    public boolean updateNote(Note note) {
+        try {
+            this.deleteNote(note);
+            this.storeNote(note);
+            return true;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
